@@ -1,0 +1,5 @@
+{
+    "require": {
+        "payrexx/payrexx": "1.8.6"
+    }
+}

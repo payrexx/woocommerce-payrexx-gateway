@@ -1,0 +1,210 @@
+# Copyright (C) 2019 Payrexx
+# This file is distributed under the same license as the WooCommerce Payrexx Gateway plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
+"Language-Team: Deutsch\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-10-09T16:21:30+02:00\n"
+"PO-Revision-Date: 2023-04-17 13:59+0000\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Domain: trunk\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+"X-Loco-Version: 2.6.3; wp-6.1.1"
+
+#. Description of the plugin
+msgid "Accept many different payment methods on your store using Payrexx"
+msgstr ""
+"Akzeptieren Sie mit Payrexx verschiedene Zahlungsmittel auf Ihrem Onlineshop"
+
+#: includes/settings/payrexx_settings.php:55
+msgid "Additional Settings"
+msgstr "Zusätzliche Einstellungen"
+
+#: src/Model/PaymentMethod/Amex.php:8
+msgid "Amex (Payrexx)"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php:43
+msgid "API Key"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php:5
+msgid "API Settings"
+msgstr "API Einstellungen"
+
+#: src/Model/PaymentMethod/ApplePay.php:9
+msgid "Apple Pay (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/BankTransfer.php:9
+msgid "Bank Transfer (Payrexx)"
+msgstr "Bank Überweisung"
+
+#: includes/settings/payrexx_settings.php:11
+msgid "Choose Your Platform"
+msgstr "Wählen Sie Ihre Plattform"
+
+#: includes/settings/payrexx_pm_settings.php:19
+msgid "Description"
+msgstr "Beschreibung"
+
+#: includes/settings/payrexx_pm_settings.php:7
+msgid "Enable Payment Method"
+msgstr "Zahlungsmittel aktivieren"
+
+#: includes/settings/payrexx_subscription_pm_settings.php:8
+msgid "Enable payment method for automatic subscription payments"
+msgstr "Zahlungsmittel für wiederkehrende Zahlungen aktivieren"
+
+#: includes/settings/payrexx_pm_settings.php:5
+msgid "Enable/Disable"
+msgstr "Aktivieren/Deaktivieren"
+
+#: includes/settings/payrexx_subscription_pm_settings.php:6
+msgid "Enable/Disable Subscriptions"
+msgstr "Abonnemente Aktivieren/Deaktivieren"
+
+#: includes/settings/payrexx_settings.php:63
+msgid ""
+"Enter a look and feel profile ID if you wish to use a specific design in the "
+"checkout"
+msgstr ""
+"Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im "
+"Checkout zu nutzen"
+
+#: src/Model/PaymentMethod/Abstract/Base.php:26
+msgid "General Payrexx Settings"
+msgstr "Allgemeine Payrexx Einstellungen"
+
+#: src/Model/PaymentMethod/GooglePay.php:9
+msgid "Google Pay (Payrexx)"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://payrexx.com"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php:36
+msgid "Instance Name"
+msgstr "Instanz Name"
+
+#: src/Model/PaymentMethod/Invoice.php:9
+msgid "Invoice (Payrexx)"
+msgstr "Rechnung (Payrexx)"
+
+#: includes/settings/payrexx_settings.php:60
+msgid "Look&Feel Profile ID"
+msgstr "Look&Feel Profil ID"
+
+#: src/Model/PaymentMethod/Maestro.php:9
+msgid "Maestro (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/Mastercard.php:9
+msgid "Mastercard (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/Masterpass.php:9
+msgid "Masterpass (Payrexx)"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php:46
+msgid ""
+"Paste the API key from the integrations page of your Payrexx merchant "
+"backend here"
+msgstr ""
+"Füge Sie den API Key, von der Integrationsseite in Ihrem Payrexx Händler "
+"Account, hier ein"
+
+#: woo-payrexx-gateway.php:177
+msgid "Payment failed. Please choose another method."
+msgstr "Zahlung fehlgeschlagen. Bitte wählen Sie eine anderes Zahlungsmittel."
+
+#: src/Model/PaymentMethod/Paypal.php:9
+msgid "Paypal (Payrexx)"
+msgstr ""
+
+#. Author of the plugin
+#: includes/admin/class-wc-payrexx-gateway-admin.php:35
+#: src/Model/PaymentMethod/Payrexx.php:9
+msgid "Payrexx"
+msgstr ""
+
+#: src/Model/PaymentMethod/PostFinanceCard.php:9
+msgid "Post Finance Card (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/PostFinanceEFinance.php:9
+msgid "PostFinance E-Finance (Payrexx)"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php:66
+msgid "Prefix "
+msgstr ""
+
+#: src/Model/PaymentMethod/SamsungPay.php:9
+msgid "Samsung Pay (Payrexx)"
+msgstr ""
+
+#: includes/admin/class-wc-payrexx-gateway-admin.php:144
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: src/Model/PaymentMethod/Sofort.php:9
+msgid "Sofort (Payrexx)"
+msgstr ""
+
+#: includes/settings/payrexx_pm_settings.php:22
+msgid ""
+"The description of the paymment method which is visible in the checkout once "
+"selected."
+msgstr ""
+"Die Zahlungsmittel Beschreibung, welche im Checkout erscheint wenn das "
+"jeweilige Zahlungsmittel gewählt wird."
+
+#: includes/settings/payrexx_settings.php:39
+msgid ""
+"The instance name is your Payrexx account name. You find it in the URL when "
+"logged in INSTANCENAME.payrexx.com."
+msgstr ""
+"Der Instanzname ist Ihr Payrexx Account Name. Sie finden diesen in der URL, "
+"wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME."
+"payrexx.com."
+
+#: includes/settings/payrexx_settings.php:70
+#| msgid ""
+#| "The Prefix is only necessary for customers outside the Payrexx platform"
+msgid "The Prefix is only necessary for merchants outside the Payrexx platform"
+msgstr ""
+"Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
+
+#: includes/settings/payrexx_pm_settings.php:13
+msgid "The title of the payment method which shows in the checkout."
+msgstr ""
+"Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
+
+#: includes/settings/payrexx_pm_settings.php:11
+msgid "Title"
+msgstr "Titel"
+
+#: src/Model/PaymentMethod/Twint.php:9
+msgid "Twint (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/Visa.php:9
+msgid "Visa (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/WirPay.php:9
+msgid "Wirpay (Payrexx)"
+msgstr ""
+
+#. Name of the plugin
+msgid "WooCommerce Payrexx Gateway"
+msgstr ""

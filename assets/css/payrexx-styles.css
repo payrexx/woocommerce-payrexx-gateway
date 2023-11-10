@@ -1,0 +1,10 @@
+.wc_payment_methods [class*="payment_method_payrexx"] img {
+    margin-left: 10px;
+    max-height: 30px;
+    max-width: 32px;
+    vertical-align: middle;
+}
+
+.wc_payment_methods .payment_method_payrexx_heidipay img {
+    max-width: 75px;
+}
