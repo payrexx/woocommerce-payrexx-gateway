@@ -6,7 +6,7 @@
  * Author URI: https://payrexx.com
  * Version: 3.0.3
  * Requires at least: 4.4
- * Tested up to: 6.2
+ * Tested up to: 6.4.1
  * WC requires at least: 3.8.1
  * WC tested up to: 8.1.1
  */
