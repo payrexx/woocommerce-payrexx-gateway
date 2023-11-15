@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.0.2
+ * Version: 3.0.3
  * Requires at least: 4.4
  * Tested up to: 6.2
  * WC requires at least: 3.8.1
@@ -145,6 +145,11 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
                     'payment_scripts'
                 ]
             );
+            add_action( 'before_woocommerce_init', function() {
+                if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+                    \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+                }
+            });
         }
 
         public function loaded()

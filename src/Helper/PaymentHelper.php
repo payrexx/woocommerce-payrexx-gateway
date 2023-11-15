@@ -34,7 +34,7 @@ class PaymentHelper
         $payrexxApiService = WC_Payrexx_Gateway::getPayrexxApiService();
 
         // Delete old Gateway using order metadata
-        $gatewayId = intval(get_post_meta($order_id, 'payrexx_gateway_id', true));
+        $gatewayId = intval($order->get_meta('payrexx_gateway_id', true));
         $payrexxApiService->deleteGatewayById($gatewayId);
     }
 

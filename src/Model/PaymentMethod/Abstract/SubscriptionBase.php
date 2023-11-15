@@ -186,7 +186,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		foreach ($subscriptions as $subscription) {
 
 			// Get tokenization from the subscription (new way)
-			$tokenizationId = intval(get_post_meta($subscription->get_id(), 'payrexx_auth_transaction_id', true));
+			$tokenizationId = intval($subscription->get_meta( 'payrexx_auth_transaction_id', true ) );
 
 			if (!$tokenizationId) {
 				// Get tokenization id from the last order except this renewal (old way)
@@ -197,7 +197,8 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 					$last_order_id = $order_id;
 					break;
 				}
-				$tokenizationId = intval(get_post_meta($last_order_id, 'payrexx_auth_transaction_id', true));
+				$order = wc_get_order( $last_order_id );
+				$tokenizationId = intval( $order->get_meta( 'payrexx_auth_transaction_id' , true ) );
 
 				$subscription->update_meta_data('payrexx_auth_transaction_id', $tokenizationId);
 				$subscription->save();

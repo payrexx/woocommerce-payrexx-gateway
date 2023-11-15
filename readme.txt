@@ -58,6 +58,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.0.3 =
+* Minor update, no need to backup
+
 = 3.0.2 =
 * Minor update, no need to backup
 
@@ -290,6 +293,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.0.3 =
+* Feature: WooCommerce HPOS Compatibility
 
 = 3.0.2 =
 * Feature: Added reka as new payment method
