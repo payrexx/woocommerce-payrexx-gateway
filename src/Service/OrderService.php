@@ -12,6 +12,7 @@ class OrderService
     const WC_STATUS_PROCESSING = 'processing';
     const WC_STATUS_COMPLETED = 'completed';
     const WC_STATUS_ONHOLD = 'on-hold';
+	const WC_STATUS_PENDING = 'pending';
 
     const STATUS_MESSAGES = [
         self::WC_STATUS_CANCELLED => 'Payment was cancelled by the customer',
@@ -67,33 +68,37 @@ class OrderService
                 $newTransactionStatus = self::WC_STATUS_FAILED;
         }
 
-        if (!$newTransactionStatus || !$this->transitionAllowed($newTransactionStatus, $order->get_status())) {
-            return;
-        }
+		if ( ! $newTransactionStatus || ! $this->transition_allowed( $newTransactionStatus, $order->get_status() ) ) {
+			return;
+		}
 
         $this->transitionOrder($order, $newTransactionStatus);
     }
 
-    /**
-     * @param string $newStatus
-     * @param string $oldStatus
-     * @return bool
-     */
-    public function transitionAllowed(string $newStatus, string $oldStatus)
-    {
-        switch($newStatus) {
-            case self::WC_STATUS_CANCELLED:
-                return !in_array($oldStatus, [self::WC_STATUS_CANCELLED, self::WC_STATUS_PROCESSING, self::WC_STATUS_COMPLETED]);
-            case self::WC_STATUS_FAILED:
-                return !in_array($oldStatus, [self::WC_STATUS_FAILED, self::WC_STATUS_PROCESSING, self::WC_STATUS_COMPLETED]);
-            case self::WC_STATUS_PROCESSING:
-                return !in_array($oldStatus, [self::WC_STATUS_PROCESSING, self::WC_STATUS_COMPLETED]);
-            case self::WC_STATUS_REFUNDED:
-            case self::WC_STATUS_ONHOLD:
-            default:
-                return $oldStatus != $newStatus;
-        }
-    }
+	/**
+	 * Check order transition allowed
+	 *
+	 * @param string $new_status new order status.
+	 * @param string $old_status old order status.
+	 * @return bool
+	 */
+	public function transition_allowed( string $new_status, string $old_status ): bool {
+		if ( $new_status === $old_status ) {
+			return false;
+		}
+		switch ( $new_status ) {
+			case self::WC_STATUS_CANCELLED:
+			case self::WC_STATUS_FAILED:
+				return in_array( $old_status, [ self::WC_STATUS_PENDING, self::WC_STATUS_ONHOLD ] );
+			case self::WC_STATUS_PROCESSING:
+				return ! in_array( $old_status, [ self::WC_STATUS_COMPLETED, self::WC_STATUS_REFUNDED ] );
+			case self::WC_STATUS_REFUNDED:
+				return in_array( $old_status, [ self::WC_STATUS_PROCESSING, self::WC_STATUS_COMPLETED ] );
+			case self::WC_STATUS_ONHOLD:
+				return self::WC_STATUS_PENDING === $old_status;
+		}
+		return true;
+	}
 
     /**
      * @param $order
@@ -111,9 +116,9 @@ class OrderService
      * @return void
      */
     private function setOrderPaid($order, $transactionUuid) {
-        if (!$this->transitionAllowed(self::WC_STATUS_PROCESSING, $order->get_status())) {
-            return;
-        }
+		if ( ! $this->transition_allowed( self::WC_STATUS_PROCESSING, $order->get_status() ) ) {
+			return;
+		}
 
         $order->payment_complete($transactionUuid);
         // Remove cart
