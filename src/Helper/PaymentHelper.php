@@ -27,7 +27,7 @@ class PaymentHelper
         $orderService = WC_Payrexx_Gateway::getOrderService();
 
         // Set order status to cancelled
-        if ($orderService->transitionAllowed(OrderService::WC_STATUS_CANCELLED, $order->get_status())) {
+        if ($orderService->transition_allowed(OrderService::WC_STATUS_CANCELLED, $order->get_status())) {
             $orderService->transitionOrder($order, OrderService::WC_STATUS_CANCELLED);
         }
 
