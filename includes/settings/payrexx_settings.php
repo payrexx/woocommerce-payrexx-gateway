@@ -33,6 +33,7 @@ return apply_filters('wc_payrexx_gateway_settings', [
                 'pay.boukii.com' => 'Boukii (Neuron-e)',
                 'payrexx.aboon.ch' => 'Aboon',
                 '1pay.ch' => '1pay.ch',
+                'pay.weblandschaft.ch' => 'Weblandschaft',
             ],
         ],
         [
