@@ -83,6 +83,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 		protected function define_constants() {
 			define('PAYREXX_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 			define('PAYREXX_PM_DIR', PAYREXX_PLUGIN_DIR . 'src/Model/PaymentMethod/');
+			define('PAYREXX_PM_BLOCK_DIR', PAYREXX_PLUGIN_DIR . 'src/Blocks/Payments/Integrations/');
 			define('PAYREXX_MAIN_FILE',  __FILE__ );
 			define('PAYREXX_MAIN_NAME',  plugin_basename( __FILE__ ) );
 
@@ -150,6 +151,47 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
 				}
 			});
+			add_action( 'before_woocommerce_init', function() {
+				if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_checkout_blocks', __FILE__, true );
+				}
+			});
+
+			add_action( 
+				'woocommerce_blocks_loaded',
+				[
+					$this,
+					'register_block_payment_methods' 
+				]
+			);
+		}
+
+		/**
+		 * Custom function to register a payment method type
+		*/
+		function register_block_payment_methods() {
+			// Check if the required class exists
+			if ( ! class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+				return;
+			}
+
+			// Hook the registration function to the 'woocommerce_blocks_payment_method_type_registration' action
+			add_action(
+				'woocommerce_blocks_payment_method_type_registration',
+				function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+					foreach ( $this->paymentMethodList as $paymentMethod ) {
+						$requireFile = PAYREXX_PM_BLOCK_DIR . $paymentMethod . '.php';
+						if ( ! file_exists( $requireFile ) ) {
+							continue;
+						}
+						require_once $requireFile;
+						$blockGateway = 'WC_Payrexx_Gateway_' . $paymentMethod . '_Block';
+						// Register an instance of My_Custom_Gateway_Blocks
+						$payment_method_registry->register( new $blockGateway );
+					}
+				}
+			);
+
 		}
 
 		public function loaded()
