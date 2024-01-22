@@ -2,6 +2,8 @@
 
 namespace PayrexxPaymentGateway\Service;
 
+use Exception;
+use Payrexx\Models\Response\Transaction;
 use PayrexxPaymentGateway\Util\BasketUtil;
 
 class PayrexxApiService
@@ -159,5 +161,33 @@ class PayrexxApiService
         } catch (\Payrexx\PayrexxException $e) {
             throw new \Exception('No gateway found by ID: '. $gatewayId);
         }
+    }
+
+    public function refund_transaction($gatewayId, $transaction_uuid, $amount)
+    {
+        try {
+            $payrexxGateway = $this->getPayrexxGateway($gatewayId);
+            $invoices = $payrexxGateway->getInvoices();
+
+            if (!$invoices || !$invoice = end($invoices)) {
+                return null;
+            }
+    
+            if (!$transactions = $invoice['transactions']) {
+                return null;
+            }
+            $transaction = $this->getPayrexxTransaction(end($transactions)['id']);
+            if ($transaction->getUuid() == $transaction_uuid && $transaction->getStatus() == Transaction::CONFIRMED) {
+                $payrexx = $this->getInterface();
+                $transaction = new \Payrexx\Models\Request\Transaction();
+                $transaction->setId($transaction->getId());
+                $transaction->setAmount((int) $amount * 100);
+                return $payrexx->refund($transaction);
+            }
+        } catch (\Payrexx\PayrexxException $e) {
+            return null;
+            throw new Exception('Error while processing the refund: ' . $e->getMessage());
+        }
+
     }
 }

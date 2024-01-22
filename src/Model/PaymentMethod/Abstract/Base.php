@@ -3,6 +3,7 @@
 use PayrexxPaymentGateway\Helper\PaymentHelper;
 use PayrexxPaymentGateway\Helper\SubscriptionHelper;
 use \PayrexxPaymentGateway\Service\PayrexxApiService;
+use PayrexxPaymentGateway\Service\OrderService;
 
 abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 {
@@ -49,6 +50,10 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	public function init_settings() {
 		parent::init_settings();
 
+		$support_refunds = array(
+			'refunds',
+		);
+		$this->supports = array_merge( $this->supports, $support_refunds );
 		$this->enabled = $this->get_option('enabled');
 		$this->title = $this->get_option('title');
 		$this->description = $this->get_option('description');
@@ -152,5 +157,35 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		}
 		// Add a wrapper around the images to allow styling.
 		return apply_filters( 'woocommerce_gateway_icon', '<span class="icon-wrapper">' . $icon . '</span>', $this->id );
+	}
+
+	/**
+	 * Processing Refund
+	 *
+	 * @param int $order_id
+	 * @param int $amount
+	 * @param string $reason
+	 * @return bool
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ): bool
+	{
+		$order = new WC_Order( $order_id );
+		$gatewayId = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
+		$transaction_uuid = $order->get_transaction_id();
+    	$refund = $this->payrexxApiService->refund_transaction( $gatewayId, $transaction_uuid, $amount );
+		$message_status = OrderService::WC_STATUS_PARTIALLY_REFUNDED;
+		if ( ( $amount * 100 ) ==  (int) ( $order->get_total( 'edit' ) * 100 ) ) {
+			$message_status = OrderService::WC_STATUS_REFUNDED;
+		}
+		if ( $refund ) {
+			$order->update_status(
+				OrderService::WC_STATUS_REFUNDED,
+				OrderService::STATUS_MESSAGES[$message_status] . ' transaction id: ' . $refund->getUuid(),
+				'wc-payrexx-gateway'
+			);
+			$order->add_order_note( $reason );
+			return true;
+		}
+		return false;
 	}
 }

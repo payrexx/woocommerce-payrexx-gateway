@@ -13,13 +13,15 @@ class OrderService
     const WC_STATUS_COMPLETED = 'completed';
     const WC_STATUS_ONHOLD = 'on-hold';
 	const WC_STATUS_PENDING = 'pending';
+    const WC_STATUS_PARTIALLY_REFUNDED = 'patialy-refunded';
 
     const STATUS_MESSAGES = [
         self::WC_STATUS_CANCELLED => 'Payment was cancelled by the customer',
         self::WC_STATUS_FAILED => 'An error occured while processing this payment',
         self::WC_STATUS_REFUNDED => 'Payment was fully refunded',
         self::WC_STATUS_ONHOLD => 'Awaiting payment',
-        ];
+        self::WC_STATUS_PARTIALLY_REFUNDED => 'Payment was partially refunded',
+    ];
 
     /**
      * @param $order
