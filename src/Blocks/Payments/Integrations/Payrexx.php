@@ -1,7 +1,4 @@
 <?php
-// namespace PayrexxPaymentGateway\Blocks\Payments\Integrations;
-
-use Automattic\WooCommerce\Blocks\Assets\Api;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
 final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
@@ -11,22 +8,6 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
 	 * @var string
 	 */
 	protected $name = 'payrexx';
-
-	/**
-	 * An instance of the Asset Api
-	 *
-	 * @var Api
-	 */
-	private $asset_api;
-
-	/**
-	 * Constructor
-	 *
-	 * @param Api $asset_api An instance of Api.
-	 */
-	public function __construct() {
-		// $this->asset_api = $asset_api;
-	}
 
 	/**
 	 * Initializes the payment method type.
@@ -52,7 +33,7 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
 	public function get_payment_method_script_handles() {
         wp_register_script(
             'payment-method-payrexx-blocks-integration',
-            plugin_dir_url( '/woo-payrexx-gateway/assets/client/blocks/payment-method-payrexx.js'),
+			plugins_url('assets/client/blocks/payment-method-payrexx.js', PAYREXX_MAIN_FILE),
             [
                 'wc-blocks-registry',
                 'wc-settings',
@@ -60,8 +41,7 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
                 'wp-html-entities',
                 'wp-i18n',
             ],
-            null,
-            true
+            true,
         );
 		return [ 'payment-method-payrexx-blocks-integration' ];
 	}
@@ -73,9 +53,9 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_data() {
 		return [
-			'title'                    => $this->get_setting( 'title' ),
-			'description'              => $this->get_setting( 'description' ),
-			'supports'                 => $this->get_supported_features(),
+			'title' => $this->get_setting( 'title' ),
+			'description' => $this->get_setting( 'description' ),
+			'supports' => $this->get_supported_features(),
 		];
 	}
 }

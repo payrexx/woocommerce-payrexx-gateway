@@ -1,17 +1,17 @@
-const settings = window.wc.wcSettings.getSetting( 'payrexx_data', {} );
-const label = window.wp.htmlEntities.decodeEntities( settings.title );
+const payrexx_settings = window.wc.wcSettings.getSetting( 'payrexx_data', {} );
+const payrexx_label = window.wp.htmlEntities.decodeEntities( payrexx_settings.title );
 const Content = () => {
-    return window.wp.htmlEntities.decodeEntities( settings.description || '' );
+    return window.wp.htmlEntities.decodeEntities( payrexx_settings.description || '' );
 };
-const Block_Gateway = {
+const Payrexx_Block_Gateway = {
     name: 'payrexx',
-    label: label,
+    label: payrexx_label,
     content: Object( window.wp.element.createElement )( Content, null ),
     edit: Object( window.wp.element.createElement )( Content, null ),
     canMakePayment: () => true,
-    ariaLabel: label,
+    ariaLabel: payrexx_label,
     supports: {
-        features: settings.supports,
+        features: payrexx_settings.supports,
     },
 };
-window.wc.wcBlocksRegistry.registerPaymentMethod( Block_Gateway );
+window.wc.wcBlocksRegistry.registerPaymentMethod( Payrexx_Block_Gateway );
