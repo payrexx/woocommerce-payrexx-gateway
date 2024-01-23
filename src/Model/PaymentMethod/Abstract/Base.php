@@ -170,20 +170,21 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	public function process_refund( $order_id, $amount = null, $reason = '' ): bool
 	{
 		$order = new WC_Order( $order_id );
-		$gatewayId = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
+		$gateway_id = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
 		$transaction_uuid = $order->get_transaction_id();
-    	$refund = $this->payrexxApiService->refund_transaction( $gatewayId, $transaction_uuid, $amount );
-		$message_status = OrderService::WC_STATUS_PARTIALLY_REFUNDED;
-		if ( ( $amount * 100 ) ==  (int) ( $order->get_total( 'edit' ) * 100 ) ) {
-			$message_status = OrderService::WC_STATUS_REFUNDED;
+		try {
+    		$refund = $this->payrexxApiService->refund_transaction(
+				$gateway_id,
+				$transaction_uuid,
+				$amount
+			);
+		} catch ( Exception $e ) {
+			return new WP_Error($e->getMessage());
 		}
 		if ( $refund ) {
-			$order->update_status(
-				OrderService::WC_STATUS_REFUNDED,
-				OrderService::STATUS_MESSAGES[$message_status] . ' transaction id: ' . $refund->getUuid(),
-				'wc-payrexx-gateway'
+			$order->add_order_note(
+				OrderService::STATUS_MESSAGES[$refund->getStatus()] . $refund->getUuid()
 			);
-			$order->add_order_note( $reason );
 			return true;
 		}
 		return false;

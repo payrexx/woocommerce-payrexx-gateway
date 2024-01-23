@@ -163,30 +163,51 @@ class PayrexxApiService
         }
     }
 
-    public function refund_transaction($gatewayId, $transaction_uuid, $amount)
+    /**
+     * Refund transaction
+     * 
+     * @param string gateway_id
+     * @param string $transaction_uuid
+     * @param float  $amount 
+     */
+    public function refund_transaction( $gateway_id, $transaction_uuid, $amount )
     {
         try {
-            $payrexxGateway = $this->getPayrexxGateway($gatewayId);
-            $invoices = $payrexxGateway->getInvoices();
+            $payrexx_gateway = $this->getPayrexxGateway( $gateway_id );
+            $invoices = $payrexx_gateway->getInvoices();
 
-            if (!$invoices || !$invoice = end($invoices)) {
+            if ( ! $invoices || ! $invoice = end( $invoices ) ) {
                 return null;
             }
     
-            if (!$transactions = $invoice['transactions']) {
+            if ( ! $transactions = $invoice['transactions'] ) {
                 return null;
             }
-            $transaction = $this->getPayrexxTransaction(end($transactions)['id']);
-            if ($transaction->getUuid() == $transaction_uuid && $transaction->getStatus() == Transaction::CONFIRMED) {
+            $transaction_id = '';
+            foreach ( $transactions as $transaction) {
+                if ( $transaction['uuid'] === $transaction_uuid) {
+                    $transaction_id = $transaction['id'];
+                    break;
+                }
+
+                // fix: if uuid not exists.
+                if ($transaction['status'] === Transaction::CONFIRMED) {
+                    $transaction_id = $transaction['id'];
+                    break;
+                }
+            }
+
+            $refund_transaction = $this->getPayrexxTransaction( $transaction_id );
+            if ( $refund_transaction->getStatus() == Transaction::CONFIRMED ) {
                 $payrexx = $this->getInterface();
                 $transaction = new \Payrexx\Models\Request\Transaction();
-                $transaction->setId($transaction->getId());
-                $transaction->setAmount((int) $amount * 100);
-                return $payrexx->refund($transaction);
+                $transaction->setId( $refund_transaction->getId() );
+                $transaction->setAmount( (int) $amount * 100 );
+                return $payrexx->refund( $transaction );
             }
-        } catch (\Payrexx\PayrexxException $e) {
+        } catch ( \Payrexx\PayrexxException $e ) {
             return null;
-            throw new Exception('Error while processing the refund: ' . $e->getMessage());
+            throw new Exception( 'Error while processing the refund: ' . $e->getMessage() );
         }
 
     }

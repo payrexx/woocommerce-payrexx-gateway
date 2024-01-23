@@ -13,14 +13,13 @@ class OrderService
     const WC_STATUS_COMPLETED = 'completed';
     const WC_STATUS_ONHOLD = 'on-hold';
 	const WC_STATUS_PENDING = 'pending';
-    const WC_STATUS_PARTIALLY_REFUNDED = 'patialy-refunded';
 
     const STATUS_MESSAGES = [
         self::WC_STATUS_CANCELLED => 'Payment was cancelled by the customer',
         self::WC_STATUS_FAILED => 'An error occured while processing this payment',
         self::WC_STATUS_REFUNDED => 'Payment was fully refunded',
         self::WC_STATUS_ONHOLD => 'Awaiting payment',
-        self::WC_STATUS_PARTIALLY_REFUNDED => 'Payment was partially refunded',
+        Transaction::PARTIALLY_REFUNDED => 'Payment was partially refunded',
     ];
 
     /**
@@ -55,12 +54,14 @@ class OrderService
             case Transaction::REFUNDED:
                 $newTransactionStatus = self::WC_STATUS_REFUNDED;
                 break;
-//            case Transaction::PARTIALLY_REFUNDED:
-//                if ($order->get_status() === 'refunded') {
-//                    break;
-//                }
-//                $order->update_status('refunded', __('Payment was partially refunded', 'wc-payrexx-gateway'));
-//                break;
+			case Transaction::PARTIALLY_REFUNDED:
+				if ( $order->get_status() === OrderService::WC_STATUS_REFUNDED ) {
+					break;
+				}
+				$order->add_order_note(
+					OrderService::STATUS_MESSAGES[$payrexxStatus] . ' ( ' . $transactionUuid . ' )'
+				);
+				break;
             case Transaction::CANCELLED:
             case Transaction::EXPIRED:
             case Transaction::DECLINED:
@@ -74,7 +75,7 @@ class OrderService
 			return;
 		}
 
-        $this->transitionOrder($order, $newTransactionStatus);
+        $this->transitionOrder($order, $newTransactionStatus, $transactionUuid);
     }
 
 	/**
@@ -102,15 +103,25 @@ class OrderService
 		return true;
 	}
 
-    /**
-     * @param $order
-     * @param $newStatus
-     * @return void
-     */
-    public function transitionOrder($order, $newStatus) {
-        $customStatus = apply_filters('woo_payrexx_custom_transaction_status_' . $newStatus, $newStatus);
-        $order->update_status($customStatus,  __(self::STATUS_MESSAGES[$newStatus], 'wc-payrexx-gateway'));
-    }
+	/**
+	 * Transtition the order
+	 *
+	 * @param order  $order
+	 * @param string $newStatus
+	 * @param string $transaction_uuid
+	 * @return void
+	 */
+	public function transitionOrder( $order, string $newStatus, string $transaction_uuid = '' ) 
+	{
+		$custom_status = apply_filters( 'woo_payrexx_custom_transaction_status_' . $newStatus, $newStatus );
+		if ( $transaction_uuid ) {
+			$transaction_uuid = ' ( ' . $transaction_uuid . ' )';
+		}
+		$order->update_status(
+			$custom_status,
+			__( self::STATUS_MESSAGES[$newStatus] . $transaction_uuid, 'wc-payrexx-gateway' )
+		);
+	}
 
     /**
      * @param $order
