@@ -92,6 +92,11 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		$cancelRedirectUrl = PaymentHelper::getCancelUrl($order);
 
 		$gateway = $this->payrexxApiService->createPayrexxGateway($order, $cart, $totalAmount, $this->pm, $reference, $successRedirectUrl, $cancelRedirectUrl, false, false);
+		if ( ! $gateway ) {
+			return array(
+				'result' => 'failure',
+			);
+		}
 		return $this->process_redirect($gateway, $order);
 	}
 
