@@ -111,7 +111,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
         protected function init() {
             if (is_admin()) {
-                $payrexxGatewayAdmin = new WC_Payrexx_Gateway_Admin();
+                new WC_Payrexx_Gateway_Admin();
             }
 
             $this->payrexxApiService = self::getPayrexxApiService();
