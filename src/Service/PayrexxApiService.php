@@ -90,7 +90,7 @@ class PayrexxApiService
             $response = $payrexx->create($gateway);
             return $response;
         } catch (\Payrexx\PayrexxException $e) {
-            error_log($e->getMessage());
+            return null;
         }
     }
 

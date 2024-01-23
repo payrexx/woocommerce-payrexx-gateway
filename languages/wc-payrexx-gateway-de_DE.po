@@ -9,13 +9,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-10-09T16:21:30+02:00\n"
-"PO-Revision-Date: 2023-04-17 13:59+0000\n"
-"X-Generator: Loco https://localise.biz/\n"
+"PO-Revision-Date: 2024-01-23 12:34+0530\n"
+"X-Generator: Poedit 2.3\n"
 "X-Domain: trunk\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: de_DE\n"
-"X-Loco-Version: 2.6.3; wp-6.1.1"
+"X-Loco-Version: 2.6.3; wp-6.1.1\n"
 
 #. Description of the plugin
 msgid "Accept many different payment methods on your store using Payrexx"
@@ -207,4 +207,8 @@ msgstr ""
 
 #. Name of the plugin
 msgid "WooCommerce Payrexx Gateway"
+msgstr ""
+
+# src/Model/PaymentMethod/BobInvoice.php: 9
+msgid "Bob Invoice (Payrexx)"
 msgstr ""

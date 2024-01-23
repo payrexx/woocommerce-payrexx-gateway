@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.0.5
+ * Version: 3.0.6
  * Requires at least: 4.4
  * Tested up to: 6.4.1
  * WC requires at least: 3.8.1
@@ -111,7 +111,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
         protected function init() {
             if (is_admin()) {
-                $this->payrexxGatewayAdmin = new WC_Payrexx_Gateway_Admin();
+                new WC_Payrexx_Gateway_Admin();
             }
 
             $this->payrexxApiService = self::getPayrexxApiService();
@@ -174,10 +174,6 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
                 }
             );
 
-            // ToDo: Remove in future release once the data was migrated
-            if (is_admin()) {
-                $this->payrexxGatewayAdmin->migrate_data();
-            }
         }
 
         public function payment_scripts()
