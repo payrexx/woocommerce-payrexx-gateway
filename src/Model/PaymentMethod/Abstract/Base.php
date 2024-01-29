@@ -173,19 +173,13 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		$gateway_id = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
 		$transaction_uuid = $order->get_transaction_id();
 		try {
-    		$refund = $this->payrexxApiService->refund_transaction(
+    		return $this->payrexxApiService->refund_transaction(
 				$gateway_id,
 				$transaction_uuid,
 				$amount
 			);
 		} catch ( Exception $e ) {
-			return new WP_Error($e->getMessage());
-		}
-		if ( $refund ) {
-			$order->add_order_note(
-				OrderService::STATUS_MESSAGES[$refund->getStatus()] . $refund->getUuid()
-			);
-			return true;
+			return new WP_Error( 'Error while processing the refund' );
 		}
 		return false;
 	}

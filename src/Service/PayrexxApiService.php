@@ -170,18 +170,18 @@ class PayrexxApiService
      * @param string $transaction_uuid
      * @param float  $amount 
      */
-    public function refund_transaction( $gateway_id, $transaction_uuid, $amount )
+    public function refund_transaction( $gateway_id, $transaction_uuid, $amount ): bool
     {
         try {
             $payrexx_gateway = $this->getPayrexxGateway( $gateway_id );
             $invoices = $payrexx_gateway->getInvoices();
 
             if ( ! $invoices || ! $invoice = end( $invoices ) ) {
-                return null;
+                return false;
             }
     
             if ( ! $transactions = $invoice['transactions'] ) {
-                return null;
+                return false;
             }
             $transaction_id = '';
             foreach ( $transactions as $transaction) {
@@ -203,11 +203,14 @@ class PayrexxApiService
                 $transaction = new \Payrexx\Models\Request\Transaction();
                 $transaction->setId( $refund_transaction->getId() );
                 $transaction->setAmount( (int) $amount * 100 );
-                return $payrexx->refund( $transaction );
+                $refund = $payrexx->refund( $transaction );
+                if ( in_array( $refund->getStatus(), [ Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED ] ) ) {
+                    return true;
+                }
+                return false;
             }
         } catch ( \Payrexx\PayrexxException $e ) {
-            return null;
-            throw new Exception( 'Error while processing the refund: ' . $e->getMessage() );
+            return false;
         }
 
     }
