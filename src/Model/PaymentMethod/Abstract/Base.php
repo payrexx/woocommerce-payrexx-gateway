@@ -162,18 +162,18 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	/**
 	 * Processing Refund
 	 *
-	 * @param int $order_id
-	 * @param int $amount
-	 * @param string $reason
+	 * @param int    $order_id order id.
+	 * @param int    $amount   refund amount.
+	 * @param string $reason   refund reason.
 	 * @return bool
 	 */
 	public function process_refund( $order_id, $amount = null, $reason = '' ): bool
 	{
-		$order = new WC_Order( $order_id );
-		$gateway_id = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
+		$order            = new WC_Order( $order_id );
+		$gateway_id       = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
 		$transaction_uuid = $order->get_transaction_id();
 		try {
-    		return $this->payrexxApiService->refund_transaction(
+			return $this->payrexxApiService->refund_transaction(
 				$gateway_id,
 				$transaction_uuid,
 				$amount

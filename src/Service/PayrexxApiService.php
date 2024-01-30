@@ -92,7 +92,7 @@ class PayrexxApiService
             $response = $payrexx->create($gateway);
             return $response;
         } catch (\Payrexx\PayrexxException $e) {
-            return null;
+            error_log($e->getMessage());
         }
     }
 
@@ -163,55 +163,56 @@ class PayrexxApiService
         }
     }
 
-    /**
-     * Refund transaction
-     * 
-     * @param string gateway_id
-     * @param string $transaction_uuid
-     * @param float  $amount 
-     */
-    public function refund_transaction( $gateway_id, $transaction_uuid, $amount ): bool
-    {
-        try {
-            $payrexx_gateway = $this->getPayrexxGateway( $gateway_id );
-            $invoices = $payrexx_gateway->getInvoices();
+	/**
+	 * Refund transaction
+	 *
+	 * @param string $gateway_id        payrexx gateway id.
+	 * @param string $transaction_uuid transaction uuid.
+	 * @param float  $amount           refund amount.
+	 */
+	public function refund_transaction( $gateway_id, $transaction_uuid, $amount ) {
+		try {
+			$payrexx_gateway = $this->getPayrexxGateway( $gateway_id );
+			$invoices        = $payrexx_gateway->getInvoices();
 
-            if ( ! $invoices || ! $invoice = end( $invoices ) ) {
-                return false;
-            }
-    
-            if ( ! $transactions = $invoice['transactions'] ) {
-                return false;
-            }
-            $transaction_id = '';
-            foreach ( $transactions as $transaction) {
-                if ( $transaction['uuid'] === $transaction_uuid) {
-                    $transaction_id = $transaction['id'];
-                    break;
-                }
+			if ( ! $invoices || ! $invoice = end( $invoices ) ) {
+				return false;
+			}
 
-                // fix: if uuid not exists.
-                if ($transaction['status'] === Transaction::CONFIRMED) {
-                    $transaction_id = $transaction['id'];
-                    break;
-                }
-            }
+			$transactions = $invoice['transactions'];
+			if ( ! $transactions ) {
+				return false;
+			}
+			$transaction_id = '';
+			foreach ( $transactions as $transaction ) {
+				if ( $transaction['uuid'] === $transaction_uuid ) {
+					$transaction_id = $transaction['id'];
+					break;
+				}
 
-            $refund_transaction = $this->getPayrexxTransaction( $transaction_id );
-            if ( $refund_transaction->getStatus() == Transaction::CONFIRMED ) {
-                $payrexx = $this->getInterface();
-                $transaction = new \Payrexx\Models\Request\Transaction();
-                $transaction->setId( $refund_transaction->getId() );
-                $transaction->setAmount( (int) $amount * 100 );
-                $refund = $payrexx->refund( $transaction );
-                if ( in_array( $refund->getStatus(), [ Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED ] ) ) {
-                    return true;
-                }
-                return false;
-            }
-        } catch ( \Payrexx\PayrexxException $e ) {
-            return false;
-        }
+				// fix: if uuid not exists.
+				if ( Transaction::CONFIRMED === $transaction['status'] ) {
+					$transaction_id = $transaction['id'];
+					break;
+				}
+			}
 
-    }
+			$refund_transaction = $this->getPayrexxTransaction( $transaction_id );
+			if ( $refund_transaction->getStatus() === Transaction::CONFIRMED ) {
+				$payrexx     = $this->getInterface();
+				$transaction = new \Payrexx\Models\Request\Transaction();
+				$transaction->setId( $refund_transaction->getId() );
+				$transaction->setAmount( (int) $amount * 100 );
+				$refund = $payrexx->refund( $transaction );
+				if ( $refund->getStatus() === Transaction::REFUNDED
+					|| $refund->getStatus() === Transaction::PARTIALLY_REFUNDED
+				) {
+					return true;
+				}
+			}
+			return false;
+		} catch ( \Payrexx\PayrexxException $e ) {
+			return false;
+		}
+	}
 }
