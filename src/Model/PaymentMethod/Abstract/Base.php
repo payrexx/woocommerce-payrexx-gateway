@@ -3,7 +3,6 @@
 use PayrexxPaymentGateway\Helper\PaymentHelper;
 use PayrexxPaymentGateway\Helper\SubscriptionHelper;
 use \PayrexxPaymentGateway\Service\PayrexxApiService;
-use PayrexxPaymentGateway\Service\OrderService;
 
 abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 {
@@ -172,15 +171,10 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		$order            = new WC_Order( $order_id );
 		$gateway_id       = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
 		$transaction_uuid = $order->get_transaction_id();
-		try {
-			return $this->payrexxApiService->refund_transaction(
-				$gateway_id,
-				$transaction_uuid,
-				$amount
-			);
-		} catch ( Exception $e ) {
-			return new WP_Error( 'Error while processing the refund' );
-		}
-		return false;
+		return $this->payrexxApiService->refund_transaction(
+			$gateway_id,
+			$transaction_uuid,
+			$amount
+		);
 	}
 }
