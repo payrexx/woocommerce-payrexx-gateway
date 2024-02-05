@@ -49,10 +49,7 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	public function init_settings() {
 		parent::init_settings();
 
-		$support_refunds = array(
-			'refunds',
-		);
-		$this->supports = array_merge( $this->supports, $support_refunds );
+		$this->supports = array_merge( $this->supports, ['refunds'] );
 		$this->enabled = $this->get_option('enabled');
 		$this->title = $this->get_option('title');
 		$this->description = $this->get_option('description');
