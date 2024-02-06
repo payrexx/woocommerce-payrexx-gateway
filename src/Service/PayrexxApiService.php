@@ -2,6 +2,8 @@
 
 namespace PayrexxPaymentGateway\Service;
 
+use Exception;
+use Payrexx\Models\Response\Transaction;
 use PayrexxPaymentGateway\Util\BasketUtil;
 
 class PayrexxApiService
@@ -160,4 +162,57 @@ class PayrexxApiService
             throw new \Exception('No gateway found by ID: '. $gatewayId);
         }
     }
+
+	/**
+	 * Refund transaction
+	 *
+	 * @param string $gateway_id        payrexx gateway id.
+	 * @param string $transaction_uuid transaction uuid.
+	 * @param float  $amount           refund amount.
+	 */
+	public function refund_transaction( $gateway_id, $transaction_uuid, $amount ) {
+		try {
+			$payrexx_gateway = $this->getPayrexxGateway( $gateway_id );
+			$invoices        = $payrexx_gateway->getInvoices();
+
+			if ( ! $invoices || ! $invoice = end( $invoices ) ) {
+				return false;
+			}
+
+			$transactions = $invoice['transactions'];
+			if ( ! $transactions ) {
+				return false;
+			}
+			$transaction_id = '';
+			foreach ( $transactions as $transaction ) {
+				if ( $transaction['uuid'] === $transaction_uuid ) {
+					$transaction_id = $transaction['id'];
+					break;
+				}
+
+				// fix: if uuid not exists.
+				if ( Transaction::CONFIRMED === $transaction['status'] ) {
+					$transaction_id = $transaction['id'];
+					break;
+				}
+			}
+
+			$refund_transaction = $this->getPayrexxTransaction( $transaction_id );
+			if ( $refund_transaction->getStatus() === Transaction::CONFIRMED ) {
+				$payrexx     = $this->getInterface();
+				$transaction = new \Payrexx\Models\Request\Transaction();
+				$transaction->setId( $refund_transaction->getId() );
+				$transaction->setAmount( (int) $amount * 100 );
+				$refund = $payrexx->refund( $transaction );
+				if ( $refund->getStatus() === Transaction::REFUNDED
+					|| $refund->getStatus() === Transaction::PARTIALLY_REFUNDED
+				) {
+					return true;
+				}
+			}
+			return false;
+		} catch ( \Payrexx\PayrexxException $e ) {
+			return false;
+		}
+	}
 }

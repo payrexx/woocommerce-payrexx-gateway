@@ -49,6 +49,7 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	public function init_settings() {
 		parent::init_settings();
 
+		$this->supports = array_merge( $this->supports, ['refunds'] );
 		$this->enabled = $this->get_option('enabled');
 		$this->title = $this->get_option('title');
 		$this->description = $this->get_option('description');
@@ -152,5 +153,25 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		}
 		// Add a wrapper around the images to allow styling.
 		return apply_filters( 'woocommerce_gateway_icon', '<span class="icon-wrapper">' . $icon . '</span>', $this->id );
+	}
+
+	/**
+	 * Processing Refund
+	 *
+	 * @param int    $order_id order id.
+	 * @param int    $amount   refund amount.
+	 * @param string $reason   refund reason.
+	 * @return bool
+	 */
+	public function process_refund( $order_id, $amount = null, $reason = '' ): bool
+	{
+		$order            = new WC_Order( $order_id );
+		$gateway_id       = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
+		$transaction_uuid = $order->get_transaction_id();
+		return $this->payrexxApiService->refund_transaction(
+			$gateway_id,
+			$transaction_uuid,
+			$amount
+		);
 	}
 }

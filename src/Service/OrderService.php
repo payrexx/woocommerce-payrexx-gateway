@@ -19,61 +19,72 @@ class OrderService
         self::WC_STATUS_FAILED => 'An error occured while processing this payment',
         self::WC_STATUS_REFUNDED => 'Payment was fully refunded',
         self::WC_STATUS_ONHOLD => 'Awaiting payment',
-        ];
+		Transaction::PARTIALLY_REFUNDED => 'Payment was partially refunded',
+	];
 
-    /**
-     * @param $order
-     * @param array $subscriptions
-     * @param $payrexxStatus
-     * @param $transactionUuid
-     * @param $preAuthId
-     * @return void
-     */
-    public function handleTransactionStatus($order, array $subscriptions, $payrexxStatus, $transactionUuid, $preAuthId = '') {
-        $newTransactionStatus = '';
+	/**
+	 * Handle transaction status
+	 *
+	 * @param Order  $order            Order.
+	 * @param array  $subscriptions    subscriptions.
+	 * @param string $payrexx_status   payrexx transaction status.
+	 * @param string $transaction_uuid payrexx transaction uuid.
+	 * @param string $pre_auth_id      preauth id.
+	 * @return void
+	 */
+	public function handleTransactionStatus(
+		$order,
+		array $subscriptions,
+		$payrexx_status,
+		$transaction_uuid,
+		$pre_auth_id = ''
+	) {
+		$order_status = '';
 
-        switch ($payrexxStatus) {
-            case Transaction::WAITING:
-                $newTransactionStatus = self::WC_STATUS_ONHOLD;
-                break;
-            case Transaction::CONFIRMED:
-                $this->setOrderPaid($order, $transactionUuid);
-                return;
-            case Transaction::AUTHORIZED:
-                foreach ($subscriptions as $subscription) {
-                    $subscription->update_meta_data('payrexx_auth_transaction_id', $preAuthId);
-                    $subscription->save();
-                }
+		switch ( $payrexx_status ) {
+			case Transaction::WAITING:
+				$order_status = self::WC_STATUS_ONHOLD;
+				break;
+			case Transaction::CONFIRMED:
+				$this->setOrderPaid( $order, $transaction_uuid );
+				return;
+			case Transaction::AUTHORIZED:
+				foreach ( $subscriptions as $subscription ) {
+					$subscription->update_meta_data( 'payrexx_auth_transaction_id', $pre_auth_id );
+					$subscription->save();
+				}
 
-                // An order with amount 0 is considered as paid if the authorization is successful
-                if (floatval($order->get_total('edit')) === 0.0) {
-                    $this->setOrderPaid($order, $transactionUuid);
-                }
-                break;
-            case Transaction::REFUNDED:
-                $newTransactionStatus = self::WC_STATUS_REFUNDED;
-                break;
-//            case Transaction::PARTIALLY_REFUNDED:
-//                if ($order->get_status() === 'refunded') {
-//                    break;
-//                }
-//                $order->update_status('refunded', __('Payment was partially refunded', 'wc-payrexx-gateway'));
-//                break;
-            case Transaction::CANCELLED:
-            case Transaction::EXPIRED:
-            case Transaction::DECLINED:
-                $newTransactionStatus = self::WC_STATUS_CANCELLED;
-                break;
-            case Transaction::ERROR:
-                $newTransactionStatus = self::WC_STATUS_FAILED;
-        }
+				// An order with amount 0 is considered as paid if the authorization is successful.
+				if ( floatval( $order->get_total( 'edit' ) ) === 0.0 ) {
+					$this->setOrderPaid( $order, $transaction_uuid );
+				}
+				break;
+			case Transaction::REFUNDED:
+				$order_status = self::WC_STATUS_REFUNDED;
+				break;
+			case Transaction::PARTIALLY_REFUNDED:
+				if ( $order->get_status() === self::WC_STATUS_REFUNDED ) {
+					break;
+				}
+				$order->add_order_note(
+					self::STATUS_MESSAGES[ $payrexx_status ] . ' ( ' . $transaction_uuid . ' )'
+				);
+				return;
+			case Transaction::CANCELLED:
+			case Transaction::EXPIRED:
+			case Transaction::DECLINED:
+				$order_status = self::WC_STATUS_CANCELLED;
+				break;
+			case Transaction::ERROR:
+				$order_status = self::WC_STATUS_FAILED;
+		}
 
-		if ( ! $newTransactionStatus || ! $this->transition_allowed( $newTransactionStatus, $order->get_status() ) ) {
+		if ( ! $order_status || ! $this->transition_allowed( $order_status, $order->get_status() ) ) {
 			return;
 		}
 
-        $this->transitionOrder($order, $newTransactionStatus);
-    }
+		$this->transitionOrder( $order, $order_status, $transaction_uuid );
+	}
 
 	/**
 	 * Check order transition allowed
@@ -100,15 +111,24 @@ class OrderService
 		return true;
 	}
 
-    /**
-     * @param $order
-     * @param $newStatus
-     * @return void
-     */
-    public function transitionOrder($order, $newStatus) {
-        $customStatus = apply_filters('woo_payrexx_custom_transaction_status_' . $newStatus, $newStatus);
-        $order->update_status($customStatus,  __(self::STATUS_MESSAGES[$newStatus], 'wc-payrexx-gateway'));
-    }
+	/**
+	 * Transtition the order
+	 *
+	 * @param order  $order            order.
+	 * @param string $order_status     order status.
+	 * @param string $transaction_uuid payrexx transaction uuid.
+	 * @return void
+	 */
+	public function transitionOrder( $order, string $order_status, string $transaction_uuid = '' ) {
+		$custom_status = apply_filters( 'woo_payrexx_custom_transaction_status_' . $order_status, $order_status );
+		if ( $transaction_uuid ) {
+			$transaction_uuid = ' ( ' . $transaction_uuid . ' )';
+		}
+		$order->update_status(
+			$custom_status,
+			__( self::STATUS_MESSAGES[$order_status] . $transaction_uuid, 'wc-payrexx-gateway' )
+		);
+	}
 
     /**
      * @param $order
