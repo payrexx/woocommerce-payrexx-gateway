@@ -31,22 +31,22 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_script_handles() {
-        wp_register_script(
-            'payrexx-blocks-integration',
+		wp_register_script(
+			'payrexx-blocks-integration',
 			plugins_url('assets/client/blocks/payrexx.js', PAYREXX_MAIN_FILE),
-            [
-                'wc-blocks-registry',
-                'wc-settings',
-                'wp-element',
-                'wp-html-entities',
-                'wp-i18n',
-            ],
-            null,
-            true
-        );
-        if( function_exists( 'wp_set_script_translations' ) ) {
-            wp_set_script_translations( 'payrexx-blocks-integration');
-        }
+			[
+				'wc-blocks-registry',
+				'wc-settings',
+				'wp-element',
+				'wp-html-entities',
+				'wp-i18n',
+			],
+			null,
+			true
+		);
+		if( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( 'payrexx-blocks-integration');
+		}
 		return [ 'payrexx-blocks-integration' ];
 	}
 
