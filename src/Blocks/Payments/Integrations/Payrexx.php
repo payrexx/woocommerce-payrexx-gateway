@@ -3,7 +3,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodTyp
 
 final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
 	/**
-	 * Payment method name/id/slug.
+	 * Payment method name
 	 *
 	 * @var string
 	 */
@@ -32,8 +32,8 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
 	 */
 	public function get_payment_method_script_handles() {
         wp_register_script(
-            'payment-method-payrexx-blocks-integration',
-			plugins_url('assets/client/blocks/payment-method-payrexx.js', PAYREXX_MAIN_FILE),
+            'payrexx-blocks-integration',
+			plugins_url('assets/client/blocks/payrexx.js', PAYREXX_MAIN_FILE),
             [
                 'wc-blocks-registry',
                 'wc-settings',
@@ -41,9 +41,13 @@ final class WC_Payrexx_Gateway_Payrexx_Block extends AbstractPaymentMethodType {
                 'wp-html-entities',
                 'wp-i18n',
             ],
-            true,
+            null,
+            true
         );
-		return [ 'payment-method-payrexx-blocks-integration' ];
+        if( function_exists( 'wp_set_script_translations' ) ) {
+            wp_set_script_translations( 'payrexx-blocks-integration');
+        }
+		return [ 'payrexx-blocks-integration' ];
 	}
 
 	/**
