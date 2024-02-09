@@ -63,6 +63,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Minor update, no need to backup
 
 = 3.0.7 =
+* Support block checkout, no need to backup
+
+= 3.0.7 =
 * New feature, no need to backup
 
 = 3.0.6 =
@@ -312,6 +315,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.0.8 =
 * Bugfix: Fixed refund amount 
+
+= 3.0.7 =
+* Bugfix: Support Block Checkout
 
 = 3.0.7 =
 * Feature: Execute refunds
