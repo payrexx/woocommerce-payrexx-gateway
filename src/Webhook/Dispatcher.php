@@ -47,6 +47,9 @@ class Dispatcher
     {
         try {
             $resp = $_REQUEST;
+			if ( !isset( $resp['transaction'] ) ) {
+				$this->send_response( 'Transaction empty' );
+			}
             $order_id = $resp['transaction']['invoice']['referenceId'];
             $gateway_id = $resp['transaction']['invoice']['paymentRequestId'];
 
