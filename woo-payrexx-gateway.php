@@ -156,21 +156,19 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 		/**
 		 * Custom function to register a payment method type
-		*/
-		function register_block_payment_methods() {
-			// Check if the required class exists
+		 */
+		public function register_block_payment_methods() {
+			// Check if the required class exists.
 			if ( ! class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
 				return;
 			}
 
-			// Hook the registration function to the 'woocommerce_blocks_payment_method_type_registration' action
 			add_action(
 				'woocommerce_blocks_payment_method_type_registration',
 				function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
-					foreach ( $this->paymentMethodList as $paymentMethod ) {
-						$blockGateway = 'WC_Payrexx_Gateway_' . $paymentMethod . '_Block';
-						// Register an instance of My_Custom_Gateway_Blocks
-						$payment_method_registry->register( new $blockGateway );
+					foreach ( $this->paymentMethodList as $payment_method ) {
+						$block_gateway = 'WC_Payrexx_Gateway_' . $payment_method . '_Block';
+						$payment_method_registry->register( new $block_gateway() );
 					}
 				}
 			);
