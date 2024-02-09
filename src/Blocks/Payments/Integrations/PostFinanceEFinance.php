@@ -1,21 +1,14 @@
 <?php
-
-class WC_Payrexx_Gateway_PostFinanceEFinance extends WC_Payrexx_Gateway_SubscriptionBase
-{
-
-	public function __construct()
-	{
-		$this->id = PAYREXX_PM_PREFIX . 'post-finance-e-finance';
-		$this->method_title = __('PostFinance E-Finance (Payrexx)', 'wc-payrexx-gateway');
-
-		parent::__construct();
-	}
-}
+/**
+ * Woocommerce payrexx payment gateway
+ */
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
-final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPaymentMethodType
-{
+/**
+ * WC_Payrexx_Gateway_Reka_Block
+ */
+final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPaymentMethodType {
 	/**
 	 * Payment method name
 	 *
@@ -26,9 +19,8 @@ final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPayment
 	/**
 	 * Initializes the payment method type.
 	 */
-	public function initialize()
-	{
-		$this->settings = get_option('woocommerce_payrexx_post-finance-e-finance_settings', []);
+	public function initialize() {
+		$this->settings = get_option( 'woocommerce_payrexx_post-finance-e-finance_settings', [] );
 	}
 
 	/**
@@ -36,9 +28,8 @@ final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPayment
 	 *
 	 * @return boolean
 	 */
-	public function is_active()
-	{
-		return filter_var($this->get_setting('enabled', false), FILTER_VALIDATE_BOOLEAN);
+	public function is_active() {
+		return filter_var( $this->get_setting( 'enabled', false ), FILTER_VALIDATE_BOOLEAN );
 	}
 
 	/**
@@ -46,11 +37,10 @@ final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPayment
 	 *
 	 * @return array
 	 */
-	public function get_payment_method_script_handles()
-	{
+	public function get_payment_method_script_handles() {
 		wp_register_script(
 			'payrexx-post-finance-e-finance-blocks-integration',
-			plugins_url('assets/client/blocks/post-finance-e-finance.js', PAYREXX_MAIN_FILE),
+			plugins_url( 'assets/client/blocks/post-finance-e-finance.js', PAYREXX_MAIN_FILE ),
 			[
 				'wc-blocks-registry',
 				'wc-settings',
@@ -58,13 +48,13 @@ final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPayment
 				'wp-html-entities',
 				'wp-i18n',
 			],
-			null,
+			true,
 			true
 		);
-		if (function_exists('wp_set_script_translations')) {
-			wp_set_script_translations('payrexx-post-finance-e-finance-blocks-integration');
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( 'payrexx-post-finance-e-finance-blocks-integration' );
 		}
-		return ['payrexx-post-finance-e-finance-blocks-integration'];
+		return [ 'payrexx-post-finance-e-finance-blocks-integration' ];
 	}
 
 	/**
@@ -72,12 +62,11 @@ final class WC_Payrexx_Gateway_PostFinanceEFinance_Block extends AbstractPayment
 	 *
 	 * @return array
 	 */
-	public function get_payment_method_data()
-	{
+	public function get_payment_method_data() {
 		return [
-			'title' => $this->get_setting('title'),
-			'description' => $this->get_setting('description'),
-			'supports' => $this->get_supported_features(),
+			'title'       => $this->get_setting( 'title' ),
+			'description' => $this->get_setting( 'description' ),
+			'supports'    => $this->get_supported_features(),
 		];
 	}
 }

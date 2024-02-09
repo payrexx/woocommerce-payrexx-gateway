@@ -1,7 +1,7 @@
 const payrexx_bank_transfer_settings = window.wc.wcSettings.getSetting( 'payrexx_bank-transfer_data', {} );
-const payrexx_bank_transfer_label = window.wp.htmlEntities.decodeEntities( payrexx_bank-transfer_settings.title );
+const payrexx_bank_transfer_label = window.wp.htmlEntities.decodeEntities( payrexx_bank_transfer_settings.title );
 const PayrexxBankTransferContent = () => {
-    return window.wp.htmlEntities.decodeEntities( payrexx_bank-transfer_settings.description || '' );
+    return window.wp.htmlEntities.decodeEntities( payrexx_bank_transfer_settings.description || '' );
 };
 const Payrexx_BankTransfer_Block_Gateway = {
     name: 'payrexx_bank-transfer',

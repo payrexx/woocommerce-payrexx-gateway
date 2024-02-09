@@ -1,8 +1,14 @@
 <?php
+/**
+ * Woocommerce payrexx payment gateway
+ */
+
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
-final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType
-{
+/**
+ * WC_Payrexx_Gateway_Reka_Block
+ */
+final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType {
 	/**
 	 * Payment method name
 	 *
@@ -13,9 +19,8 @@ final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType
 	/**
 	 * Initializes the payment method type.
 	 */
-	public function initialize()
-	{
-		$this->settings = get_option('woocommerce_payrexx_reka_settings', []);
+	public function initialize() {
+		$this->settings = get_option( 'woocommerce_payrexx_reka_settings', [] );
 	}
 
 	/**
@@ -23,9 +28,8 @@ final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType
 	 *
 	 * @return boolean
 	 */
-	public function is_active()
-	{
-		return filter_var($this->get_setting('enabled', false), FILTER_VALIDATE_BOOLEAN);
+	public function is_active() {
+		return filter_var( $this->get_setting( 'enabled', false ), FILTER_VALIDATE_BOOLEAN );
 	}
 
 	/**
@@ -33,11 +37,10 @@ final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType
 	 *
 	 * @return array
 	 */
-	public function get_payment_method_script_handles()
-	{
+	public function get_payment_method_script_handles() {
 		wp_register_script(
 			'payrexx-reka-blocks-integration',
-			plugins_url('assets/client/blocks/reka.js', PAYREXX_MAIN_FILE),
+			plugins_url( 'assets/client/blocks/reka.js', PAYREXX_MAIN_FILE ),
 			[
 				'wc-blocks-registry',
 				'wc-settings',
@@ -45,13 +48,14 @@ final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType
 				'wp-html-entities',
 				'wp-i18n',
 			],
-			null,
+			true,
 			true
 		);
-		if (function_exists('wp_set_script_translations')) {
-			wp_set_script_translations('payrexx-reka-blocks-integration');
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( 'payrexx-reka-blocks-integration' );
 		}
-		return ['payrexx-reka-blocks-integration'];
+
+		return [ 'payrexx-reka-blocks-integration' ];
 	}
 
 	/**
@@ -59,12 +63,11 @@ final class WC_Payrexx_Gateway_Reka_Block extends AbstractPaymentMethodType
 	 *
 	 * @return array
 	 */
-	public function get_payment_method_data()
-	{
+	public function get_payment_method_data() {
 		return [
-			'title' => $this->get_setting('title'),
-			'description' => $this->get_setting('description'),
-			'supports' => $this->get_supported_features(),
+			'title'       => $this->get_setting( 'title' ),
+			'description' => $this->get_setting( 'description' ),
+			'supports'    => $this->get_supported_features(),
 		];
 	}
 }
