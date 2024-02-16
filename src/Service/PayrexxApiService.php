@@ -202,7 +202,7 @@ class PayrexxApiService
 				$payrexx     = $this->getInterface();
 				$transaction = new \Payrexx\Models\Request\Transaction();
 				$transaction->setId( $refund_transaction->getId() );
-				$transaction->setAmount( (int) $amount * 100 );
+				$transaction->setAmount( (int) ( $amount * 100 ) );
 				$refund = $payrexx->refund( $transaction );
 				if ( $refund->getStatus() === Transaction::REFUNDED
 					|| $refund->getStatus() === Transaction::PARTIALLY_REFUNDED
