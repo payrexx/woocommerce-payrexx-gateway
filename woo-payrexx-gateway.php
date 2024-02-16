@@ -111,7 +111,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 		protected function init() {
 			if (is_admin()) {
-				$this->payrexxGatewayAdmin = new WC_Payrexx_Gateway_Admin();
+				new WC_Payrexx_Gateway_Admin();
 			}
 
 			$this->payrexxApiService = self::getPayrexxApiService();
@@ -173,11 +173,6 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 					return $gateways;
 				}
 			);
-
-			// ToDo: Remove in future release once the data was migrated
-			if (is_admin()) {
-				$this->payrexxGatewayAdmin->migrate_data();
-			}
 		}
 
 		public function payment_scripts()

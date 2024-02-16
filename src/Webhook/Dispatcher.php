@@ -47,8 +47,8 @@ class Dispatcher
     {
         try {
             $resp = $_REQUEST;
-            $order_id = $resp['transaction']['invoice']['referenceId'] ?? '';
-            $gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
+			$order_id = $resp['transaction']['invoice']['referenceId'] ?? '';
+			$gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
 
 			if ( ! $order_id ) {
 				$this->send_response( 'Webhook data incomplete' );
