@@ -47,11 +47,12 @@ class Dispatcher
     {
         try {
             $resp = $_REQUEST;
-			if ( !isset( $resp['transaction'] ) ) {
-				$this->send_response( 'Transaction empty' );
+            $order_id = $resp['transaction']['invoice']['referenceId'] ?? '';
+            $gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
+
+			if ( ! $order_id ) {
+				$this->send_response( 'Webhook data incomplete' );
 			}
-            $order_id = $resp['transaction']['invoice']['referenceId'];
-            $gateway_id = $resp['transaction']['invoice']['paymentRequestId'];
 
             if (!empty($this->prefix) && strpos($order_id, $this->prefix) === false) {
                 $this->send_response('Prefix mismatch');
