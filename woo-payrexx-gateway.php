@@ -83,6 +83,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 		protected function define_constants() {
 			define('PAYREXX_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 			define('PAYREXX_PM_DIR', PAYREXX_PLUGIN_DIR . 'src/Model/PaymentMethod/');
+			define('PAYREXX_PM_BLOCK_DIR', PAYREXX_PLUGIN_DIR . 'src/Blocks/PaymentMethod/');
 			define('PAYREXX_MAIN_FILE',  __FILE__ );
 			define('PAYREXX_MAIN_NAME',  plugin_basename( __FILE__ ) );
 
@@ -148,17 +149,41 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 			add_action( 'before_woocommerce_init', function() {
 				if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+					\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_checkout_blocks', __FILE__, true );
 				}
 			});
+		}
+
+		/**
+		 * Custom function to register a payment method type
+		 */
+		public function register_block_payment_methods() {
+			// Check if the required class exists.
+			if ( ! class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+				return;
+			}
+
+			add_action(
+				'woocommerce_blocks_payment_method_type_registration',
+				function( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+					foreach ( $this->paymentMethodList as $payment_method ) {
+						$block_gateway = 'WC_Payrexx_Gateway_' . $payment_method . '_Block';
+						$payment_method_registry->register( new $block_gateway() );
+					}
+				}
+			);
+
 		}
 
 		public function loaded()
 		{
 			require_once PAYREXX_PM_DIR . 'Abstract/Base.php';
 			require_once PAYREXX_PM_DIR . 'Abstract/SubscriptionBase.php';
+			require_once PAYREXX_PM_BLOCK_DIR . 'Base/class-wc-payrexx-gateway-block-base.php';
 
 			foreach ($this->paymentMethodList as $paymentMethod) {
 				require_once PAYREXX_PM_DIR . $paymentMethod . '.php';
+				require_once PAYREXX_PM_BLOCK_DIR . 'class-wc-payrexx-gateway-' . strtolower( $paymentMethod ) . '-block.php';
 			}
 
 			// Add payment gateways
@@ -172,6 +197,14 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 					return $gateways;
 				}
+			);
+
+			add_action( 
+				'woocommerce_blocks_loaded',
+				[
+					$this,
+					'register_block_payment_methods' 
+				]
 			);
 		}
 

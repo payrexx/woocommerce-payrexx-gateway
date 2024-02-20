@@ -1,4 +1,4 @@
-﻿=== WooCommerce Payrexx Payment Gateway  ===
+=== WooCommerce Payrexx Payment Gateway  ===
 Contributors: payrexx
 Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, payrexx, gateway, postfinance, twint, wir, giropay, concardis, paymill, braintree, stripe, ogone, ingenico, viveum, reka, datatrans, six, saferpay, onepage, shop, payment link, invoices, virtual terminal, vpos
@@ -311,7 +311,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 == Changelog ==
 
 = 3.0.8 =
-* Bugfix: Fixed refund amount 
+* Bugfix: Fixed refund amount
+* Bugfix: Support Block Checkout
 
 = 3.0.7 =
 * Feature: Execute refunds

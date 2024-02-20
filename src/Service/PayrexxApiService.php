@@ -204,9 +204,12 @@ class PayrexxApiService
 				$transaction->setId( $refund_transaction->getId() );
 				$transaction->setAmount( (int) ( $amount * 100 ) );
 				$refund = $payrexx->refund( $transaction );
-				if ( $refund->getStatus() === Transaction::REFUNDED
-					|| $refund->getStatus() === Transaction::PARTIALLY_REFUNDED
-				) {
+                $refund_success_status = [
+                    Transaction::CONFIRMED,
+                    Transaction::REFUNDED,
+                    Transaction::PARTIALLY_REFUNDED,
+                ];
+				if ( in_array( $refund->getStatus(), $refund_success_status ) ) {
 					return true;
 				}
 			}
