@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, payrexx, gateway, postfinance, twint, wir, giropay, concardis, paymill, braintree, stripe, ogone, ingenico, viveum, reka, datatrans, six, saferpay, onepage, shop, payment link, invoices, virtual terminal, vpos
 Requires at least: 4.4
 Tested up to: 6.4.2
-Stable tag: 3.0.8
+Stable tag: 3.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,10 +38,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Centi
 * Heidipay
 * SamsungPay
-* Sofort
 * Wirpay
 * Reka
-* Bob Invoice
 
 == Installation ==
 * Download the plugin
@@ -58,6 +56,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 4. Screenshot Payrexx Backend
 
 == Upgrade Notice ==
+
+= 3.0.9 =
+* Minor update, no need to backup
 
 = 3.0.8 =
 * Minor update, no need to backup
@@ -309,6 +310,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.0.9 =
+* Bugfix: Removed Bob invoice and sofort payment method.
 
 = 3.0.8 =
 * Bugfix: Fixed refund amount
