@@ -221,6 +221,11 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 				wc_add_notice(__('Payment failed. Please choose another method.', 'wc-payrexx-gateway'), 'error');
 				PaymentHelper::handleError();
 			}
+
+			wp_register_script( 'payrexx_googlepay_check', plugins_url( 'assets/js/googlepay.js', PAYREXX_MAIN_FILE ), array( 'jquery' ) );
+			wp_register_script( 'payrexx_applepay_check', plugins_url( 'assets/js/applepay.js', PAYREXX_MAIN_FILE ), array( 'jquery' ) );
+			wp_enqueue_script( 'payrexx_googlepay_check' );
+			wp_enqueue_script( 'payrexx_applepay_check' );
 		}
 
 		public static function getPayrexxApiService() {
