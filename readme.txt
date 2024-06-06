@@ -40,6 +40,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * SamsungPay
 * Wirpay
 * Reka
+* Klarna
 
 == Installation ==
 * Download the plugin
