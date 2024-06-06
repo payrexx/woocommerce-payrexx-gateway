@@ -6,13 +6,13 @@
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 
 /**
- * WC_Payrexx_Gateway_Sofort_Block
+ * WC_Payrexx_Gateway_Klarna_Block
  */
-class WC_Payrexx_Gateway_Sofort_Block extends WC_Payrexx_Gateway_Block_Base {
+class WC_Payrexx_Gateway_Klarna_Block extends WC_Payrexx_Gateway_Block_Base {
 	/**
 	 * Payment method name
 	 *
 	 * @var string
 	 */
-	protected $name = PAYREXX_PM_PREFIX . 'sofort';
+	protected $name = PAYREXX_PM_PREFIX . 'klarna';
 }
