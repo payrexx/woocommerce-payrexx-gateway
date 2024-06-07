@@ -41,6 +41,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Wirpay
 * Reka
 * Klarna
+* Boncard
 
 == Installation ==
 * Download the plugin
@@ -320,6 +321,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.0.11 =
 * Feature: Added Klarna as new payment method.
+* Feature: Added Boncard as new payment method.
 
 = 3.0.10 =
 * Feature: Added LLV Payment to Platform selection.

@@ -1,11 +1,9 @@
-# Copyright (C) 2024 Payrexx
-# This file is distributed under the same license as the WooCommerce Payrexx Gateway plugin.
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
 "POT-Creation-Date: 2019-10-09T16:21:30+02:00\n"
-"PO-Revision-Date: 2024-05-31 17:35+0530\n"
+"PO-Revision-Date: 2024-06-07 16:42+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Switzerland)\n"
 "Language: de_CH\n"
@@ -206,3 +204,6 @@ msgstr ""
 
 msgid "Klarna (Payrexx)"
 msgstr "Klarna (Payrexx)"
+
+msgid "Boncard (Payrexx)"
+msgstr "Boncard (Payrexx)"
