@@ -43,7 +43,7 @@ if ($this->id === 'payrexx') {
             'wirpay' => 'WIRpay',
             'paypal' => 'PayPal',
             'bitcoin' => 'Bitcoin',
-            'sofortueberweisung_de' => 'Sofort Überweisung',
+            'klarna' => 'Klarna',
             'airplus' => 'Airplus',
             'billpay' => 'Billpay',
             'bonuscard' => 'Bonus card',
