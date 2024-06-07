@@ -2,7 +2,12 @@
     'use strict';
 
     $(document).ready(function() {
-        console.log('apple pay');
+        setTimeout(function() {
+            checkGooglePaySupport();
+        }, 100);
+    });
+
+    $(document).on("DOMNodeInserted", '.woocommerce-checkout-payment', function(e) {
         checkGooglePaySupport();
     });
 
@@ -36,10 +41,14 @@
                 }
             );
             paymentsClient.isReadyToPay(isReadyToPayRequest).then(function(response) {
-                if (!response.result) {
+                if (response.result) {
                     $('label[for$=payrexx_google-pay]').show();
                 }
-            }).catch(function(err) {});
-        } catch (err) {}
+            }).catch(function(err) {
+                console.log(err);
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 }(jQuery));

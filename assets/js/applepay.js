@@ -2,7 +2,12 @@
     'use strict';
 
     $(document).ready(function() {
-        console.log('google pay');
+        setTimeout(function() {
+            checkApplePaySupport();
+        }, 100);
+    });
+
+    $(document).on("DOMNodeInserted", '.woocommerce-checkout-payment', function(e) {
         checkApplePaySupport();
     });
 
