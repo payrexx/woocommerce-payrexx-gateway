@@ -1,23 +1,19 @@
-# Copyright (C) 2024 Payrexx
-# This file is distributed under the same license as the WooCommerce Payrexx Gateway plugin.msgid ""
+msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
-"POT-Creation-Date: 2019-10-09T16:21:30+02:00\n"
-"PO-Revision-Date: 2024-05-31 11:56+0000\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-07 11:04+0000\n"
+"PO-Revision-Date: 2024-06-07 16:36+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
-"Language: de-DE\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Loco-Source-Locale: en_IN\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Domain: trunk\n"
-"X-Loco-Version: 2.6.3; wp-6.1.1\n"
-"\n"
-"X-Loco-Parser: loco_parse_po"
+"X-Loco-Parser: loco_parse_po\n"
+"X-Generator: Poedit 2.3\n"
 
 #. Description of the plugin
 msgid "Accept many different payment methods on your store using Payrexx"
@@ -77,8 +73,8 @@ msgid ""
 "Enter a look and feel profile ID if you wish to use a specific design in the "
 "checkout"
 msgstr ""
-"Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im "
-"Checkout zu nutzen"
+"Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im Checkout "
+"zu nutzen"
 
 #: src/Model/PaymentMethod/Abstract/Base.php:26
 msgid "General Payrexx Settings"
@@ -118,8 +114,8 @@ msgstr ""
 
 #: includes/settings/payrexx_settings.php:46
 msgid ""
-"Paste the API key from the integrations page of your Payrexx merchant "
-"backend here"
+"Paste the API key from the integrations page of your Payrexx merchant backend "
+"here"
 msgstr ""
 "Füge Sie den API Key, von der Integrationsseite in Ihrem Payrexx Händler "
 "Account, hier ein"
@@ -133,7 +129,7 @@ msgid "Paypal (Payrexx)"
 msgstr ""
 
 #. Author of the plugin
-#: includes/admin/class-wc-payrexx-gateway-admin.php:35 
+#: includes/admin/class-wc-payrexx-gateway-admin.php:35
 #: src/Model/PaymentMethod/Payrexx.php:9
 msgid "Payrexx"
 msgstr ""
@@ -172,19 +168,17 @@ msgid ""
 "logged in INSTANCENAME.payrexx.com."
 msgstr ""
 "Der Instanzname ist Ihr Payrexx Account Name. Sie finden diesen in der URL, "
-"wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME."
-"payrexx.com."
+"wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME.payrexx."
+"com."
 
 #: includes/settings/payrexx_settings.php:70
 #| msgid "The Prefix is only necessary for customers outside the Payrexx platform"
 msgid "The Prefix is only necessary for merchants outside the Payrexx platform"
-msgstr ""
-"Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
+msgstr "Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
 
 #: includes/settings/payrexx_pm_settings.php:13
 msgid "The title of the payment method which shows in the checkout."
-msgstr ""
-"Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
+msgstr "Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
 
 #: includes/settings/payrexx_pm_settings.php:11
 msgid "Title"
@@ -208,3 +202,6 @@ msgstr ""
 
 msgid "Klarna (Payrexx)"
 msgstr "Klarna (Payrexx)"
+
+msgid "Boncard (Payrexx)"
+msgstr "Boncard (Payrexx)"
