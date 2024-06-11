@@ -1,5 +1,5 @@
 const payrexx_boncard_settings = window.wc.wcSettings.getSetting( 'payrexx_boncard_data', {} );
-const payrexx_boncard_label = window.wp.htmlEntities.decodeEntities( payrexx_boncard_settings.title ) || window.wp.i18n.__( 'Amex (Payrexx)', 'wc-payrexx-gateway' )
+const payrexx_boncard_label = window.wp.htmlEntities.decodeEntities( payrexx_boncard_settings.title ) || window.wp.i18n.__( 'Boncard (Payrexx)', 'wc-payrexx-gateway' )
 const PayrexxBorncardContent = () => {
 	return window.wp.htmlEntities.decodeEntities( payrexx_boncard_settings.description || '' );
 };
