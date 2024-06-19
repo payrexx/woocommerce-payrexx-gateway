@@ -7,7 +7,7 @@
         }, 100);
     });
 
-    $(document).on("DOMNodeInserted", '.woocommerce-checkout-payment', function(e) {
+    $(document).on("DOMNodeInserted", '.woocommerce-checkout-payment, #payment-method', function(e) {
         checkGooglePaySupport();
     });
 
@@ -15,7 +15,7 @@
      * Check the deive to support google pay.
      */
     function checkGooglePaySupport() {
-        $('label[for$=payrexx_google-pay]').hide();
+        $('label[for$=payrexx_google-pay], [class$=payrexx_google-pay], [id$=payrexx_google-pay]').hide();
         try {
             const baseRequest = {
                 apiVersion: 2,
@@ -42,7 +42,7 @@
             );
             paymentsClient.isReadyToPay(isReadyToPayRequest).then(function(response) {
                 if (response.result) {
-                    $('label[for$=payrexx_google-pay]').show();
+                    $('label[for$=payrexx_google-pay], [class$=payrexx_google-pay], [id$=payrexx_google-pay]').show();
                 }
             }).catch(function(err) {
                 console.log(err);
