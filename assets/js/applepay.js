@@ -7,7 +7,7 @@
         }, 100);
     });
 
-    $(document).on("DOMNodeInserted", '.woocommerce-checkout-payment', function(e) {
+    $(document).on("DOMNodeInserted", '.woocommerce-checkout-payment, #payment-method', function(e) {
         checkApplePaySupport();
     });
 
