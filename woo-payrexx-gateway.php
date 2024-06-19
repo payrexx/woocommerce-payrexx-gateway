@@ -226,13 +226,13 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 			if ( 'yes' == $googlePayPaymentMethod->enabled ) {
 				wp_register_script( 'googlepay_js', 'https://pay.google.com/gp/p/js/pay.js', array( 'jquery' ) );
 				wp_enqueue_script( 'googlepay_js' );
-				wp_register_script( 'payrexx_googlepay_check', plugins_url( 'assets/js/googlepay.js', PAYREXX_MAIN_FILE ), array( 'googlepay_js' ) );
+				wp_register_script( 'payrexx_googlepay_check', plugins_url( 'assets/js/googlepay.js', PAYREXX_MAIN_FILE ), array( 'googlepay_js' ), '1.0.1' );
 				wp_enqueue_script( 'payrexx_googlepay_check' );
 			}
 
 			$applePayPaymentMethod = new WC_Payrexx_Gateway_ApplePay();
 			if ( 'yes' == $applePayPaymentMethod->enabled ) {
-				wp_register_script( 'payrexx_applepay_check', plugins_url( 'assets/js/applepay.js', PAYREXX_MAIN_FILE ), array( 'jquery' ) );
+				wp_register_script( 'payrexx_applepay_check', plugins_url( 'assets/js/applepay.js', PAYREXX_MAIN_FILE ), array( 'jquery' ), '1.0.1' );
 				wp_enqueue_script( 'payrexx_applepay_check' );
 			}
 		}
