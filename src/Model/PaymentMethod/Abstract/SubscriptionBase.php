@@ -121,6 +121,13 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			$order        = new \WC_Order( $subscription->get_last_order() );
 		}
 
+		// Fix: Restrict gateway creation if order is not exist to the subscription.
+		$post_type = get_post_type( $order_id );
+		if ( $post_type === 'shop_subscription' ) {
+			return array(
+				'result' => 'failure',
+			);
+		}
 		$total_amount = floatval( $order->get_total( 'edit' ) );
 		$reference    = ( get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' ) ? get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' ) . '_' : '' ) . $order_id;
 
@@ -172,6 +179,11 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			$charge_on_auth
 		);
 
+		if ( ! $gateway ) {
+			return array(
+				'result' => 'failure',
+			);
+		}
 		return $this->process_redirect( $gateway, $order );
 	}
 
