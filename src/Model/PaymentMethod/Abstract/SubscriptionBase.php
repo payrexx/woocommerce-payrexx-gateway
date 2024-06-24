@@ -123,7 +123,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 
 		// Fix: Restrict gateway creation if order is not exist to the subscription.
 		$post_type = get_post_type( $order_id );
-		if ( $post_type === 'shop_subscription' ) {
+		if ( $post_type !== 'shop_order' ) {
 			return array(
 				'result' => 'failure',
 			);
