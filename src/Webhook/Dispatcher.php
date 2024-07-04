@@ -90,19 +90,8 @@ class Dispatcher
                 // Payment method change > $order_id is a subscriptionId and must be overwritten
                 // Subscription renewal > $order_id is from an old order and must be overwritten
                 $firstSubscription = reset($subscriptions);
+                $order_id = $firstSubscription->get_last_order( 'ids', 'any' );
                 $preAuthId = $resp['transaction']['preAuthorizationId'];
-                // Check if the subscription is associated with a switch order (upgrade/downgrade)
-                if ($firstSubscription->has_status( 'active' ) && $firstSubscription->get_last_order() > 0) {
-                    $order_id = $firstSubscription->get_last_order();
-                } else {
-                    // If it's a switch order, get the switch order ID
-                    $order_id = $firstSubscription->get_meta( '_subscription_switch_order_id' );
-
-                    // Fallback: Use the last order ID associated with the subscription if the switch order ID is not found
-                    if (empty($order_id)) {
-                        $order_id = $firstSubscription->get_last_order();
-                    }
-                }
             }
 
             $order = new \WC_Order($order_id);
