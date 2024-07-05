@@ -30,6 +30,7 @@ if ( class_exists( '\WC_Subscriptions' ) ) {
 				'visa'                 => 'Visa',
 				'american_express'     => 'American Express',
 				'twint'                => 'TWINT',
+				'post-finance-pay'     => 'Post Finance Pay',
 			),
 		);
 	}
