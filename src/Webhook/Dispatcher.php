@@ -90,7 +90,7 @@ class Dispatcher
                 // Payment method change > $order_id is a subscriptionId and must be overwritten
                 // Subscription renewal > $order_id is from an old order and must be overwritten
                 $firstSubscription = reset($subscriptions);
-                $order_id = $firstSubscription->get_last_order();
+                $order_id = $firstSubscription->get_last_order( 'ids', 'any' );
                 $preAuthId = $resp['transaction']['preAuthorizationId'];
             }
 
