@@ -29,9 +29,8 @@ if ( class_exists( '\WC_Subscriptions' ) ) {
 				'mastercard'           => 'Mastercard',
 				'visa'                 => 'Visa',
 				'american_express'     => 'American Express',
-				'postfinance_card'     => 'PostFinance Card',
 				'twint'                => 'TWINT',
-				'postfinance_efinance' => 'PostFinance E-Finance',
+				'post-finance-pay'     => 'Post Finance Pay',
 			),
 		);
 	}
