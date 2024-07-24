@@ -2,6 +2,8 @@
 
 namespace PayrexxPaymentGateway\Util;
 
+use WC_Tax;
+
 class BasketUtil
 {
 
@@ -17,6 +19,7 @@ class BasketUtil
         $basket = [];
 
         foreach ($cartItems as $item) {
+            // Product
             $productId = $item['data']->get_id();
             $amount = $item['data']->get_sale_price() ?: $item['data']->get_price();
 
@@ -30,31 +33,47 @@ class BasketUtil
                 }
             }
 
+            $amount += $productPriceIncludesTax ? 0 : $item['line_subtotal_tax'];
+            // Get VAT rate based on product tax class
+            $tax_class = $item['data']->get_tax_class();
+            $tax_rates = WC_Tax::get_rates( $tax_class );
+            $tax_rate = !empty( $tax_rates ) ? reset( $tax_rates )['rate'] : 0;
+
             $basket[] = [
                 'name' => $item['data']->get_title(),
                 'description' => strip_tags($item['data']->get_short_description()),
                 'quantity' => $item['quantity'],
                 'amount' => round($amount * 100),
                 'sku' => $item['data']->get_sku(),
+                'vatRate' => $tax_rate,
             ];
         }
 
+        // Shipping
         $shipping = $cart->get_shipping_total();
         $shippingTax = $cart->get_shipping_tax();
-        if ($shipping || $shippingTax) {
-            $shippingAmount = round($shipping + $shippingTax, 2);
+        if ( $shipping || $shippingTax ) {
+            $shippingTaxPercentage = 0;
+            if ( !empty( $cart->get_shipping_taxes() ) ) {
+                $shippingTaxPercentage = WC_Tax::get_rate_percent_value(
+                    array_key_first( $cart->get_shipping_taxes() )
+                );
+            }
+            $shippingAmount = round( $shipping + $shippingTax, 2 );
             $basket[] = [
                 'name' => 'Shipping',
                 'quantity' => 1,
-                'amount' => round($shippingAmount * 100),
+                'amount' => round( $shippingAmount * 100 ),
+                'vatRate' => $shippingTaxPercentage,
             ];
         }
 
+        // Discount
         $discount = $cart->get_discount_total();
         $discountTax = $cart->get_discount_tax();
         if ($discount) {
             $discountAmount = $discount;
-            $discountAmount += !$productPriceIncludesTax ? 0 : $discountTax;
+            $discountAmount += $productPriceIncludesTax ? 0 : $discountTax;
             $basket[] = [
                 'name' => 'Discount',
                 'quantity' => 1,
@@ -62,27 +81,18 @@ class BasketUtil
             ];
         }
 
+        // Fee
         $fee = $cart->get_fee_total();
         $feeTax = $cart->get_fee_tax();
         if ($fee) {
             $feeAmount = $fee;
-            $feeAmount += !$productPriceIncludesTax ? 0 : $feeTax;
+            $feeAmount += $productPriceIncludesTax ? 0 : $feeTax;
             $basket[] = [
                 'name' => 'Fee',
                 'quantity' => 1,
                 'amount' => round($feeAmount * 100),
             ];
         }
-
-        $taxAmount = $cart->get_cart_contents_tax();
-        if ($taxAmount && !$productPriceIncludesTax) {
-            $basket[] = [
-                'name' => 'Tax',
-                'quantity' => 1,
-                'amount' => round($taxAmount * 100),
-            ];
-        }
-
         return $basket;
     }
 

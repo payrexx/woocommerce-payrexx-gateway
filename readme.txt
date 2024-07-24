@@ -3,8 +3,8 @@ Contributors: payrexx
 Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, payrexx, gateway, postfinance, twint, wir, giropay, concardis, paymill, braintree, stripe, ogone, ingenico, viveum, reka, datatrans, six, saferpay, onepage, shop, payment link, invoices, virtual terminal, vpos
 Requires at least: 4.4
-Tested up to: 6.4.2
-Stable tag: 3.0.15
+Tested up to: 6.6.1
+Stable tag: 3.0.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 4. Screenshot Payrexx Backend
 
 == Upgrade Notice ==
+
+= 3.0.16 =
+* Minor update, no need to backup
 
 = 3.0.15 =
 * Major Info: Removed PostFinance Card and PostFinance E-Finance.
@@ -330,6 +333,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.0.16 =
+* Improvement: Improved basket items tax to gateway request.
 
 = 3.0.15 =
 * Feature: Added New payment method Post Finance Pay
