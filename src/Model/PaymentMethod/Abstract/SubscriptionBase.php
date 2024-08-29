@@ -122,11 +122,19 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		}
 
 		// Fix: Restrict gateway creation if order is not exist to the subscription.
-		$post_type = get_post_type( $order_id );
-		if ( $post_type !== 'shop_order' ) {
-			return array(
-				'result' => 'failure',
-			);
+		if ( class_exists( \Automattic\WooCommerce\Utilities\OrderUtil::class ) ) {
+			if ( ! \Automattic\WooCommerce\Utilities\OrderUtil::is_order( $order_id, [ 'shop_order' ] ) ) {
+				return array(
+					'result' => 'failure',
+				);
+			}
+		} else {
+			$post_type = get_post_type( $order_id );
+			if ( $post_type !== 'shop_order' ) {
+				return array(
+					'result' => 'failure',
+				);
+			}
 		}
 		$total_amount = floatval( $order->get_total( 'edit' ) );
 		$reference    = ( get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' ) ? get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' ) . '_' : '' ) . $order_id;
