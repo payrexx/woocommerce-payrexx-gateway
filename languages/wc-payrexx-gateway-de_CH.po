@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
 "POT-Creation-Date: 2019-10-09T16:21:30+02:00\n"
-"PO-Revision-Date: 2024-07-05 18:46+0530\n"
+"PO-Revision-Date: 2024-09-11 19:10+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Switzerland)\n"
 "Language: de_CH\n"
@@ -136,14 +136,6 @@ msgstr ""
 msgid "Payrexx"
 msgstr ""
 
-#: src/Model/PaymentMethod/PostFinanceCard.php:9
-msgid "Post Finance Card (Payrexx)"
-msgstr ""
-
-#: src/Model/PaymentMethod/PostFinanceEFinance.php:9
-msgid "PostFinance E-Finance (Payrexx)"
-msgstr ""
-
 #: includes/settings/payrexx_settings.php:66
 msgid "Prefix "
 msgstr ""
@@ -210,3 +202,9 @@ msgstr "Boncard (Payrexx)"
 
 msgid "Post Finance Pay (Payrexx)"
 msgstr "Post Finance Pay (Payrexx)"
+
+msgid "Post Finance E-Finance (Payrexx)"
+msgstr "Post Finance E-Finance (Payrexx)"
+
+msgid "Post Finance Card (Payrexx)"
+msgstr "Post Finance Card (Payrexx)"
