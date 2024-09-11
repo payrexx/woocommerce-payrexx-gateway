@@ -9,9 +9,10 @@ class BasketUtil
 
     /**
      * @param $cart
+     * @param float $totalAmount
      * @return array
      */
-    public static function createBasketByCart($cart): array
+    public static function createBasketByCart($cart, float $totalAmount): array
     {
         $productPriceIncludesTax = ('yes' === get_option( 'woocommerce_prices_include_tax'));
 
@@ -96,6 +97,25 @@ class BasketUtil
                 'quantity' => 1,
                 'amount' => round($feeAmount * 100),
             ];
+        }
+
+        $basketAmount = self::getBasketAmount( $basket );
+        if ( number_format ( $basketAmount, 2) === number_format( $totalAmount, 2 )) {
+            return $basket;
+        }
+
+        // Fix: Tax not included to product price.
+        $taxAmount = $cart->get_cart_contents_tax();
+        if ( $taxAmount ) {
+            $computedAmount = $basketAmount + floatval( $taxAmount );
+            if ( number_format ( $computedAmount, 2) === number_format( $totalAmount, 2 ) ) {
+                $basket[] = [
+                    'name' => 'Tax',
+                    'quantity' => 1,
+                    'amount' => round( $taxAmount * 100 ),
+                    'vatRate' => 0,
+                ];
+            }
         }
         return $basket;
     }

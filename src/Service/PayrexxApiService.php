@@ -59,7 +59,7 @@ class PayrexxApiService
         $gateway->setPreAuthorization($preAuthorization);
         $gateway->setChargeOnAuthorization($chargeOnAuth);
 
-        $basket = BasketUtil::createBasketByCart($cart);
+        $basket = BasketUtil::createBasketByCart($cart, $totalAmount);
         $basketAmount = round(BasketUtil::getBasketAmount($basket), 2);
         if ($totalAmount && $totalAmount === $basketAmount) {
             $gateway->setBasket($basket);
