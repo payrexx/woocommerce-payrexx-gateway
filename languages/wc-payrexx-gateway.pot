@@ -194,3 +194,11 @@ msgstr ""
 # src/Model/PaymentMethod/PostFinancePay.php: 9
 msgid "Post Finance Pay (Payrexx)"
 msgstr ""
+
+# src/Model/PaymentMethod/PostFinanceCard.php: 9
+msgid "Post Finance Card (Payrexx)"
+msgstr ""
+
+# src/Model/PaymentMethod/PostFinanceEFinance.php: 9
+msgid "Post Finance E-Finance (Payrexx)"
+msgstr ""
