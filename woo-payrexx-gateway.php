@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.0.17
+ * Version: 3.0.18
  * Requires at least: 4.4
  * Tested up to: 6.6.1
  * WC requires at least: 3.8.1
