@@ -348,6 +348,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.0.18 =
 * Info: Added payment method PostFinance Card and PostFinance E-Finance.
+* Feature: Added new payment method Diners Club and Discover.
 
 = 3.0.17 =
 * Improvement: Improved code to support HPOS for subscription.
