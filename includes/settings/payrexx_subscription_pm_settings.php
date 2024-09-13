@@ -31,6 +31,8 @@ if ( class_exists( '\WC_Subscriptions' ) ) {
 				'american_express'     => 'American Express',
 				'twint'                => 'TWINT',
 				'post-finance-pay'     => 'Post Finance Pay',
+				'post-finance-card'    =>  'PostFinance Card',
+				'post-finance-e-finance' => 'PostFinance E-Finance',
 			),
 		);
 	}

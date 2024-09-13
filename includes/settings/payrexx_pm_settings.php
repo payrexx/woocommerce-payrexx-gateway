@@ -58,6 +58,8 @@ if ($this->id === 'payrexx') {
             'myone' => 'My One',
             'paysafecard' => 'Paysafe Card',
             'post-finance-pay' => 'Post Finance Pay',
+            'post-finance-card' => 'PostFinance Card',
+            'post-finance-e-finance' => 'PostFinance E-Finance',
             'swissbilling' => 'SwissBilling',
             'twint' => 'TWINT',
             'barzahlen' => 'Barzahlen/Viacash',

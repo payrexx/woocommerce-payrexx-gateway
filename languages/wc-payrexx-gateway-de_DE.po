@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
-"PO-Revision-Date: 2024-07-05 18:48+0530\n"
+"PO-Revision-Date: 2024-09-11 19:13+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
 "Language: de_DE\n"
@@ -136,11 +136,11 @@ msgstr ""
 
 #: src/Model/PaymentMethod/PostFinanceCard.php:9
 msgid "Post Finance Card (Payrexx)"
-msgstr ""
+msgstr "Post Finance Card (Payrexx)"
 
 #: src/Model/PaymentMethod/PostFinanceEFinance.php:9
-msgid "PostFinance E-Finance (Payrexx)"
-msgstr ""
+msgid "Post Finance E-Finance (Payrexx)"
+msgstr "Post Finance E-Finance (Payrexx)"
 
 #: includes/settings/payrexx_settings.php:66
 msgid "Prefix "
