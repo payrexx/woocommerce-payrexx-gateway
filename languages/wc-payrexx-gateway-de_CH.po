@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
 "POT-Creation-Date: 2019-10-09T16:21:30+02:00\n"
-"PO-Revision-Date: 2024-09-11 19:10+0530\n"
+"PO-Revision-Date: 2024-09-16 18:21+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Switzerland)\n"
 "Language: de_CH\n"
@@ -208,3 +208,9 @@ msgstr "Post Finance E-Finance (Payrexx)"
 
 msgid "Post Finance Card (Payrexx)"
 msgstr "Post Finance Card (Payrexx)"
+
+msgid "Diners Club (Payrexx)"
+msgstr "Diners Club (Payrexx)"
+
+msgid "Discover (Payrexx)"
+msgstr "Discover (Payrexx)"
