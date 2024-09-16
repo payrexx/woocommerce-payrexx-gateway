@@ -1,6 +1,6 @@
 <?php
 
-class WC_Payrexx_Gateway_DinersClub extends WC_Payrexx_Gateway_SubscriptionBase
+class WC_Payrexx_Gateway_DinersClub extends WC_Payrexx_Gateway_Base
 {
 
     public function __construct()
