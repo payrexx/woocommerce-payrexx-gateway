@@ -35,6 +35,7 @@ return apply_filters('wc_payrexx_gateway_settings', [
                 '1pay.ch' => '1pay.ch',
                 'pay.weblandschaft.ch' => 'Weblandschaft',
                 'payment.llv.li' => 'LLV Payment',
+                'paydirect.ch' => 'Paydirect',
             ],
         ],
         [
