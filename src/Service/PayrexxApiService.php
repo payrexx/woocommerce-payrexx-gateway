@@ -59,14 +59,14 @@ class PayrexxApiService
         $gateway->setPreAuthorization($preAuthorization);
         $gateway->setChargeOnAuthorization($chargeOnAuth);
 
-        $basket = BasketUtil::createBasketByCart($cart, $totalAmount);
+        $basket = BasketUtil::createBasketByCart($cart);
         $basketAmount = round(BasketUtil::getBasketAmount($basket), 2);
         if ($totalAmount && $totalAmount === $basketAmount) {
             $gateway->setBasket($basket);
         } else {
             $gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
         }
-
+        
         $gateway->setReferenceId($reference);
 
         $gateway->setLookAndFeelProfile($this->lookAndFeelId ?: null);
