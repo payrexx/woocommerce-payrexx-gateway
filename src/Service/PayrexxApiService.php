@@ -66,7 +66,7 @@ class PayrexxApiService
         } else {
             $gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
         }
-        
+
         $gateway->setReferenceId($reference);
 
         $gateway->setLookAndFeelProfile($this->lookAndFeelId ?: null);

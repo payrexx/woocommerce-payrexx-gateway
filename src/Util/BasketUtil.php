@@ -102,7 +102,6 @@ class BasketUtil
                 'amount' => round($feeAmount * 100),
             ];
         }
-
         return $basket;
     }
 
