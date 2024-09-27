@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Payrexx Gateway\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-05 18:51+0530\n"
+"POT-Creation-Date: 2024-09-16 18:22+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -201,4 +201,12 @@ msgstr ""
 
 # src/Model/PaymentMethod/PostFinanceEFinance.php: 9
 msgid "Post Finance E-Finance (Payrexx)"
+msgstr ""
+
+# src/Model/PaymentMethod/DinersClub.php: 9
+msgid "Diners Club (Payrexx)"
+msgstr ""
+
+# src/Model/PaymentMethod/Discover.php: 9
+msgid "Discover (Payrexx)"
 msgstr ""

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
-"PO-Revision-Date: 2024-09-11 19:13+0530\n"
+"PO-Revision-Date: 2024-09-16 18:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Germany)\n"
 "Language: de_DE\n"
@@ -208,3 +208,9 @@ msgstr "Boncard (Payrexx)"
 
 msgid "Post Finance Pay (Payrexx)"
 msgstr "Post Finance Pay (Payrexx)"
+
+msgid "Diners Club (Payrexx)"
+msgstr "Diners Club (Payrexx)"
+
+msgid "Discover (Payrexx)"
+msgstr "Discover (Payrexx)"
