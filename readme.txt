@@ -41,6 +41,10 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Reka
 * Klarna
 * Boncard
+* PostFinance Card
+* PostFinance E-Finance
+* Diners Club
+* Discover
 
 == Installation ==
 * Download the plugin
