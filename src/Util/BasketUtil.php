@@ -42,7 +42,6 @@ class BasketUtil
 				$amount += $taxPerProduct;
 			}
 
-            $amount += $productPriceIncludesTax ? 0 : $item['line_subtotal_tax'];
             // Get VAT rate based on product tax class
             $tax_class = $item['data']->get_tax_class();
             $tax_rates = WC_Tax::get_rates( $tax_class );
