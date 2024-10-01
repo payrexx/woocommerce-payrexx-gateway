@@ -82,10 +82,14 @@ class BasketUtil
         if ($discount) {
             $discountAmount = $discount;
             $discountAmount += $productPriceIncludesTax ? 0 : $discountTax;
+
+			// Calculate the VAT Rate based on discount amount and tax.
+			$vatRate = $discountTax ? round( ( $discountTax / $discount ) * 100 ) : 0;
             $basket[] = [
                 'name' => 'Discount',
                 'quantity' => 1,
                 'amount' => round($discountAmount * -100),
+				'vatRate' => $vatRate,
             ];
         }
 
@@ -105,10 +109,10 @@ class BasketUtil
     }
 
     /**
-     * @param $basket
+     * @param array $basket
      * @return float
      */
-    public static function getBasketAmount($basket): float
+    public static function getBasketAmount(array $basket): float
     {
         $basketAmount = 0;
 
@@ -120,18 +124,17 @@ class BasketUtil
     }
 
     /**
-     * @param $basket
+     * @param array $basket
      * @return string
      */
-    public static function createPurposeByBasket($basket): string
+    public static function createPurposeByBasket(array $basket): string
     {
         $desc = [];
         foreach ($basket as $product) {
             $desc[] = implode(' ', [
                 $product['name'],
-                $product['quantity'],
                 'x',
-                number_format($product['amount'] / 100, 2, '.'),
+                $product['quantity'],
             ]);
         }
         return implode('; ', $desc);
