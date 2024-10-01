@@ -37,7 +37,7 @@ class BasketUtil
                 $amount = 0;
             }
 
-            $taxPerProduct = ( ( $item['line_subtotal_tax'] * 100 ) / $item['quantity'] ) / 100;
+			$taxPerProduct = ( ( $item['line_subtotal_tax'] * 100 ) / $item['quantity'] ) / 100;
 			if ( ! $productPriceIncludesTax ) {
 				$amount += $taxPerProduct;
 			}
