@@ -37,7 +37,11 @@ class BasketUtil
                 $amount = 0;
             }
 
-            $amount += $productPriceIncludesTax ? 0 : $item['line_subtotal_tax'];
+			$taxPerProduct = ( ( $item['line_subtotal_tax'] * 100 ) / $item['quantity'] ) / 100;
+			if ( ! $productPriceIncludesTax ) {
+				$amount += $taxPerProduct;
+			}
+
             // Get VAT rate based on product tax class
             $tax_class = $item['data']->get_tax_class();
             $tax_rates = WC_Tax::get_rates( $tax_class );
@@ -78,10 +82,14 @@ class BasketUtil
         if ($discount) {
             $discountAmount = $discount;
             $discountAmount += $productPriceIncludesTax ? 0 : $discountTax;
+			// Calculate the VAT Rate based on discount amount and tax.
+			$vatRate = $discountTax ? round( ( $discountTax / $discount ) * 100 ) : 0;
+
             $basket[] = [
                 'name' => 'Discount',
                 'quantity' => 1,
                 'amount' => round($discountAmount * -100),
+				'vatRate' => $vatRate,
             ];
         }
 
@@ -101,10 +109,10 @@ class BasketUtil
     }
 
     /**
-     * @param $basket
+     * @param array $basket
      * @return float
      */
-    public static function getBasketAmount($basket): float
+    public static function getBasketAmount(array $basket): float
     {
         $basketAmount = 0;
 
@@ -116,10 +124,10 @@ class BasketUtil
     }
 
     /**
-     * @param $basket
+     * @param array $basket
      * @return string
      */
-    public static function createPurposeByBasket($basket): string
+    public static function createPurposeByBasket(array $basket): string
     {
         $desc = [];
         foreach ($basket as $product) {
