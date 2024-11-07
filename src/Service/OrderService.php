@@ -112,7 +112,7 @@ class OrderService
 			case self::WC_STATUS_PROCESSING:
 				return ! in_array( $old_status, [ self::WC_STATUS_COMPLETED, self::WC_STATUS_REFUNDED ] );
 			case self::WC_STATUS_REFUNDED:
-				return in_array( $old_status, [ self::WC_STATUS_PROCESSING ] );
+				return in_array( $old_status, [ self::WC_STATUS_PROCESSING, self::WC_STATUS_COMPLETED ] );
 			case self::WC_STATUS_ONHOLD:
 				return self::WC_STATUS_PENDING === $old_status;
 		}
