@@ -79,7 +79,7 @@ class OrderService
 				$order_status = self::WC_STATUS_FAILED;
 		}
 
-		if ( ! $order_status || ! $this->transition_allowed( $order_status, $order->get_status() ) ) {
+		if ( ! $order_status || ! $this->transition_allowed( $order_status, $order ) ) {
 			return;
 		}
 
@@ -90,11 +90,19 @@ class OrderService
 	 * Check order transition allowed
 	 *
 	 * @param string $new_status new order status.
-	 * @param string $old_status old order status.
+	 * @param WC_Order $order woocommerce order.
 	 * @return bool
 	 */
-	public function transition_allowed( string $new_status, string $old_status ): bool {
-		if ( $new_status === $old_status ) {
+	public function transition_allowed( string $new_status, $order ): bool {
+		$old_status = $order->get_status();
+
+		if ( $new_status === $old_status) {
+			return false;
+		}
+
+		if ( $order->get_transaction_id() &&
+			$new_status !== self::WC_STATUS_REFUNDED
+		) {
 			return false;
 		}
 		switch ( $new_status ) {
@@ -104,7 +112,7 @@ class OrderService
 			case self::WC_STATUS_PROCESSING:
 				return ! in_array( $old_status, [ self::WC_STATUS_COMPLETED, self::WC_STATUS_REFUNDED ] );
 			case self::WC_STATUS_REFUNDED:
-				return in_array( $old_status, [ self::WC_STATUS_PROCESSING, self::WC_STATUS_COMPLETED ] );
+				return in_array( $old_status, [ self::WC_STATUS_PROCESSING ] );
 			case self::WC_STATUS_ONHOLD:
 				return self::WC_STATUS_PENDING === $old_status;
 		}
