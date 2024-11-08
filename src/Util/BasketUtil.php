@@ -69,7 +69,10 @@ class BasketUtil
             }
             $shippingAmount = round( $shipping + $shippingTax, 2 );
             $basket[] = [
-                'name' => 'Shipping',
+                'name' =>  [
+                    1 => 'Versand',
+                    2 => 'Shipping',
+                ],
                 'quantity' => 1,
                 'amount' => round( $shippingAmount * 100 ),
                 'vatRate' => $shippingTaxPercentage,
@@ -132,7 +135,7 @@ class BasketUtil
         $desc = [];
         foreach ($basket as $product) {
             $desc[] = implode(' ', [
-                $product['name'],
+                is_array( $product['name'] ) ? $product['name'][2] : $product['name'],
                 $product['quantity'],
                 'x',
                 number_format($product['amount'] / 100, 2, '.'),
