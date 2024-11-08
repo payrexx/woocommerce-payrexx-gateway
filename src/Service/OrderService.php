@@ -98,28 +98,13 @@ class OrderService
 
 		if ($new_status === $old_status ||
     		(
-				$order->get_transaction_id() &&  // Already paid
+				$order->get_transaction_id() && // Check paid
 				$new_status !== self::WC_STATUS_REFUNDED // Refund allowed
 			)
 		) {
 			return false;
 		}
 
-		if ( $new_status === self::WC_STATUS_REFUNDED ) {
-			// Calculate the total refunded amount
-			$total_refunded = 0;
-			foreach ($order->get_refunds() as $refund) {
-				$total_refunded += (float) $refund->get_amount();
-			}
-
-			// Check if a partial refund is allowed (i.e., total refunded is less than order total)
-			$order_total = (float) $order->get_total();
-			$is_partial_refund_allowed = $total_refunded < $order_total;
-
-			if ( ! $is_partial_refund_allowed ) {
-				return false;
-			}
-		}
 		switch ( $new_status ) {
 			case self::WC_STATUS_CANCELLED:
 			case self::WC_STATUS_FAILED:
@@ -159,7 +144,7 @@ class OrderService
      * @return void
      */
     private function setOrderPaid($order, $transactionUuid) {
-		if ( ! $this->transition_allowed( self::WC_STATUS_PROCESSING, $order->get_status() ) ) {
+		if ( ! $this->transition_allowed( self::WC_STATUS_PROCESSING, $order ) ) {
 			return;
 		}
 
