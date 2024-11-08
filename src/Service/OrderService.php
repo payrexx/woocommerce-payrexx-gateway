@@ -96,14 +96,29 @@ class OrderService
 	public function transition_allowed( string $new_status, $order ): bool {
 		$old_status = $order->get_status();
 
-		if ( $new_status === $old_status) {
+		if ($new_status === $old_status ||
+    		(
+				$order->get_transaction_id() &&  // Already paid
+				$new_status !== self::WC_STATUS_REFUNDED // Refund allowed
+			)
+		) {
 			return false;
 		}
 
-		if ( $order->get_transaction_id() &&
-			$new_status !== self::WC_STATUS_REFUNDED
-		) {
-			return false;
+		if ( $new_status === self::WC_STATUS_REFUNDED ) {
+			// Calculate the total refunded amount
+			$total_refunded = 0;
+			foreach ($order->get_refunds() as $refund) {
+				$total_refunded += (float) $refund->get_amount();
+			}
+
+			// Check if a partial refund is allowed (i.e., total refunded is less than order total)
+			$order_total = (float) $order->get_total();
+			$is_partial_refund_allowed = $total_refunded < $order_total;
+
+			if ( ! $is_partial_refund_allowed ) {
+				return false;
+			}
 		}
 		switch ( $new_status ) {
 			case self::WC_STATUS_CANCELLED:
@@ -116,7 +131,7 @@ class OrderService
 			case self::WC_STATUS_ONHOLD:
 				return self::WC_STATUS_PENDING === $old_status;
 		}
-		return true;
+		return false;
 	}
 
 	/**
