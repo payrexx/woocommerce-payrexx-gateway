@@ -89,7 +89,10 @@ class BasketUtil
 			$vatRate = $discountTax ? round( ( $discountTax / $discount ) * 100 ) : 0;
 
             $basket[] = [
-                'name' => 'Discount',
+                'name' => [
+                    1 => 'Rabatt',
+                    2 => 'Discount',
+                ],
                 'quantity' => 1,
                 'amount' => round($discountAmount * -100),
 				'vatRate' => $vatRate,
@@ -103,7 +106,10 @@ class BasketUtil
             $feeAmount = $fee;
             $feeAmount += $productPriceIncludesTax ? 0 : $feeTax;
             $basket[] = [
-                'name' => 'Fee',
+                'name' =>  [
+                    1 => 'Gebühr',
+                    2 => 'Fee',
+                ],
                 'quantity' => 1,
                 'amount' => round($feeAmount * 100),
             ];
