@@ -96,8 +96,8 @@ class OrderService
 	public function transition_allowed( string $new_status, $order ): bool {
 		$old_status = $order->get_status();
 
-		if ($new_status === $old_status ||
-    		(
+		if ( $new_status === $old_status ||
+			(
 				$order->get_transaction_id() && // Check paid
 				$new_status !== self::WC_STATUS_REFUNDED // Refund allowed
 			)
