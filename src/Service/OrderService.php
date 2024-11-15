@@ -79,7 +79,7 @@ class OrderService
 				$order_status = self::WC_STATUS_FAILED;
 		}
 
-		if ( ! $order_status || ! $this->transition_allowed( $order_status, $order->get_status() ) ) {
+		if ( ! $order_status || ! $this->transition_allowed( $order_status, $order ) ) {
 			return;
 		}
 
@@ -90,13 +90,21 @@ class OrderService
 	 * Check order transition allowed
 	 *
 	 * @param string $new_status new order status.
-	 * @param string $old_status old order status.
+	 * @param WC_Order $order woocommerce order.
 	 * @return bool
 	 */
-	public function transition_allowed( string $new_status, string $old_status ): bool {
-		if ( $new_status === $old_status ) {
+	public function transition_allowed( string $new_status, $order ): bool {
+		$old_status = $order->get_status();
+
+		if ( $new_status === $old_status ||
+			(
+				$order->get_transaction_id() && // Check paid
+				$new_status !== self::WC_STATUS_REFUNDED // Refund allowed
+			)
+		) {
 			return false;
 		}
+
 		switch ( $new_status ) {
 			case self::WC_STATUS_CANCELLED:
 			case self::WC_STATUS_FAILED:
@@ -108,7 +116,7 @@ class OrderService
 			case self::WC_STATUS_ONHOLD:
 				return self::WC_STATUS_PENDING === $old_status;
 		}
-		return true;
+		return false;
 	}
 
 	/**
@@ -136,7 +144,7 @@ class OrderService
      * @return void
      */
     private function setOrderPaid($order, $transactionUuid) {
-		if ( ! $this->transition_allowed( self::WC_STATUS_PROCESSING, $order->get_status() ) ) {
+		if ( ! $this->transition_allowed( self::WC_STATUS_PROCESSING, $order ) ) {
 			return;
 		}
 
