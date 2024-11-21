@@ -3,8 +3,8 @@ Contributors: payrexx
 Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, payrexx, gateway, postfinance, twint, wir, giropay, concardis, paymill, braintree, stripe, ogone, ingenico, viveum, reka, datatrans, six, saferpay, onepage, shop, payment link, invoices, virtual terminal, vpos
 Requires at least: 4.4
-Tested up to: 6.6.2
-Stable tag: 3.0.22
+Tested up to: 6.7
+Stable tag: 3.0.23
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * PostFinance E-Finance
 * Diners Club
 * Discover
+* Pay By Bank
 
 == Installation ==
 * Download the plugin
@@ -61,6 +62,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 4. Screenshot Payrexx Backend
 
 == Upgrade Notice ==
+
+= 3.0.23 =
+* New payment method update, no need to backup
 
 = 3.0.22 =
 * Webhook improvement, no need to backup
@@ -355,6 +359,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.0.23 =
+* Feature: Added New payment method Pay by Bank.
 
 = 3.0.22 =
 * Improvement: Improved order status on webhook
