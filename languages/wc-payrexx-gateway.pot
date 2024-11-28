@@ -210,3 +210,7 @@ msgstr ""
 # src/Model/PaymentMethod/Discover.php: 9
 msgid "Discover (Payrexx)"
 msgstr ""
+
+# src/Model/PaymentMethod/PayByBank.php: 9
+msgid "Pay by Bank (Payrexx)"
+msgstr ""
