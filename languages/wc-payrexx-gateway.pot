@@ -42,7 +42,7 @@ msgid "Apple Pay (Payrexx)"
 msgstr ""
 
 #: src/Model/PaymentMethod/BankTransfer.php:9
-msgid "Bank Transfer (Payrexx)"
+msgid "Purchase on invoice"
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:11
@@ -92,7 +92,7 @@ msgid "Instance Name"
 msgstr ""
 
 #: src/Model/PaymentMethod/Invoice.php:9
-msgid "Invoice (Payrexx)"
+msgid "Bill (manual)"
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:60
