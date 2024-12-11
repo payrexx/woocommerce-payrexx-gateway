@@ -41,8 +41,8 @@ msgid "Apple Pay (Payrexx)"
 msgstr ""
 
 #: src/Model/PaymentMethod/BankTransfer.php:9
-msgid "Bank Transfer (Payrexx)"
-msgstr "Bank Überweisung"
+msgid "Purchase on invoice"
+msgstr "Kauf auf Rechnung"
 
 #: includes/settings/payrexx_settings.php:11
 msgid "Choose Your Platform"
@@ -93,8 +93,8 @@ msgid "Instance Name"
 msgstr "Instanz Name"
 
 #: src/Model/PaymentMethod/Invoice.php:9
-msgid "Invoice (Payrexx)"
-msgstr "Rechnung (Payrexx)"
+msgid "Bill (manual)"
+msgstr "Rechnung (manuell)"
 
 #: includes/settings/payrexx_settings.php:60
 msgid "Look&Feel Profile ID"
