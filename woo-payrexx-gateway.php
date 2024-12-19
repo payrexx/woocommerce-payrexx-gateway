@@ -93,7 +93,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 			define('PAYREXX_ADMIN_SETTINGS_ID' , 'payrexx');
 
-			define('LANG', ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr', ]);
+			define('LANG', ['en', 'de', 'it', 'fr', 'nl', 'pt', 'tr']);
 		}
 
 		protected function include() {
