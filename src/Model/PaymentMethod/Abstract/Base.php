@@ -110,7 +110,11 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		$order->update_meta_data('payrexx_gateway_id', $gateway->getId());
 		$order->save();
 
-		$language = substr(get_locale(), 0, 2);
+		if (isset($_COOKIE['pll_language'])) {
+			$language = sanitize_text_field($_COOKIE['pll_language']);
+		}
+		
+		$language = substr($language ?? get_locale(), 0, 2);
 		!in_array($language, LANG) ? $language = LANG[0] : null;
 		$redirect = str_replace('?', $language . '/?', $gateway->getLink());
 
