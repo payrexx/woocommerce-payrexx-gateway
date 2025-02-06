@@ -1,5 +1,5 @@
 {
     "require": {
-        "payrexx/payrexx": "1.8.6"
+        "payrexx/payrexx": "^1.8"
     }
 }
