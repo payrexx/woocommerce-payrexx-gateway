@@ -34,7 +34,6 @@ return apply_filters('wc_payrexx_gateway_settings', [
                 'payrexx.aboon.ch' => 'Aboon',
                 '1pay.ch' => '1pay.ch',
                 'pay.weblandschaft.ch' => 'Weblandschaft',
-                'payment.llv.li' => 'LLV Payment',
                 'paydirect.ch' => 'Paydirect',
             ],
         ],
