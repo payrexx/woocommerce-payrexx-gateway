@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6545e976e162a395fc487d1bd820a556",
+    "content-hash": "c269d27c586a841535969fd92fc48da1",
     "packages": [
         {
             "name": "payrexx/payrexx",
-            "version": "v1.8.6",
+            "version": "v1.8.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/payrexx/payrexx-php.git",
-                "reference": "4eef7d12fb2650e53adeb25b57ab1f18301d100a"
+                "reference": "ab932dca32c607cbaa6f8da9b9e1de2efe28021f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/4eef7d12fb2650e53adeb25b57ab1f18301d100a",
-                "reference": "4eef7d12fb2650e53adeb25b57ab1f18301d100a",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/ab932dca32c607cbaa6f8da9b9e1de2efe28021f",
+                "reference": "ab932dca32c607cbaa6f8da9b9e1de2efe28021f",
                 "shasum": ""
             },
             "require": {
@@ -50,9 +50,9 @@
             ],
             "support": {
                 "issues": "https://github.com/payrexx/payrexx-php/issues",
-                "source": "https://github.com/payrexx/payrexx-php/tree/v1.8.6"
+                "source": "https://github.com/payrexx/payrexx-php/tree/v1.8.10"
             },
-            "time": "2023-02-14T09:01:02+00:00"
+            "time": "2024-10-21T06:19:05+00:00"
         }
     ],
     "packages-dev": [],
@@ -63,5 +63,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.6.0"
 }
