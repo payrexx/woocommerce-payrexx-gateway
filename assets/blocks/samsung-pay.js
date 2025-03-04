@@ -1,7 +1,11 @@
 const payrexx_samsung_pay_settings = window.wc.wcSettings.getSetting( 'payrexx_samsung-pay_data', {} );
 const payrexx_samsung_pay_label = window.wp.htmlEntities.decodeEntities( payrexx_samsung_pay_settings.title ) || window.wp.i18n.__( 'Samsung Pay (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxSamsungPayContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_samsung_pay_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_samsung_pay_settings.description || ''
+	);
 };
 const Payrexx_SamsungPay_Block_Gateway = {
 	name: 'payrexx_samsung-pay',

@@ -64,6 +64,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.0.28 =
+* Support subscription on Block, no need to backup
+
 = 3.0.27 =
 * New payment method update, no need to backup
 
@@ -372,6 +375,10 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.0.28 =
+* Support subscription on Block.
+
 = 3.0.27 =
 * Feature: Added New payment method xMoney.
 

@@ -1,7 +1,11 @@
 const payrexx_reka_settings = window.wc.wcSettings.getSetting( 'payrexx_reka_data', {} );
 const payrexx_reka_label = window.wp.htmlEntities.decodeEntities( payrexx_reka_settings.title  ) || window.wp.i18n.__( 'Reka (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxRekaContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_reka_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_reka_settings.description || ''
+	);
 };
 const Payrexx_Reka_Block_Gateway = {
 	name: 'payrexx_reka',
