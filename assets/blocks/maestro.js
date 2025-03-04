@@ -1,7 +1,11 @@
 const payrexx_maestro_settings = window.wc.wcSettings.getSetting( 'payrexx_maestro_data', {} );
 const payrexx_maestro_label = window.wp.htmlEntities.decodeEntities( payrexx_maestro_settings.title ) || window.wp.i18n.__( 'Maestro (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxMaestroContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_maestro_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_maestro_settings.description || ''
+	);
 };
 const Payrexx_Maestro_Block_Gateway = {
 	name: 'payrexx_maestro',

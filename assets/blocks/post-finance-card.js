@@ -1,7 +1,11 @@
 const payrexx_post_finance_card_settings = window.wc.wcSettings.getSetting( 'payrexx_post-finance-card_data', {} );
 const payrexx_post_finance_card_label = window.wp.htmlEntities.decodeEntities( payrexx_post_finance_card_settings.title ) || window.wp.i18n.__( 'Post Finance Card (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxPostFinancecardContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_post_finance_card_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_post_finance_card_settings.description || ''
+	);
 };
 const Payrexx_PostFinancecard_Block_Gateway = {
 	name: 'payrexx_post-finance-card',

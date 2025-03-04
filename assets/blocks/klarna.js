@@ -1,7 +1,11 @@
 const payrexx_klarna_settings = window.wc.wcSettings.getSetting( 'payrexx_klarna_data', {} );
 const payrexx_klarna_label = window.wp.htmlEntities.decodeEntities( payrexx_klarna_settings.title ) || window.wp.i18n.__( 'Klarna (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxKlarnaContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_klarna_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_klarna_settings.description || ''
+	);
 };
 const Payrexx_Klarna_Block_Gateway = {
 	name: 'payrexx_klarna',

@@ -1,7 +1,11 @@
 const payrexx_mastercard_settings = window.wc.wcSettings.getSetting( 'payrexx_mastercard_data', {} );
 const payrexx_mastercard_label = window.wp.htmlEntities.decodeEntities( payrexx_mastercard_settings.title ) || window.wp.i18n.__( 'Mastercard (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxMastercardContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_mastercard_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_mastercard_settings.description || ''
+	);
 };
 const Payrexx_Mastercard_Block_Gateway = {
 	name: 'payrexx_mastercard',

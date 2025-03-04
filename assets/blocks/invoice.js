@@ -1,7 +1,11 @@
 const payrexx_invoice_settings = window.wc.wcSettings.getSetting( 'payrexx_invoice_data', {} );
 const payrexx_invoice_label = window.wp.htmlEntities.decodeEntities( payrexx_invoice_settings.title ) || window.wp.i18n.__( 'Bill (manual)', 'wc-payrexx-gateway' );
 const PayrexxInvoiceContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_invoice_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_invoice_settings.description || ''
+	);
 };
 const Payrexx_Invoice_Block_Gateway = {
 	name: 'payrexx_invoice',

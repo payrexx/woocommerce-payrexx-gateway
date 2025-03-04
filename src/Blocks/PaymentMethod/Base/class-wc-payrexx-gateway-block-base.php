@@ -4,6 +4,7 @@
  */
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
+use PayrexxPaymentGateway\Helper\SubscriptionHelper;
 
 /**
  * WC_Payrexx_Block_Base
@@ -60,10 +61,35 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_data() {
+		$description = wp_kses_post( $this->settings['description'] );
+		if ( 'yes' === $this->settings['subscriptions_enabled'] ) {
+			$supports = array_merge(
+				$this->get_supported_features(),
+				SubscriptionHelper::get_supported_features()
+			);
+
+			// Check if the cart contains a subscription
+			if ( SubscriptionHelper::isSubscription( WC()->cart ) ) {
+				$name = esc_attr( 'payrexx-allow-recurring-' . $this->name );
+				$label_text = wp_kses_post( $this->settings['subscriptions_user_desc'] );
+
+				$description .= sprintf(
+					'<br/>
+					<div class="wc-block-components-checkbox">
+						<label for="%s">
+							<input type="checkbox" class="wc-block-components-checkbox__input" checked name="%s" id="%s" value="1" />
+							%s
+						</label>
+					</div>',
+					$name, $name, $name, $label_text
+				);
+			}
+		}
+
 		return [
 			'title'       => $this->get_setting( 'title' ),
-			'description' => $this->get_setting( 'description' ),
-			'supports'    => $this->get_supported_features(),
+			'description' => $description,
+			'supports'    => $supports,
 		];
 	}
 }

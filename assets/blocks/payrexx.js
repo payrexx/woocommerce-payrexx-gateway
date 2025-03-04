@@ -1,7 +1,11 @@
 const payrexx_settings = window.wc.wcSettings.getSetting( 'payrexx_data', {} );
 const payrexx_label = window.wp.htmlEntities.decodeEntities( payrexx_settings.title ) || window.wp.i18n.__( 'Payrexx', 'wc-payrexx-gateway' );
 const Content = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_settings.description || ''
+	);
 };
 const Payrexx_Block_Gateway = {
 	name: 'payrexx',

@@ -1,7 +1,11 @@
 const payrexx_boncard_settings = window.wc.wcSettings.getSetting( 'payrexx_boncard_data', {} );
 const payrexx_boncard_label = window.wp.htmlEntities.decodeEntities( payrexx_boncard_settings.title ) || window.wp.i18n.__( 'Boncard (Payrexx)', 'wc-payrexx-gateway' )
 const PayrexxBorncardContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_boncard_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_boncard_settings.description || ''
+	);
 };
 const Payrexx_Boncard_Block_Gateway = {
 	name: 'payrexx_boncard',
