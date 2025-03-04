@@ -1,7 +1,11 @@
 const payrexx_heidipay_settings = window.wc.wcSettings.getSetting( 'payrexx_heidipay_data', {} );
 const payrexx_heidipay_label = window.wp.htmlEntities.decodeEntities( payrexx_heidipay_settings.title ) || window.wp.i18n.__( 'Heidipay (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxHeidipayContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_heidipay_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_heidipay_settings.description || ''
+	);
 };
 const Payrexx_Heidipay_Block_Gateway = {
 	name: 'payrexx_heidipay',

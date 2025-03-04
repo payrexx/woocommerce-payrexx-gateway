@@ -1,7 +1,11 @@
 const payrexx_masterpass_settings = window.wc.wcSettings.getSetting( 'payrexx_masterpass_data', {} );
 const payrexx_masterpass_label = window.wp.htmlEntities.decodeEntities( payrexx_masterpass_settings.title ) || window.wp.i18n.__( 'Masterpass (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxMasterpassContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_masterpass_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_masterpass_settings.description || ''
+	);
 };
 const Payrexx_Masterpass_Block_Gateway = {
 	name: 'payrexx_masterpass',

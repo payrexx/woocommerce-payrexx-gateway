@@ -1,7 +1,11 @@
 const payrexx_bank_transfer_settings = window.wc.wcSettings.getSetting( 'payrexx_bank-transfer_data', {} );
 const payrexx_bank_transfer_label = window.wp.htmlEntities.decodeEntities( payrexx_bank_transfer_settings.title ) || window.wp.i18n.__( 'Purchase on invoice', 'wc-payrexx-gateway' );
 const PayrexxBankTransferContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_bank_transfer_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_bank_transfer_settings.description || ''
+	);
 };
 const Payrexx_BankTransfer_Block_Gateway = {
 	name: 'payrexx_bank-transfer',

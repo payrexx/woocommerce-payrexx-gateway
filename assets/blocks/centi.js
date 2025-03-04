@@ -1,7 +1,11 @@
 const payrexx_centi_settings = window.wc.wcSettings.getSetting( 'payrexx_centi_data', {} );
 const payrexx_centi_label = window.wp.htmlEntities.decodeEntities( payrexx_centi_settings.title ) || window.wp.i18n.__( 'Centi (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxCentiContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_centi_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_centi_settings.description || ''
+	);
 };
 const Payrexx_Centi_Block_Gateway = {
 	name: 'payrexx_centi',

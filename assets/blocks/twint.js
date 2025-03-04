@@ -1,7 +1,11 @@
 const payrexx_twint_settings = window.wc.wcSettings.getSetting( 'payrexx_twint_data', {} );
 const payrexx_twint_label = window.wp.htmlEntities.decodeEntities( payrexx_twint_settings.title ) || window.wp.i18n.__( 'Twint (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxTwintContent = () => {
-	return window.wp.htmlEntities.decodeEntities( payrexx_twint_settings.description || '' );
+	return window.wp.element.createElement(
+		window.wp.element.RawHTML,
+		null,
+		payrexx_twint_settings.description || ''
+	);
 };
 const Payrexx_Twint_Block_Gateway = {
 	name: 'payrexx_twint',

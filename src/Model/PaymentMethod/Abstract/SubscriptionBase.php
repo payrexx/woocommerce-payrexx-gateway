@@ -46,18 +46,10 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		$this->subscriptions_user_desc = $this->get_option( 'subscriptions_user_desc' );
 
 		if ( 'yes' === $this->subscriptions_enabled ) {
-			$support_subscriptions = array(
-				'subscriptions',
-				'subscription_cancellation',
-				'subscription_suspension',
-				'subscription_reactivation',
-				'subscription_amount_changes',
-				'subscription_date_changes',
-				'multiple_subscriptions',
-				'subscription_payment_method_change',
-				'subscription_payment_method_change_customer',
+			$this->supports = array_merge(
+				$this->supports,
+				SubscriptionHelper::get_supported_features()
 			);
-			$this->supports        = array_merge( $this->supports, $support_subscriptions );
 
 			if ( SubscriptionHelper::isSubscription( WC()->cart ) ) {
 				add_filter( 'woocommerce_gateway_description', array( $this, 'gateway_subscription_checkbox' ), 20, 2 );
