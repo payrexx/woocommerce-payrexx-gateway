@@ -9,7 +9,16 @@ const PayrexxPostFinancecardContent = () => {
 };
 const Payrexx_PostFinancecard_Block_Gateway = {
 	name: 'payrexx_post-finance-card',
-	label: payrexx_post_finance_card_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_post_finance_card_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_post_finance_card_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxPostFinancecardContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxPostFinancecardContent, null ),
 	canMakePayment: () => true,

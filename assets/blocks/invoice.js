@@ -9,7 +9,16 @@ const PayrexxInvoiceContent = () => {
 };
 const Payrexx_Invoice_Block_Gateway = {
 	name: 'payrexx_invoice',
-	label: payrexx_invoice_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_invoice_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_invoice_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxInvoiceContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxInvoiceContent, null ),
 	canMakePayment: () => true,

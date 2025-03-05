@@ -1,4 +1,4 @@
-const payrexx_post_finance_pay_settings = window.wc.wcSettings.getSetting( 'payrexx_post-finance-pay', {} );
+const payrexx_post_finance_pay_settings = window.wc.wcSettings.getSetting( 'payrexx_post-finance-pay_data', {} );
 const payrexx_post_finance_pay = window.wp.htmlEntities.decodeEntities( payrexx_post_finance_pay_settings.title ) || window.wp.i18n.__( 'Post Finance Pay (Payrexx)', 'wc-payrexx-gateway' );
 const PayrexxPostFinancePayContent = () => {
 	return window.wp.element.createElement(
@@ -9,7 +9,16 @@ const PayrexxPostFinancePayContent = () => {
 };
 const Payrexx_PostFinancePay_Block_Gateway = {
 	name: 'payrexx_post-finance-pay',
-	label: payrexx_post_finance_pay,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_post_finance_pay,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_post_finance_pay_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxPostFinancePayContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxPostFinancePayContent, null ),
 	canMakePayment: () => true,

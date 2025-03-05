@@ -9,7 +9,16 @@ const PayrexxGooglePayContent = () => {
 };
 const Payrexx_GooglePay_Block_Gateway = {
 	name: 'payrexx_google-pay',
-	label: payrexx_google_pay_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_google_pay_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_google_pay_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxGooglePayContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxGooglePayContent, null ),
 	canMakePayment: () => true,

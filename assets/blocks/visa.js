@@ -9,7 +9,16 @@ const PayrexxVisaContent = () => {
 };
 const Payrexx_Visa_Block_Gateway = {
 	name: 'payrexx_visa',
-	label: payrexx_visa_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_visa_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_visa_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxVisaContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxVisaContent, null ),
 	canMakePayment: () => true,

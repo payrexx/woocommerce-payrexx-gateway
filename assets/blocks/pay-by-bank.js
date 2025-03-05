@@ -9,7 +9,16 @@ const PayrexxPayByBankContent = () => {
 };
 const Payrexx_PayByBank_Block_Gateway = {
 	name: 'payrexx_pay-by-bank',
-	label: payrexx_pay_by_bank_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_pay_by_bank_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_pay_by_bank_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxPayByBankContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxPayByBankContent, null ),
 	canMakePayment: () => true,

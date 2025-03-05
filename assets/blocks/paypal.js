@@ -9,7 +9,16 @@ const PayrexxPaypalContent = () => {
 };
 const Payrexx_Paypal_Block_Gateway = {
 	name: 'payrexx_paypal',
-	label: payrexx_paypal_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_paypal_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_paypal_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxPaypalContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxPaypalContent, null ),
 	canMakePayment: () => true,

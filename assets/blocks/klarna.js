@@ -9,7 +9,16 @@ const PayrexxKlarnaContent = () => {
 };
 const Payrexx_Klarna_Block_Gateway = {
 	name: 'payrexx_klarna',
-	label: payrexx_klarna_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_klarna_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_klarna_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxKlarnaContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxKlarnaContent, null ),
 	canMakePayment: () => true,
