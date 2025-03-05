@@ -9,7 +9,16 @@ const PayrexxMastercardContent = () => {
 };
 const Payrexx_Mastercard_Block_Gateway = {
 	name: 'payrexx_mastercard',
-	label: payrexx_mastercard_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_mastercard_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_mastercard_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxMastercardContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxMastercardContent, null ),
 	canMakePayment: () => true,

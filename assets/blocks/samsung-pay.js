@@ -9,7 +9,16 @@ const PayrexxSamsungPayContent = () => {
 };
 const Payrexx_SamsungPay_Block_Gateway = {
 	name: 'payrexx_samsung-pay',
-	label: payrexx_samsung_pay_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_samsung_pay_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_samsung_pay_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxSamsungPayContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxSamsungPayContent, null ),
 	canMakePayment: () => true,

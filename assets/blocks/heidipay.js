@@ -9,7 +9,16 @@ const PayrexxHeidipayContent = () => {
 };
 const Payrexx_Heidipay_Block_Gateway = {
 	name: 'payrexx_heidipay',
-	label: payrexx_heidipay_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_heidipay_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_heidipay_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxHeidipayContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxHeidipayContent, null ),
 	canMakePayment: () => true,

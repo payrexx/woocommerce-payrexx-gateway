@@ -9,7 +9,16 @@ const PayrexxBankTransferContent = () => {
 };
 const Payrexx_BankTransfer_Block_Gateway = {
 	name: 'payrexx_bank-transfer',
-	label: payrexx_bank_transfer_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_bank_transfer_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_bank_transfer_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxBankTransferContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxBankTransferContent, null ),
 	canMakePayment: () => true,

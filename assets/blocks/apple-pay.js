@@ -9,7 +9,16 @@ const PayrexxApplePayContent = () => {
 };
 const Payrexx_ApplePay_Block_Gateway = {
 	name: 'payrexx_apple-pay',
-	label: payrexx_apple_pay_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_apple_pay_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_apple_pay_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxApplePayContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxApplePayContent, null ),
 	canMakePayment: () => true,

@@ -8,3 +8,8 @@
 .wc_payment_methods .payment_method_payrexx_heidipay img {
     max-width: 75px;
 }
+
+.wc-block-components-radio-control__label img[id^="payrexx"] {
+    display: inline-flex;
+    margin-right: 8px;
+}
