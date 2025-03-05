@@ -9,7 +9,16 @@ const PayrexxDiscoverContent = () => {
 };
 const Payrexx_Discover_Block_Gateway = {
 	name: 'payrexx_discover',
-	label: payrexx_discover_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_discover_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_discover_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxDiscoverContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxDiscoverContent, null ),
 	canMakePayment: () => true,

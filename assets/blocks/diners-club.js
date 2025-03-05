@@ -9,7 +9,16 @@ const PayrexxDinersClubContent = () => {
 };
 const Payrexx_DinersClub_Block_Gateway = {
 	name: 'payrexx_diners-club',
-	label: payrexx_diners_club_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_diners_club_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_diners_club_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxDinersClubContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxDinersClubContent, null ),
 	canMakePayment: () => true,

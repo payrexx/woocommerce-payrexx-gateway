@@ -9,7 +9,16 @@ const PayrexxMasterpassContent = () => {
 };
 const Payrexx_Masterpass_Block_Gateway = {
 	name: 'payrexx_masterpass',
-	label: payrexx_masterpass_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_masterpass_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_masterpass_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxMasterpassContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxMasterpassContent, null ),
 	canMakePayment: () => true,

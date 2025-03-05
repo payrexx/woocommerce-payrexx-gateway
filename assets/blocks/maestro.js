@@ -9,7 +9,16 @@ const PayrexxMaestroContent = () => {
 };
 const Payrexx_Maestro_Block_Gateway = {
 	name: 'payrexx_maestro',
-	label: payrexx_maestro_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_maestro_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_maestro_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxMaestroContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxMaestroContent, null ),
 	canMakePayment: () => true,

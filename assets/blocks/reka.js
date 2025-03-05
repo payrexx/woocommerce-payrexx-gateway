@@ -9,7 +9,16 @@ const PayrexxRekaContent = () => {
 };
 const Payrexx_Reka_Block_Gateway = {
 	name: 'payrexx_reka',
-	label: payrexx_reka_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_reka_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_reka_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxRekaContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxRekaContent, null ),
 	canMakePayment: () => true,

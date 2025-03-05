@@ -9,7 +9,16 @@ const PayrexxTwintContent = () => {
 };
 const Payrexx_Twint_Block_Gateway = {
 	name: 'payrexx_twint',
-	label: payrexx_twint_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_twint_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_twint_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxTwintContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxTwintContent, null ),
 	canMakePayment: () => true,

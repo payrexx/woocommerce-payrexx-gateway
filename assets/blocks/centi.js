@@ -9,7 +9,16 @@ const PayrexxCentiContent = () => {
 };
 const Payrexx_Centi_Block_Gateway = {
 	name: 'payrexx_centi',
-	label: payrexx_centi_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_centi_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_centi_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxCentiContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxCentiContent, null ),
 	canMakePayment: () => true,

@@ -9,7 +9,16 @@ const PayrexxAmexContent = () => {
 };
 const Payrexx_Amex_Block_Gateway = {
 	name: 'payrexx_american-express',
-	label: payrexx_amex_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_amex_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_amex_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxAmexContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxAmexContent, null ),
 	canMakePayment: () => true,

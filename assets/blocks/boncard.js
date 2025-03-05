@@ -9,7 +9,16 @@ const PayrexxBorncardContent = () => {
 };
 const Payrexx_Boncard_Block_Gateway = {
 	name: 'payrexx_boncard',
-	label: payrexx_boncard_label,
+	label: window.wp.element.createElement(
+		'span',
+		{ style: { display: 'inline-flex', alignItems: 'center', gap: '8px' } },
+		payrexx_boncard_label,
+		window.wp.element.createElement(
+			window.wp.element.RawHTML,
+			null,
+			payrexx_boncard_settings.icon || ''
+		),
+	),
 	content: Object( window.wp.element.createElement )( PayrexxBorncardContent, null ),
 	edit: Object( window.wp.element.createElement )( PayrexxBorncardContent, null ),
 	canMakePayment: () => true,
