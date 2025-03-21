@@ -76,6 +76,7 @@ if ($this->id === 'payrexx') {
             'gecko-card' => 'Gecko Card',
             'reka' => 'Reka',
             'boncard' => 'Boncard',
+            'x-money' => 'xMoney',
         ]
     ];
 }
