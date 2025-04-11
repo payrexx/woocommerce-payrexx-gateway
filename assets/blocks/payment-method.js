@@ -30,7 +30,6 @@ registerPayrexxPaymentMethod = (id, defaultLabel ) => {
 			emitResponse.responseTypes.SUCCESS,
 			onPaymentProcessing,
 		] );
-
 		return window.wp.element.createElement(
 			window.wp.element.RawHTML,
 			null,
