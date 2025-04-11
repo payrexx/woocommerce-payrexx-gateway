@@ -12,19 +12,15 @@ registerPayrexxPaymentMethod = (id, defaultLabel ) => {
 		useEffect( () => {
 			const unsubscribe = onPaymentProcessing( async () => {
 				const checkbox = document.getElementById('payrexx-allow-recurring-' + id);
-				console.log(checkbox.checked );
-				if ( checkbox && checkbox.checked ) {
-					console.log('inside');
-					const payrexx_allow_recurring_block = 'payrexx-allow-recurring-' + id;
-					return {
-						type: emitResponse.responseTypes.SUCCESS,
-						meta: {
-							paymentMethodData: {
-								payrexx_allow_recurring_block,
-							},
+				const payrexx_allow_recurring_block = checkbox && checkbox.checked ? 'payrexx-allow-recurring-' + id : 'no';
+				return {
+					type: emitResponse.responseTypes.SUCCESS,
+					meta: {
+						paymentMethodData: {
+							payrexx_allow_recurring_block,
 						},
-					};
-				}
+					},
+				};
 			} );
 			return () => {
 				unsubscribe();
@@ -34,7 +30,7 @@ registerPayrexxPaymentMethod = (id, defaultLabel ) => {
 			emitResponse.responseTypes.SUCCESS,
 			onPaymentProcessing,
 		] );
-	
+
 		return window.wp.element.createElement(
 			window.wp.element.RawHTML,
 			null,
