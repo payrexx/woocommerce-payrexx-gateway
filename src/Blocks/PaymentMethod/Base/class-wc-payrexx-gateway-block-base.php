@@ -4,6 +4,7 @@
  */
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
+use PayrexxPaymentGateway\Helper\SubscriptionHelper;
 
 /**
  * WC_Payrexx_Block_Base
@@ -32,8 +33,7 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_script_handles() {
-		$pm     = str_replace( PAYREXX_PM_PREFIX, '', $this->name );
-		$handle = 'payrexx-blocks-' . $pm . '-integration';
+		$handle = 'payrexx-blocks-payment-method-integration';
 		$deps   = [
 			'wc-blocks-registry',
 			'wc-settings',
@@ -43,7 +43,7 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 		];
 		wp_register_script(
 			$handle,
-			plugins_url( 'assets/blocks/' . $pm . '.js', PAYREXX_MAIN_FILE ),
+			plugins_url( 'assets/blocks/payment-method.js', PAYREXX_MAIN_FILE ),
 			$deps,
 			true,
 			true
@@ -60,10 +60,73 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_data() {
+		$description = wp_kses_post( $this->settings['description'] );
+		$supports = $this->get_supported_features();
+		
+		if ( isset($this->settings['subscriptions_enabled'] )
+		 	&& 'yes' === $this->settings['subscriptions_enabled']
+			&& SubscriptionHelper::isSubscription( WC()->cart )
+		) {
+			$supports = array_merge(
+				$supports,
+				SubscriptionHelper::get_supported_features()
+			);
+			$description .= $this->get_subscription_checkbox();
+		}
+
 		return [
 			'title'       => $this->get_setting( 'title' ),
-			'description' => $this->get_setting( 'description' ),
-			'supports'    => $this->get_supported_features(),
+			'description' => $description,
+			'supports'    => $supports,
+			'icon'        => $this->get_payment_logo(),
 		];
+	}
+
+	/**
+	 * Get subscription checkbox
+	 */
+	private function get_subscription_checkbox():string {
+		$name = esc_attr( 'payrexx-allow-recurring-' . $this->name );
+		$label_text = wp_kses_post( $this->settings['subscriptions_user_desc'] ?? '' );
+
+		return sprintf(
+			'<br/>
+			<label for="%s">
+				<input type="checkbox" checked="checked" name="%s" id="%s" value="1" />
+				%s
+			</label>
+			',
+			$name, $name, $name, $label_text
+		);
+	}
+
+	/**
+	 * Get payment logo
+	 */
+	private function get_payment_logo():string {
+		$pm = str_replace(PAYREXX_PM_PREFIX, '', $this->name);
+
+		$pm = ( 'payrexx' == $pm ? '' : $pm);
+		$icon = '';
+		if ( $pm ) {
+			$src  = WC_HTTPS::force_https_url(
+				plugins_url( 'includes/cardicons/card_' . $pm . '.svg', PAYREXX_MAIN_FILE )
+			);
+			return '<img src="' . $src . '" alt="' . $pm . '" id="payrexx-' . $pm . '"/>';
+		} else {
+			$subscription_logos = $this->settings[ 'subscription_logos' ] ?? [];
+			$logos              = $this->settings[ 'logos' ] ?? [];
+			if ( $logos && $subscription_logos ) {
+				$logos = SubscriptionHelper::isSubscription( WC()->cart ) ? $subscription_logos : $logos;
+				$icon  = '';
+				foreach ( $logos as $logo ) {
+					$src   = WC_HTTPS::force_https_url(
+						plugins_url( 'includes/cardicons/card_' . $logo . '.svg', PAYREXX_MAIN_FILE )
+					);
+					$icon .= '<img src="' . $src . '" alt="' . $logo . '" id="payrexx-' . $logo . '"/>';
+				}
+			}
+		}
+		return $icon;
 	}
 }
