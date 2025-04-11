@@ -86,3 +86,4 @@ registerPayrexxPaymentMethod( 'payrexx_samsung-pay', 'Samsung Pay (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_twint', 'Twint (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_visa', 'Visa (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_wirpay', 'Wirpay (Payrexx)' );
+registerPayrexxPaymentMethod( 'payrexx_x-money', 'xMoney (Payrexx)' );
