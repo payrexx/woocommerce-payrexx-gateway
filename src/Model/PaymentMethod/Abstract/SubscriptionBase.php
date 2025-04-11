@@ -137,6 +137,12 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		$charge_on_auth = false;
 		$pre_auth       = true;
 
+		if ( isset($_POST['payrexx_allow_recurring_block'])
+			&&  $_POST['payrexx_allow_recurring_block'] === 'payrexx-allow-recurring-' . $this->id
+		) {
+			$_POST['payrexx-allow-recurring-' . $this->id] = 'yes';
+		}
+
 		if ( SubscriptionHelper::isPaymentMethodChange() ) {
 			$cancel_redirect_url = wp_nonce_url(
 				add_query_arg( array( 'change_payment_method' => $subscription->get_id() ), $subscription->get_checkout_payment_url() )
