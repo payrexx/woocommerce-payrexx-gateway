@@ -33,8 +33,7 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 	 * @return array
 	 */
 	public function get_payment_method_script_handles() {
-		$pm     = str_replace( PAYREXX_PM_PREFIX, '', $this->name );
-		$handle = 'payrexx-blocks-' . $pm . '-integration';
+		$handle = 'payrexx-blocks-payment-method-integration';
 		$deps   = [
 			'wc-blocks-registry',
 			'wc-settings',
@@ -44,7 +43,7 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 		];
 		wp_register_script(
 			$handle,
-			plugins_url( 'assets/blocks/' . $pm . '.js', PAYREXX_MAIN_FILE ),
+			plugins_url( 'assets/blocks/payment-method.js', PAYREXX_MAIN_FILE ),
 			$deps,
 			true,
 			true
