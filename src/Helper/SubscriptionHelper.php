@@ -2,19 +2,24 @@
 
 namespace PayrexxPaymentGateway\Helper;
 
-class SubscriptionHelper
-{
+class SubscriptionHelper {
 	/**
 	 * @param $cart
 	 * @return bool
 	 */
-	public static function isSubscription($cart):bool {
-		if (empty($cart->cart_contents)) return false;
-		if (self::isPaymentMethodChange()) return true;
+	public static function isSubscription( $cart ):bool {
+		if ( empty( $cart->cart_contents ) ) {
+			return false;
+		}
+		if ( self::isPaymentMethodChange() ) {
+			return true;
+		}
 
 		// Check if cart contains subscriptions
-		foreach ($cart->cart_contents as $cart_item) {
-			if (class_exists('WC_Subscriptions_Product') && \WC_Subscriptions_Product::is_subscription($cart_item['data'])) {
+		foreach ( $cart->cart_contents as $cart_item ) {
+			if ( class_exists( 'WC_Subscriptions_Product' )
+				&& \WC_Subscriptions_Product::is_subscription( $cart_item['data'] )
+			) {
 				return true;
 			}
 		}
@@ -25,9 +30,13 @@ class SubscriptionHelper
 	/**
 	 * @return bool
 	 */
-	public static function isPaymentMethodChange():bool	{
-		$changePaymentMethod = !empty($_GET['change_payment_method']) ? $_GET['change_payment_method'] : null;
-		if (!$changePaymentMethod) return false;
+	public static function isPaymentMethodChange():bool {
+		$change_payment_method = ! empty( $_GET['change_payment_method'] )
+			? $_GET['change_payment_method'] :
+			null;
+		if ( ! $change_payment_method ) {
+			return false;
+		}
 		return true;
 	}
 
@@ -37,7 +46,7 @@ class SubscriptionHelper
 	 * @return array
 	 */
 	public static function get_supported_features(): array {
-		return [
+		return array(
 			'subscriptions',
 			'subscription_cancellation',
 			'subscription_suspension',
@@ -47,6 +56,6 @@ class SubscriptionHelper
 			'multiple_subscriptions',
 			'subscription_payment_method_change',
 			'subscription_payment_method_change_customer',
-		];
+		);
 	}
 }
