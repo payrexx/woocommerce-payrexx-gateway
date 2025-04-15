@@ -137,8 +137,8 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		$charge_on_auth = false;
 		$pre_auth       = true;
 
-		if ( isset($_POST['payrexx_allow_recurring_block'])
-			&&  $_POST['payrexx_allow_recurring_block'] === 'payrexx-allow-recurring-' . $this->id
+		if ( isset( $_POST['payrexx_allow_recurring_block'] )
+			&& $_POST['payrexx_allow_recurring_block'] === 'payrexx-allow-recurring-' . $this->id
 		) {
 			$_POST['payrexx-allow-recurring-' . $this->id] = 'yes';
 		}
