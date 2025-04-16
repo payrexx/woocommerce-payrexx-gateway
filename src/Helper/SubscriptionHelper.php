@@ -16,11 +16,11 @@ class SubscriptionHelper {
 		}
 
 		// Check if cart contains subscriptions
-		foreach ( $cart->cart_contents as $cart_item ) {
-			if ( class_exists( 'WC_Subscriptions_Product' )
-				&& \WC_Subscriptions_Product::is_subscription( $cart_item['data'] )
-			) {
-				return true;
+		if ( class_exists( 'WC_Subscriptions_Product' ) ) {
+			foreach ( $cart->cart_contents as $cart_item ) {
+				if ( \WC_Subscriptions_Product::is_subscription( $cart_item['data'] ) ) {
+					return true;
+				}
 			}
 		}
 
