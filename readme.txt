@@ -47,6 +47,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Discover
 * Pay By Bank
 * xMoney
+* Powerpay
 
 == Installation ==
 * Download the plugin
@@ -66,6 +67,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.0.28 =
 * Support subscription on Block, no need to backup
+* New payment method update, no need to backup
 
 = 3.0.27 =
 * New payment method update, no need to backup
@@ -377,7 +379,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 == Changelog ==
 
 = 3.0.28 =
-* Support subscription on Block.
+* Improvement: Support subscription on Block.
+* Feature: Added New payment method Powerpay.
 
 = 3.0.27 =
 * Feature: Added New payment method xMoney.
