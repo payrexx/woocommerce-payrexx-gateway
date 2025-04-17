@@ -5,10 +5,6 @@
     vertical-align: middle;
 }
 
-.wc_payment_methods .payment_method_payrexx_heidipay img {
-    max-width: 75px;
-}
-
 img#payrexx-heidipay,
 img#payrexx-powerpay {
     max-width: 75px;
