@@ -87,3 +87,4 @@ registerPayrexxPaymentMethod( 'payrexx_twint', 'Twint (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_visa', 'Visa (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_wirpay', 'Wirpay (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_x-money', 'xMoney (Payrexx)' );
+registerPayrexxPaymentMethod( 'payrexx_powerpay', 'Powerpay (Payrexx)' );
