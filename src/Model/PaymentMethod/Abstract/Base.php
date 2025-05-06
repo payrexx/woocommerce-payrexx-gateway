@@ -153,7 +153,7 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 			}
 		} else {
 			$src  = WC_HTTPS::force_https_url( plugins_url( '/includes/cardicons/card_' . $this->pm . '.svg', PAYREXX_MAIN_FILE ) );
-			$icon = '<img src="' . $src . '" alt="' . $this->pm . '" id="' . $this->pm . '"/>';
+			$icon = '<img src="' . $src . '" alt="' . $this->pm . '" id="' . $this->id . '"/>';
 		}
 		// Add a wrapper around the images to allow styling.
 		return apply_filters( 'woocommerce_gateway_icon', '<span class="icon-wrapper">' . $icon . '</span>', $this->id );
