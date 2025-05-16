@@ -48,7 +48,7 @@ class BasketUtil
             $tax_rate = !empty( $tax_rates ) ? reset( $tax_rates )['rate'] : 0;
 
             $basket[] = [
-                'name' => $item['data']->get_title(),
+                'name' => $item['data']->get_name(),
                 'description' => strip_tags($item['data']->get_short_description()),
                 'quantity' => $item['quantity'],
                 'amount' => round($amount * 100),
