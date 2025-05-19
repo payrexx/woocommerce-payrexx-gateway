@@ -48,7 +48,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Pay By Bank
 * xMoney
 * Powerpay
-* Cembrapay
+* CembraPay
 
 == Installation ==
 * Download the plugin
@@ -385,7 +385,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 == Changelog ==
 
 = 3.0.30 =
-* Feature: Added New payment method Cembrapay.
+* Feature: Added New payment method CembraPay.
 
 = 3.0.29 =
 * Feature: Added New payment method Powerpay.
