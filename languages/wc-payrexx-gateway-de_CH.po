@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-21 18:19+0530\n"
-"PO-Revision-Date: 2025-05-19 16:20+0530\n"
+"PO-Revision-Date: 2025-05-19 19:05+0530\n"
 "Last-Translator: \n"
 "Language-Team: German (Switzerland)\n"
 "Language: de_CH\n"
@@ -225,6 +225,6 @@ msgstr "xMoney (Payrexx)"
 msgid "Powerpay (Payrexx)"
 msgstr "Powerpay (Payrexx)"
 
-# src/Model/PaymentMethod/Cembrapay.php:9
-msgid "Cembrapay (Payrexx)"
-msgstr "Cembrapay (Payrexx)"
+# src/Model/PaymentMethod/CembraPay.php:9
+msgid "CembraPay (Payrexx)"
+msgstr "CembraPay (Payrexx)"
