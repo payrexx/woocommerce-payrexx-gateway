@@ -222,3 +222,7 @@ msgstr ""
 # src/Model/PaymentMethod/Powerpay.php: 9
 msgid "Powerpay (Payrexx)"
 msgstr ""
+
+# src/Model/PaymentMethod/CembraPay.php: 9
+msgid "CembraPay (Payrexx)"
+msgstr ""
