@@ -88,4 +88,4 @@ registerPayrexxPaymentMethod( 'payrexx_visa', 'Visa (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_wirpay', 'Wirpay (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_x-money', 'xMoney (Payrexx)' );
 registerPayrexxPaymentMethod( 'payrexx_powerpay', 'Powerpay (Payrexx)' );
-registerPayrexxPaymentMethod( 'payrexx_cembrapay', 'Cembrapay (Payrexx)' );
+registerPayrexxPaymentMethod( 'payrexx_cembrapay', 'CembraPay (Payrexx)' );

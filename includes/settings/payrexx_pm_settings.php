@@ -78,7 +78,7 @@ if ($this->id === 'payrexx') {
             'boncard' => 'Boncard',
             'x-money' => 'xMoney',
             'powerpay' => 'Powerpay',
-            'cembrapay' => 'Cembrapay',
+            'cembrapay' => 'CembraPay',
         ]
     ];
 }
