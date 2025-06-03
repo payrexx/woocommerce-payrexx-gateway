@@ -7,10 +7,7 @@ use PayrexxPaymentGateway\Service\OrderService;
 
 class PaymentHelper
 {
-    /**
-     * @return void
-     */
-    public static function handleError() {
+    public static function handleError(): void {
         if (!isset($_GET['order_id']) || !isset($_GET['order_hash'])) {
             return;
         }
@@ -38,22 +35,16 @@ class PaymentHelper
         $payrexxApiService->deleteGatewayById($gatewayId);
     }
 
-    /**
-     * @param $order
-     * @return string
-     */
-    public static function getCancelUrl($order) {
-        $checkoutUrl = wc_get_checkout_url();
-
-        $getParam = strpos($checkoutUrl, '?');
-        return $checkoutUrl . ($getParam ? '&' : '?') . 'payrexx_error=1&order_hash=' . self::getOrderTimeHash($order) .'&order_id=' . $order->get_id();
+    public static function getCancelUrl(\WC_Order $order): string  {
+        $payUrl = $order->get_checkout_payment_url( true );
+        return add_query_arg([
+            'order_id'      => $order->get_id(),
+            'order_hash'    => self::getOrderTimeHash( $order ),
+            'payrexx_error' => '1',
+        ], $payUrl );
     }
 
-    /**
-     * @param $order
-     * @return string
-     */
-    private static function getOrderTimeHash($order) {
+    private static function getOrderTimeHash(\WC_Order $order): string {
         return hash('sha256', AUTH_SALT . $order->get_date_created()->__toString());
     }
 }
