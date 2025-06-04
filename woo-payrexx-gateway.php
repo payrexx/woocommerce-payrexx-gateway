@@ -207,6 +207,16 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 					'register_block_payment_methods'
 				]
 			);
+
+			add_filter(
+				'woocommerce_valid_order_statuses_for_payment',
+				[
+					$this,
+					'allow_order_payment_on_cancelled'
+				],
+				10,
+				2
+			);
 		}
 
 		public function payment_scripts()
@@ -249,6 +259,24 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 		public static function getOrderService() {
 			return new OrderService();
+		}
+
+		/**
+		 * Allow payment retry for cancelled orders when using Payrexx payment methods.
+		 *
+		 * @param array    $statuses Valid order statuses for payment.
+		 * @param WC_Order $order    The WooCommerce order object.
+		 * @return array
+		 */
+		public function allow_order_payment_on_cancelled(array $statuses, WC_Order $order): array {
+			if (
+				strpos($order->get_payment_method(), 'payrexx') === 0 &&
+				$order->has_status(OrderService::WC_STATUS_CANCELLED)
+			) {
+				$statuses[] = OrderService::WC_STATUS_CANCELLED;
+			}
+
+			return $statuses;
 		}
 	}
 }
