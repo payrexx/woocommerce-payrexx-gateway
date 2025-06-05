@@ -102,14 +102,12 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	}
 
 	/**
-	 * @param $gateway
-	 * @param $order
+	 * @param GatewayResponse $gateway
+	 * @param WC_order        $order
+	 * @param bool            $isPaymentMethodChange
 	 * @return array
 	 */
-	public function process_redirect($gateway, $order) {
-		$order->update_meta_data('payrexx_gateway_id', $gateway->getId());
-		$order->save();
-
+	public function process_redirect($gateway, $order, $isPaymentMethodChange = false) {
 		if (isset($_COOKIE['pll_language'])) {
 			$language = sanitize_text_field($_COOKIE['pll_language']);
 		}
@@ -118,6 +116,13 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		!in_array($language, LANG) ? $language = LANG[0] : null;
 		$redirect = str_replace('?', $language . '/?', $gateway->getLink());
 
+		if ( $isPaymentMethodChange ) {
+			header("Location:" . $redirect);
+			exit();
+		} else {
+			$order->update_meta_data('payrexx_gateway_id', $gateway->getId());
+			$order->save();
+		}
 		// Return redirect
 		return [
 			'result' => 'success',

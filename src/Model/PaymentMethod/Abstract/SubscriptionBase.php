@@ -50,8 +50,12 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 				$this->supports,
 				SubscriptionHelper::get_supported_features()
 			);
+			$isSubscription = false;
+			if (SubscriptionHelper::isPaymentMethodChange()) {
+				$isSubscription = new \WC_Subscription($_GET['change_payment_method']);
+			}
 
-			if ( SubscriptionHelper::isSubscription( WC()->cart ) ) {
+			if ( $isSubscription || SubscriptionHelper::isSubscription( WC()->cart ) ) {
 				add_filter( 'woocommerce_gateway_description', array( $this, 'gateway_subscription_checkbox' ), 20, 2 );
 			}
 		}
@@ -105,23 +109,28 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		$cart  = WC()->cart;
 		$order = new \WC_Order( $order_id );
 
-		if ( ! SubscriptionHelper::isSubscription( $cart ) ) {
+		$isPaymentMethodChange = SubscriptionHelper::isPaymentMethodChange();
+		$isSubscription = SubscriptionHelper::isSubscription( $cart );
+
+		// Case 1: Not a subscription or payment method change
+		if ( ! $isPaymentMethodChange && ! $isSubscription ) {
 			return parent::process_payment( $order_id );
 		}
-		if ( SubscriptionHelper::isPaymentMethodChange() ) {
+
+		if ( $isPaymentMethodChange ) {
 			$subscription = new \WC_Subscription( $order_id );
 			$order        = new \WC_Order( $subscription->get_last_order() );
 		}
 
 		// Fix: Restrict gateway creation if order is not exist to the subscription.
 		if ( class_exists( \Automattic\WooCommerce\Utilities\OrderUtil::class ) ) {
-			if ( ! \Automattic\WooCommerce\Utilities\OrderUtil::is_order( $order_id, [ 'shop_order' ] ) ) {
+			if ( ! \Automattic\WooCommerce\Utilities\OrderUtil::is_order( $order->get_id(), [ 'shop_order' ] ) ) {
 				return array(
 					'result' => 'failure',
 				);
 			}
 		} else {
-			$post_type = get_post_type( $order_id );
+			$post_type = get_post_type( $order->get_id() );
 			if ( $post_type !== 'shop_order' ) {
 				return array(
 					'result' => 'failure',
@@ -136,18 +145,14 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 
 		$charge_on_auth = false;
 		$pre_auth       = true;
-
+		$allow_recurring_key  = 'payrexx-allow-recurring-' . $this->id;
 		if ( isset( $_POST['payrexx_allow_recurring_block'] )
 			&& $_POST['payrexx_allow_recurring_block'] === 'payrexx-allow-recurring-' . $this->id
 		) {
-			$_POST['payrexx-allow-recurring-' . $this->id] = 'yes';
+			$_POST[$allow_recurring_key] = 'yes';
 		}
 
-		if ( SubscriptionHelper::isPaymentMethodChange() ) {
-			$cancel_redirect_url = wp_nonce_url(
-				add_query_arg( array( 'change_payment_method' => $subscription->get_id() ), $subscription->get_checkout_payment_url() )
-			);
-		} elseif ( empty( $_POST['payrexx-allow-recurring-' . $this->id] ) ) { // manually renewal.
+		if ( empty( $_POST[$allow_recurring_key] ) ) { // manually renewal.
 			// Set all subscriptions connected to this order to manual.
 			if ( function_exists( 'wcs_get_subscriptions_for_order' ) ) {
 				$subscriptions = wcs_get_subscriptions_for_order(
@@ -173,6 +178,12 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			$charge_on_auth = !!$total_amount; // auto renewal.
 		}
 
+		if ( $isPaymentMethodChange ) {
+			$charge_on_auth = false;
+			$pre_auth = true;
+			$cancel_redirect_url = '';
+			$success_redirect_url = $subscription->get_view_order_url();
+		}
 		$gateway = $this->payrexxApiService->createPayrexxGateway(
 			$order,
 			$cart,
@@ -182,7 +193,8 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			$success_redirect_url,
 			$cancel_redirect_url,
 			$pre_auth,
-			$charge_on_auth
+			$charge_on_auth,
+			$isPaymentMethodChange ? $subscription : null
 		);
 
 		if ( ! $gateway ) {
@@ -190,7 +202,11 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 				'result' => 'failure',
 			);
 		}
-		return $this->process_redirect( $gateway, $order );
+		if ( $subscription ) {
+			$subscription->update_meta_data('payrexx_gateway_id', $gateway->getId());
+			$subscription->save();
+		}
+		return $this->process_redirect( $gateway, $order, $isPaymentMethodChange );
 	}
 
 	/**
