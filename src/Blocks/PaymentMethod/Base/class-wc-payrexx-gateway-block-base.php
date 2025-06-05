@@ -64,9 +64,13 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 	public function get_payment_method_data() {
 		$description = wp_kses_post( $this->settings['description'] );
 		$supports    = $this->get_supported_features();
+		$isSubscription = false;
+		if ( SubscriptionHelper::isPaymentMethodChange() ) {
+			$isSubscription = new \WC_Subscription( $_GET['change_payment_method'] );
+		}
 		if ( isset( $this->settings['subscriptions_enabled'] )
 			&& 'yes' === $this->settings['subscriptions_enabled']
-			&& SubscriptionHelper::isSubscription( WC()->cart )
+			&& ( SubscriptionHelper::isSubscription( WC()->cart ) || $isSubscription )
 		) {
 			$supports     = array_merge(
 				$supports,
