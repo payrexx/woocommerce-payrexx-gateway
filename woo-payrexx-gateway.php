@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.0.31
+ * Version: 3.0.32
  * Requires at least: 4.4
  * Tested up to: 6.8
  * Requires Plugins: woocommerce
@@ -113,7 +113,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 		protected function init() {
 			if (is_admin()) {
-				new WC_Payrexx_Gateway_Admin();
+				new WC_Payrexx_Gateway_Admin(__FILE__);
 			}
 
 			$this->payrexxApiService = self::getPayrexxApiService();

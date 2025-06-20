@@ -96,15 +96,6 @@ class PayrexxApiService
         }
     }
 
-    /**
-     * @return \Payrexx\Payrexx
-     */
-    public function getInterface(): \Payrexx\Payrexx
-    {
-        $platform = !empty($this->platform) ? $this->platform : \Payrexx\Communicator::API_URL_BASE_DOMAIN;
-        return new \Payrexx\Payrexx($this->instance, $this->apiKey, '', $platform);
-    }
-
     public function deleteGatewayById($gatewayId):bool {
         $payrexx = $this->getInterface();
 
@@ -218,4 +209,27 @@ class PayrexxApiService
 			return false;
 		}
 	}
+
+    public function validate_api_credentials($instance, $apiKey, $platform)
+    {
+        $payrexx = new \Payrexx\Payrexx($instance, $apiKey, '', $platform);
+        $signatureCheck = new \Payrexx\Models\Request\SignatureCheck();
+
+        try {
+            $response = $payrexx->getOne($signatureCheck);
+        } catch(\Payrexx\PayrexxException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return \Payrexx\Payrexx
+     */
+    private function getInterface(): \Payrexx\Payrexx
+    {
+        $platform = !empty($this->platform) ? $this->platform : \Payrexx\Communicator::API_URL_BASE_DOMAIN;
+        return new \Payrexx\Payrexx($this->instance, $this->apiKey, '', $platform);
+    }
 }

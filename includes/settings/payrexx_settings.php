@@ -54,6 +54,12 @@ return apply_filters('wc_payrexx_gateway_settings', [
             'custom_attributes' => ['required' => 'required'],
         ],
         [
+            'type'         => 'verify_button',
+            'title'        => __('Validate API Credentials', 'wc-payrexx-gateway'),
+            'id'           => PAYREXX_CONFIGS_PREFIX . 'api_validation',
+            'button_label' => __('Validate', 'wc-payrexx-gateway'),
+        ],
+        [
             'type' => 'sectionend',
             'id' => PAYREXX_CONFIGS_PREFIX . 'api_settings',
         ],
