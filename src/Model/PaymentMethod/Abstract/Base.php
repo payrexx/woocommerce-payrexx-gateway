@@ -24,7 +24,7 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 
 		$pm = str_replace(PAYREXX_PM_PREFIX, '', $this->id);
 		$this->pm = ($pm == 'payrexx' ? '' : $pm);
-		$this->method_description = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . PAYREXX_ADMIN_SETTINGS_ID ) . '">' . __('General Payrexx Settings', 'wc-payrexx-gateway') . '</a>';
+		$this->method_description = '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=' . PAYREXX_ADMIN_SETTINGS_ID ) . '">' . __('General Payrexx Settings', 'woo-payrexx-gateway') . '</a>';
 
 		if ($this->pm) {
 			$this->icon = WC_HTTPS::force_https_url(plugins_url('/includes/cardicons/card_' . $this->pm . '.svg', PAYREXX_MAIN_FILE));

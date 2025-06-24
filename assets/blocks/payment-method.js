@@ -3,7 +3,7 @@ registerPayrexxPaymentMethod = (id, defaultLabel ) => {
 	if (!paymentMethodSettings || !paymentMethodSettings.title) {
 		return;
 	}
-	const paymentMethodLabelText = window.wp.htmlEntities.decodeEntities( paymentMethodSettings.title ) || window.wp.i18n.__( defaultLabel, 'wc-payrexx-gateway' );
+	const paymentMethodLabelText = window.wp.htmlEntities.decodeEntities( paymentMethodSettings.title ) || window.wp.i18n.__( defaultLabel, 'woo-payrexx-gateway' );
 
 	const { useEffect } = window.wp.element;
 	const ContentComponent = ( props ) => {

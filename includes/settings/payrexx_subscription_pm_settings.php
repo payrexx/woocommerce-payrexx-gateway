@@ -3,27 +3,27 @@ $settings = array();
 if ( class_exists( '\WC_Subscriptions' ) ) {
 	$settings = array(
 		'subscriptions_enabled'   => array(
-			'title'   => __( 'Enable/Disable Subscriptions', 'wc-payrexx-gateway' ),
+			'title'   => __( 'Enable/Disable Subscriptions', 'woo-payrexx-gateway' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Enable payment method for automatic subscription payments', 'wc-payrexx-gateway' ),
+			'label'   => __( 'Enable payment method for automatic subscription payments', 'woo-payrexx-gateway' ),
 			'default' => 'yes',
 		),
 		'subscriptions_user_desc' => array(
-			'title'       => __( 'Description Checkbox', 'wc-payrexx-gateway' ),
+			'title'       => __( 'Description Checkbox', 'woo-payrexx-gateway' ),
 			'type'        => 'textarea',
 			'css'         => 'width:400px;',
 			'description' => __( 'This controls the description which the user sees besides the checkbox to activate recurring payments for a subscription. Checkbox shows only if the feature is active and a subscription is purchased.', 'woocommerce' ),
-			'default'     => __( 'I accept that recurring payments will be charged to my credit card', 'wc-payrexx-gateway' ),
+			'default'     => __( 'I accept that recurring payments will be charged to my credit card', 'woo-payrexx-gateway' ),
 			'desc_tip'    => true,
 		),
 	);
 
 	if ( 'payrexx' === $this->id ) {
 		$settings['subscription_logos'] = array(
-			'title'       => __( 'Recurring payment logo', 'wc-payrexx-gateway' ),
+			'title'       => __( 'Recurring payment logo', 'woo-payrexx-gateway' ),
 			'type'        => 'multiselect',
 			'css'         => 'height: 100px;width:400px;',
-			'description' => __( 'This controls the payment method logos for recurring payments.', 'wc-payrexx-gateway' ),
+			'description' => __( 'This controls the payment method logos for recurring payments.', 'woo-payrexx-gateway' ),
 			'desc_tip'    => true,
 			'options'     => array(
 				'mastercard'           => 'Mastercard',

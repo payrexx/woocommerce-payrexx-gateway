@@ -34,7 +34,7 @@ class WC_Payrexx_Gateway_Admin
      */
     public function __construct($plugin_file)
     {
-        $this->label = __('Payrexx', 'wc-payrexx-gateway');
+        $this->label = __('Payrexx', 'woo-payrexx-gateway');
         $this->plugin_file = $plugin_file;
 
         $this->register_hooks();
@@ -186,7 +186,7 @@ class WC_Payrexx_Gateway_Admin
     public function plugin_action_links($links)
     {
         $action_links = [
-            'settings' => '<a href="' . admin_url('admin.php?page=wc-settings&tab=' . PAYREXX_ADMIN_SETTINGS_ID) . '">' . __('Settings', 'wc-payrexx-gateway') . '</a>',
+            'settings' => '<a href="' . admin_url('admin.php?page=wc-settings&tab=' . PAYREXX_ADMIN_SETTINGS_ID) . '">' . __('Settings', 'woo-payrexx-gateway') . '</a>',
         ];
 
         return array_merge($action_links, $links);
@@ -231,9 +231,9 @@ class WC_Payrexx_Gateway_Admin
         $payrexxApiService = WC_Payrexx_Gateway::getPayrexxApiService();
 
         if ($payrexxApiService->validate_api_credentials($instance, $apiKey, $platform)){
-            wp_send_json_success(['message' => __('Signature validated successfully. Your credentials are correct.', 'wc-payrexx-gateway')]);
+            wp_send_json_success(['message' => __('Signature validated successfully. Your credentials are correct.', 'woo-payrexx-gateway')]);
         }
 
-        wp_send_json_error(['message' => __('Signature validation failed. Pleae check your credentials.', 'wc-payrexx-gateway')]);
+        wp_send_json_error(['message' => __('Signature validation failed. Please check your credentials.', 'woo-payrexx-gateway')]);
     }
 }
