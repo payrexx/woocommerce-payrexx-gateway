@@ -134,7 +134,7 @@ class OrderService
 		}
 		$order->update_status(
 			$custom_status,
-			__( self::STATUS_MESSAGES[$order_status] . $transaction_uuid, 'wc-payrexx-gateway' )
+			__( self::STATUS_MESSAGES[$order_status] . $transaction_uuid, 'woo-payrexx-gateway' )
 		);
 	}
 

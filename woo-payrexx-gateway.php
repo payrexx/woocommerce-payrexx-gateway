@@ -4,12 +4,14 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.0.31
+ * Version: 3.0.32
  * Requires at least: 4.4
  * Tested up to: 6.8
  * Requires Plugins: woocommerce
  * WC requires at least: 3.8.1
  * WC tested up to: 9.4.2
+ * Text Domain: woo-payrexx-gateway
+ * Domain Path: /languages
  */
 
 // Exit if accessed directly
@@ -113,14 +115,14 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 
 		protected function init() {
 			if (is_admin()) {
-				new WC_Payrexx_Gateway_Admin();
+				new WC_Payrexx_Gateway_Admin(__FILE__);
 			}
 
 			$this->payrexxApiService = self::getPayrexxApiService();
 			$this->orderService = self::getOrderService();
 			$this->webhookDispatcher = new Dispatcher($this->payrexxApiService, $this->orderService, get_option(PAYREXX_CONFIGS_PREFIX . 'prefix'));
 
-			load_plugin_textdomain('wc-payrexx-gateway', false, basename(dirname(PAYREXX_MAIN_FILE)) . '/languages');
+			load_plugin_textdomain('woo-payrexx-gateway', false, basename(dirname(PAYREXX_MAIN_FILE)) . '/languages');
 		}
 
 		protected function register_hooks() {
@@ -229,7 +231,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 			wp_enqueue_style('payrexx_styles');
 
 			if (isset($_GET['payrexx_error'])) {
-				wc_add_notice(__('Payment failed. Please choose another method.', 'wc-payrexx-gateway'), 'error');
+				wc_add_notice(__('Payment failed. Please choose another method.', 'woo-payrexx-gateway'), 'error');
 				PaymentHelper::handleError();
 			}
 

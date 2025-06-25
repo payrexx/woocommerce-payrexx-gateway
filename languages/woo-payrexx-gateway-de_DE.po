@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
-"PO-Revision-Date: 2025-05-19 19:06+0530\n"
+"PO-Revision-Date: 2025-06-24 16:01+0000\n"
 "Last-Translator: \n"
-"Language-Team: German (Germany)\n"
+"Language-Team: Deutsch\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -13,14 +13,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Loco-Source-Locale: en_IN\n"
 "X-Loco-Parser: loco_parse_po\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Loco https://localise.biz/"
 
 #. Description of the plugin
 msgid "Accept many different payment methods on your store using Payrexx"
 msgstr ""
 "Akzeptieren Sie mit Payrexx verschiedene Zahlungsmittel auf Ihrem Onlineshop"
 
-#: includes/settings/payrexx_settings.php:55
+#: includes/settings/payrexx_settings.php:67
 msgid "Additional Settings"
 msgstr "Zusätzliche Einstellungen"
 
@@ -28,7 +28,7 @@ msgstr "Zusätzliche Einstellungen"
 msgid "Amex (Payrexx)"
 msgstr ""
 
-#: includes/settings/payrexx_settings.php:43
+#: includes/settings/payrexx_settings.php:49
 msgid "API Key"
 msgstr ""
 
@@ -40,9 +40,22 @@ msgstr "API Einstellungen"
 msgid "Apple Pay (Payrexx)"
 msgstr ""
 
-#: src/Model/PaymentMethod/BankTransfer.php:9
-msgid "Purchase on invoice"
-msgstr "Kauf auf Rechnung"
+#: src/Model/PaymentMethod/Invoice.php:9
+msgid "Bill (manual)"
+msgstr "Rechnung (manuell)"
+
+#: src/Model/PaymentMethod/Boncard.php:9
+msgid "Boncard (Payrexx)"
+msgstr "Boncard (Payrexx)"
+
+# src/Model/PaymentMethod/CembraPay.php:9
+#: src/Model/PaymentMethod/CembraPay.php:9
+msgid "CembraPay (Payrexx)"
+msgstr "CembraPay (Payrexx)"
+
+#: src/Model/PaymentMethod/Centi.php:9
+msgid "Centi (Payrexx)"
+msgstr ""
 
 #: includes/settings/payrexx_settings.php:11
 msgid "Choose Your Platform"
@@ -51,6 +64,18 @@ msgstr "Wählen Sie Ihre Plattform"
 #: includes/settings/payrexx_pm_settings.php:19
 msgid "Description"
 msgstr "Beschreibung"
+
+#: includes/settings/payrexx_subscription_pm_settings.php:12
+msgid "Description Checkbox"
+msgstr ""
+
+#: src/Model/PaymentMethod/DinersClub.php:9
+msgid "Diners Club (Payrexx)"
+msgstr "Diners Club (Payrexx)"
+
+#: src/Model/PaymentMethod/Discover.php:9
+msgid "Discover (Payrexx)"
+msgstr "Discover (Payrexx)"
 
 #: includes/settings/payrexx_pm_settings.php:7
 msgid "Enable Payment Method"
@@ -68,15 +93,15 @@ msgstr "Aktivieren/Deaktivieren"
 msgid "Enable/Disable Subscriptions"
 msgstr "Abonnemente Aktivieren/Deaktivieren"
 
-#: includes/settings/payrexx_settings.php:63
+#: includes/settings/payrexx_settings.php:75
 msgid ""
 "Enter a look and feel profile ID if you wish to use a specific design in the "
 "checkout"
 msgstr ""
-"Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im Checkout "
-"zu nutzen"
+"Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im "
+"Checkout zu nutzen"
 
-#: src/Model/PaymentMethod/Abstract/Base.php:26
+#: src/Model/PaymentMethod/Abstract/Base.php:27
 msgid "General Payrexx Settings"
 msgstr "Allgemeine Payrexx Einstellungen"
 
@@ -84,19 +109,27 @@ msgstr "Allgemeine Payrexx Einstellungen"
 msgid "Google Pay (Payrexx)"
 msgstr ""
 
+#: src/Model/PaymentMethod/Heidipay.php:9
+msgid "Heidipay (Payrexx)"
+msgstr ""
+
 #. Author URI of the plugin
 msgid "https://payrexx.com"
 msgstr ""
 
-#: includes/settings/payrexx_settings.php:36
+#: includes/settings/payrexx_subscription_pm_settings.php:16
+msgid "I accept that recurring payments will be charged to my credit card"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php:42
 msgid "Instance Name"
 msgstr "Instanz Name"
 
-#: src/Model/PaymentMethod/Invoice.php:9
-msgid "Bill (manual)"
-msgstr "Rechnung (manuell)"
+#: src/Model/PaymentMethod/Klarna.php:9
+msgid "Klarna (Payrexx)"
+msgstr "Klarna (Payrexx)"
 
-#: includes/settings/payrexx_settings.php:60
+#: includes/settings/payrexx_settings.php:72
 msgid "Look&Feel Profile ID"
 msgstr "Look&Feel Profil ID"
 
@@ -104,7 +137,7 @@ msgstr "Look&Feel Profil ID"
 msgid "Maestro (Payrexx)"
 msgstr ""
 
-#: src/Model/PaymentMethod/Mastercard.php:9
+#: src/Model/PaymentMethod/Mastercard.php:8
 msgid "Mastercard (Payrexx)"
 msgstr ""
 
@@ -112,15 +145,19 @@ msgstr ""
 msgid "Masterpass (Payrexx)"
 msgstr ""
 
-#: includes/settings/payrexx_settings.php:46
+#: includes/settings/payrexx_settings.php:52
 msgid ""
-"Paste the API key from the integrations page of your Payrexx merchant backend "
-"here"
+"Paste the API key from the integrations page of your Payrexx merchant "
+"backend here"
 msgstr ""
 "Füge Sie den API Key, von der Integrationsseite in Ihrem Payrexx Händler "
 "Account, hier ein"
 
-#: woo-payrexx-gateway.php:177
+#: src/Model/PaymentMethod/PayByBank.php:9
+msgid "Pay by Bank (Payrexx)"
+msgstr "Pay by Bank (Payrexx)"
+
+#: woo-payrexx-gateway.php:232
 msgid "Payment failed. Please choose another method."
 msgstr "Zahlung fehlgeschlagen. Bitte wählen Sie eine anderes Zahlungsmittel."
 
@@ -129,7 +166,7 @@ msgid "Paypal (Payrexx)"
 msgstr ""
 
 #. Author of the plugin
-#: includes/admin/class-wc-payrexx-gateway-admin.php:35
+#: includes/admin/class-wc-payrexx-gateway-admin.php:37
 #: src/Model/PaymentMethod/Payrexx.php:9
 msgid "Payrexx"
 msgstr ""
@@ -142,17 +179,53 @@ msgstr "Post Finance Card (Payrexx)"
 msgid "Post Finance E-Finance (Payrexx)"
 msgstr "Post Finance E-Finance (Payrexx)"
 
-#: includes/settings/payrexx_settings.php:66
+#: src/Model/PaymentMethod/PostFinancePay.php:9
+msgid "Post Finance Pay (Payrexx)"
+msgstr "Post Finance Pay (Payrexx)"
+
+# src/Model/PaymentMethod/Powerpay.php:9
+#: src/Model/PaymentMethod/Powerpay.php:9
+msgid "Powerpay (Payrexx)"
+msgstr "Powerpay (Payrexx)"
+
+#: includes/settings/payrexx_settings.php:78
 msgid "Prefix "
+msgstr ""
+
+#: src/Model/PaymentMethod/BankTransfer.php:9
+msgid "Purchase on invoice"
+msgstr "Kauf auf Rechnung"
+
+#: includes/settings/payrexx_subscription_pm_settings.php:23
+msgid "Recurring payment logo"
+msgstr ""
+
+#: src/Model/PaymentMethod/Reka.php:9
+msgid "Reka (Payrexx)"
 msgstr ""
 
 #: src/Model/PaymentMethod/SamsungPay.php:9
 msgid "Samsung Pay (Payrexx)"
 msgstr ""
 
-#: includes/admin/class-wc-payrexx-gateway-admin.php:144
+#: includes/settings/payrexx_pm_settings.php:29
+msgid "Select Logo"
+msgstr ""
+
+#: includes/admin/class-wc-payrexx-gateway-admin.php:189
 msgid "Settings"
 msgstr "Einstellungen"
+
+#: includes/admin/class-wc-payrexx-gateway-admin.php:234
+msgid "Signature validated successfully. Your credentials are correct."
+msgstr ""
+"Die Signatur wurde erfolgreich validiert. Ihre API Zugangsdaten sind korrekt."
+
+#: includes/admin/class-wc-payrexx-gateway-admin.php:237
+msgid "Signature validation failed. Pleae check your credentials."
+msgstr ""
+"Die Validierung Ihrer Signatur ist fehlgeschlagen. Ihre API Zugangsdaten "
+"sind falsch."
 
 #: includes/settings/payrexx_pm_settings.php:22
 msgid ""
@@ -162,23 +235,35 @@ msgstr ""
 "Die Zahlungsmittel Beschreibung, welche im Checkout erscheint wenn das "
 "jeweilige Zahlungsmittel gewählt wird."
 
-#: includes/settings/payrexx_settings.php:39
+#: includes/settings/payrexx_settings.php:45
 msgid ""
 "The instance name is your Payrexx account name. You find it in the URL when "
 "logged in INSTANCENAME.payrexx.com."
 msgstr ""
 "Der Instanzname ist Ihr Payrexx Account Name. Sie finden diesen in der URL, "
-"wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME.payrexx."
-"com."
+"wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME."
+"payrexx.com."
 
-#: includes/settings/payrexx_settings.php:70
-#| msgid "The Prefix is only necessary for customers outside the Payrexx platform"
+#: includes/settings/payrexx_settings.php:82
+#| msgid ""
+#| "The Prefix is only necessary for customers outside the Payrexx platform"
 msgid "The Prefix is only necessary for merchants outside the Payrexx platform"
-msgstr "Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
+msgstr ""
+"Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
 
 #: includes/settings/payrexx_pm_settings.php:13
 msgid "The title of the payment method which shows in the checkout."
-msgstr "Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
+msgstr ""
+"Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
+
+#: includes/settings/payrexx_subscription_pm_settings.php:26
+msgid "This controls the payment method logos for recurring payments."
+msgstr ""
+
+#: includes/settings/payrexx_pm_settings.php:32
+msgid ""
+"This controls the payment method logos the customer sees during checkout."
+msgstr ""
 
 #: includes/settings/payrexx_pm_settings.php:11
 msgid "Title"
@@ -187,6 +272,14 @@ msgstr "Titel"
 #: src/Model/PaymentMethod/Twint.php:9
 msgid "Twint (Payrexx)"
 msgstr ""
+
+#: includes/settings/payrexx_settings.php:60
+msgid "Validate"
+msgstr "Validieren"
+
+#: includes/settings/payrexx_settings.php:58
+msgid "Validate API Credentials"
+msgstr "API Zugangsdaten Validieren"
 
 #: src/Model/PaymentMethod/Visa.php:9
 msgid "Visa (Payrexx)"
@@ -200,31 +293,6 @@ msgstr ""
 msgid "WooCommerce Payrexx Gateway"
 msgstr ""
 
-msgid "Klarna (Payrexx)"
-msgstr "Klarna (Payrexx)"
-
-msgid "Boncard (Payrexx)"
-msgstr "Boncard (Payrexx)"
-
-msgid "Post Finance Pay (Payrexx)"
-msgstr "Post Finance Pay (Payrexx)"
-
-msgid "Diners Club (Payrexx)"
-msgstr "Diners Club (Payrexx)"
-
-msgid "Discover (Payrexx)"
-msgstr "Discover (Payrexx)"
-
-msgid "Pay by Bank (Payrexx)"
-msgstr "Pay by Bank (Payrexx)"
-
+#: src/Model/PaymentMethod/Xmoney.php:9
 msgid "xMoney (Payrexx)"
 msgstr "xMoney (Payrexx)"
-
-# src/Model/PaymentMethod/Powerpay.php:9
-msgid "Powerpay (Payrexx)"
-msgstr "Powerpay (Payrexx)"
-
-# src/Model/PaymentMethod/CembraPay.php:9
-msgid "CembraPay (Payrexx)"
-msgstr "CembraPay (Payrexx)"

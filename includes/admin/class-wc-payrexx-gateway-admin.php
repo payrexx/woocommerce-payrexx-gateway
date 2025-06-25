@@ -14,6 +14,8 @@ class WC_Payrexx_Gateway_Admin
      */
     protected static $_instance = null;
 
+    protected $plugin_file;
+
     /**
      * Main WooCommerce Payrexx Admin Instance.
      *
@@ -30,9 +32,10 @@ class WC_Payrexx_Gateway_Admin
     /**
      * WC Payrexx Admin Constructor.
      */
-    public function __construct()
+    public function __construct($plugin_file)
     {
-        $this->label = __('Payrexx', 'wc-payrexx-gateway');
+        $this->label = __('Payrexx', 'woo-payrexx-gateway');
+        $this->plugin_file = $plugin_file;
 
         $this->register_hooks();
     }
@@ -97,7 +100,49 @@ class WC_Payrexx_Gateway_Admin
             ]
         );
 
+        add_action(
+            'woocommerce_admin_field_verify_button',
+            [
+                $this,
+                'render_verify_button'
+            ]
+        );
 
+        add_action(
+                'admin_enqueue_scripts',
+                [
+                        $this, 'enqueue_admin_settings_script'
+                ]
+        );
+
+        add_action(
+                'wp_ajax_payrexx_validate_api',
+                [
+                        $this, 'payrexx_validate_api'
+                ]
+        );
+    }
+
+    /**
+     *
+     * @param string $hook
+     */
+    function enqueue_admin_settings_script($hook)
+    {
+        if ($hook !== 'woocommerce_page_wc-settings') return;
+
+        wp_enqueue_script(
+            'wc-payrexx-gateway-admin',
+            plugins_url('assets/js/settingsValidation.js', $this->plugin_file),
+            ['jquery'],
+            '1.0',
+            true
+        );
+
+        wp_localize_script('wc-payrexx-gateway-admin', 'payrexxAjax', [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce'    => wp_create_nonce('wc_payrexx_gateway_verify_nonce'),
+        ]);
     }
 
     /**
@@ -141,7 +186,7 @@ class WC_Payrexx_Gateway_Admin
     public function plugin_action_links($links)
     {
         $action_links = [
-            'settings' => '<a href="' . admin_url('admin.php?page=wc-settings&tab=' . PAYREXX_ADMIN_SETTINGS_ID) . '">' . __('Settings', 'wc-payrexx-gateway') . '</a>',
+            'settings' => '<a href="' . admin_url('admin.php?page=wc-settings&tab=' . PAYREXX_ADMIN_SETTINGS_ID) . '">' . __('Settings', 'woo-payrexx-gateway') . '</a>',
         ];
 
         return array_merge($action_links, $links);
@@ -153,5 +198,42 @@ class WC_Payrexx_Gateway_Admin
     private function get_settings()
     {
         return include(PAYREXX_PLUGIN_DIR . '/includes/settings/payrexx_settings.php');
+    }
+
+    /**
+     * Content of custom settings field
+     *
+     * @param array $value contains settings field properties
+     */
+    function render_verify_button($value) {
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc"><?php echo esc_html($value['title']); ?></th>
+            <td class="forminp">
+                <button id="validateApiCredentials" class="button button-secondary"><?php echo esc_html($value['button_label']); ?></button>
+                <span id="validationSpinner" class="spinner" style="display: none; float: none; margin: 3px 10px; vertical-align: middle;"></span>
+                <span id="validationResult" style="margin-left:10px; line-height: 2.15384615"></span>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Ajax request handle to validate API Credentials
+     *
+     */
+    function payrexx_validate_api()
+    {
+        $instance = isset($_POST['instance']) ? sanitize_text_field($_POST['instance']) : '';
+        $apiKey = isset($_POST['api_key']) ? sanitize_text_field($_POST['api_key']) : '';
+        $platform = isset($_POST['platform']) ? sanitize_text_field($_POST['platform']) : '';
+
+        $payrexxApiService = WC_Payrexx_Gateway::getPayrexxApiService();
+
+        if ($payrexxApiService->validate_api_credentials($instance, $apiKey, $platform)){
+            wp_send_json_success(['message' => __('Signature validated successfully. Your credentials are correct.', 'woo-payrexx-gateway')]);
+        }
+
+        wp_send_json_error(['message' => __('Signature validation failed. Please check your credentials.', 'woo-payrexx-gateway')]);
     }
 }
