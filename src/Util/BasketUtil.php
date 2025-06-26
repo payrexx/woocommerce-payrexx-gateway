@@ -2,15 +2,12 @@
 
 namespace PayrexxPaymentGateway\Util;
 
+use Exception;
 use WC_Tax;
 
 class BasketUtil
 {
 
-    /**
-     * @param $cart
-     * @return array
-     */
     public static function createBasketByCart($cart): array
     {
         $productPriceIncludesTax = ('yes' === get_option( 'woocommerce_prices_include_tax'));
@@ -48,7 +45,7 @@ class BasketUtil
             $tax_rate = !empty( $tax_rates ) ? reset( $tax_rates )['rate'] : 0;
 
             $basket[] = [
-                'name' => $item['data']->get_name(),
+                'name' => self::get_product_name( $item ),
                 'description' => strip_tags($item['data']->get_short_description()),
                 'quantity' => $item['quantity'],
                 'amount' => round($amount * 100),
@@ -148,5 +145,23 @@ class BasketUtil
             ]);
         }
         return implode('; ', $desc);
+    }
+
+    private static function get_product_name(array $item): string
+    {
+        $product = $item['data'];
+        $product_name = $product->get_name();
+
+        try {
+            if ( $product->is_type( 'variation' ) ) {
+                $item_meta = wc_get_formatted_cart_item_data( $item, true );
+                if ( $item_meta ) {
+                    return $product_name . " ( " . $item_meta . " )";
+                }
+            }
+        } catch ( Exception $e ) {
+        }
+
+        return $product_name;
     }
 }
