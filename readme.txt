@@ -392,6 +392,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.0.32 =
 * Feature: API Credentials Validation
+* Improvement: Product name of variable product.
 
 = 3.0.31 =
 * Improvement: Retry payment after changing the payment method.
