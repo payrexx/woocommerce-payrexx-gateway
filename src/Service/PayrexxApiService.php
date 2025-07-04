@@ -37,8 +37,7 @@ class PayrexxApiService
 				'X-Shop-Version'   => get_bloginfo('version'),
 				'X-Plugin-Version' => $plugin_data['Version'],
 			]);
-		} catch(Exception $e) {
-		}
+		} catch(Exception $e) {}
 
 		$gateway = new \Payrexx\Models\Request\Gateway();
 
