@@ -1,5 +1,6 @@
 {
-    "require": {
-        "payrexx/payrexx": "^1.8"
-    }
+  "require": {
+    "php": "^8.0",
+    "payrexx/payrexx": "^2.0"
+  }
 }
