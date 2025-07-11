@@ -8,151 +8,161 @@ use PayrexxPaymentGateway\Util\BasketUtil;
 
 class PayrexxApiService
 {
-    private $instance;
-    private $apiKey;
-    private $platform;
-    private $lookAndFeelId;
+	private $instance;
+	private $apiKey;
+	private $platform;
+	private $lookAndFeelId;
 
-    /**
-     * Constructor
-     *
-     * @param EntityRepository $customerRepository
-     * @param LoggerInterface $logger
-     */
-    public function __construct($instance, $apiKey, $platform, $lookAndFeelId)
-    {
-        $this->instance = $instance;
-        $this->apiKey = $apiKey;
-        $this->platform = $platform;
-        $this->lookAndFeelId = $lookAndFeelId;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param EntityRepository $customerRepository
+	 * @param LoggerInterface $logger
+	 */
+	public function __construct($instance, $apiKey, $platform, $lookAndFeelId)
+	{
+		$this->instance = $instance;
+		$this->apiKey = $apiKey;
+		$this->platform = $platform;
+		$this->lookAndFeelId = $lookAndFeelId;
+	}
 
-    public function createPayrexxGateway($order, $cart, $totalAmount, $pm, $reference, $successRedirectUrl, $cancelRedirectUrl, $preAuthorization, $chargeOnAuth) {
-        $payrexx = $this->getInterface();
-        $gateway = new \Payrexx\Models\Request\Gateway();
+	public function createPayrexxGateway($order, $cart, $totalAmount, $pm, $reference, $successRedirectUrl, $cancelRedirectUrl, $preAuthorization, $chargeOnAuth) {
+		$payrexx = $this->getInterface();
+		try {
+			$plugin_data = get_plugin_data(
+				WP_PLUGIN_DIR . '/woo-payrexx-gateway/woo-payrexx-gateway.php'
+			);
+			$payrexx->setHttpHeaders([
+				'X-Shop-Version'   => get_bloginfo('version'),
+				'X-Plugin-Version' => $plugin_data['Version'],
+			]);
+		} catch(Exception $e) {}
 
-        $gateway->setValidity(15);
-        $gateway->setPsp([]);
-        $gateway->setSkipResultPage(true);
+		$gateway = new \Payrexx\Models\Request\Gateway();
 
-        $totalAmount = round($totalAmount, 2);
-        if ($totalAmount) {
-            $gateway->setAmount($totalAmount * 100);
-        } else {
-            // The amount is artificially elevated because the Gateway creation always needs an amount
-            $gateway->setAmount(0.50 * 100);
-        }
+		$gateway->setValidity(15);
+		$gateway->setPsp([]);
+		$gateway->setSkipResultPage(true);
 
-        if (!$totalAmount && $preAuthorization) {
-            $gateway->setButtonText([
-                1 => 'Autorisieren',
-                2 => 'Authorize',
-                3 => 'Autoriser',
-                4 => 'Autorizzare',
-                7 => 'Autoriseer',
-            ]);
-        }
+		$totalAmount = round($totalAmount, 2);
+		if ($totalAmount) {
+			$gateway->setAmount($totalAmount * 100);
+		} else {
+			// The amount is artificially elevated because the Gateway creation always needs an amount
+			$gateway->setAmount(0.50 * 100);
+		}
 
-        $gateway->setCurrency(get_woocommerce_currency() ?: 'USD');
+		if (!$totalAmount && $preAuthorization) {
+			$gateway->setButtonText([
+				1 => 'Autorisieren',
+				2 => 'Authorize',
+				3 => 'Autoriser',
+				4 => 'Autorizzare',
+				7 => 'Autoriseer',
+			]);
+		}
 
-        $gateway->setPm([$pm]);
-        $gateway->setPreAuthorization($preAuthorization);
-        $gateway->setChargeOnAuthorization($chargeOnAuth);
+		$gateway->setCurrency(get_woocommerce_currency() ?: 'USD');
 
-        $basket = BasketUtil::createBasketByCart($cart);
-        $basketAmount = round(BasketUtil::getBasketAmount($basket), 2);
-        if ($totalAmount && $totalAmount === $basketAmount) {
-            $gateway->setBasket($basket);
-        } else {
-            $gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
-        }
+		$gateway->setPm([$pm]);
+		$gateway->setPreAuthorization($preAuthorization);
+		$gateway->setChargeOnAuthorization($chargeOnAuth);
 
-        $gateway->setReferenceId($reference);
+		$basket = BasketUtil::createBasketByCart($cart);
+		$basketAmount = round(BasketUtil::getBasketAmount($basket), 2);
+		if ($totalAmount && $totalAmount === $basketAmount) {
+			$gateway->setBasket($basket);
+		} else {
+			$gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
+		}
 
-        $gateway->setLookAndFeelProfile($this->lookAndFeelId ?: null);
+		$gateway->setReferenceId($reference);
 
-        $gateway->setSuccessRedirectUrl($successRedirectUrl);
-        $gateway->setCancelRedirectUrl($cancelRedirectUrl);
-        $gateway->setFailedRedirectUrl($cancelRedirectUrl);
+		$gateway->setLookAndFeelProfile($this->lookAndFeelId ?: null);
 
-        $billingAddress = $order->get_billing_address_1() . ' ' . $order->get_billing_address_2();
-        $gateway->addField('title', '');
-        $gateway->addField('forename', $order->get_billing_first_name());
-        $gateway->addField('surname', $order->get_billing_last_name());
-        $gateway->addField('company', $order->get_billing_company());
-        $gateway->addField('street', $billingAddress);
-        $gateway->addField('postcode', $order->get_billing_postcode());
-        $gateway->addField('place', $order->get_billing_city());
-        $gateway->addField('country', $order->get_billing_country());
-        $gateway->addField('phone', $order->get_billing_phone());
-        $gateway->addField('email', $order->get_billing_email());
-        $gateway->addField('custom_field_1', $order->get_id(), 'WooCommerce Order ID');
+		$gateway->setSuccessRedirectUrl($successRedirectUrl);
+		$gateway->setCancelRedirectUrl($cancelRedirectUrl);
+		$gateway->setFailedRedirectUrl($cancelRedirectUrl);
 
-        try {
-            $response = $payrexx->create($gateway);
-            return $response;
-        } catch (\Payrexx\PayrexxException $e) {
-            return null;
-        }
-    }
+		$billingAddress = $order->get_billing_address_1() . ' ' . $order->get_billing_address_2();
+		$gateway->addField('title', '');
+		$gateway->addField('forename', $order->get_billing_first_name());
+		$gateway->addField('surname', $order->get_billing_last_name());
+		$gateway->addField('company', $order->get_billing_company());
+		$gateway->addField('street', $billingAddress);
+		$gateway->addField('postcode', $order->get_billing_postcode());
+		$gateway->addField('place', $order->get_billing_city());
+		$gateway->addField('country', $order->get_billing_country());
+		$gateway->addField('phone', $order->get_billing_phone());
+		$gateway->addField('email', $order->get_billing_email());
+		$gateway->addField('custom_field_1', $order->get_id(), 'WooCommerce Order ID');
 
-    public function deleteGatewayById($gatewayId):bool {
-        $payrexx = $this->getInterface();
+		try {
+			$response = $payrexx->create($gateway);
+			return $response;
+		} catch (\Payrexx\PayrexxException $e) {
+			return null;
+		}
+	}
 
-        $gateway = new \Payrexx\Models\Request\Gateway();
-        $gateway->setId($gatewayId);
+	public function deleteGatewayById($gatewayId):bool {
+		$payrexx = $this->getInterface();
 
-        try {
-            $payrexx->delete($gateway);
-        } catch (\Payrexx\PayrexxException $e) {
-            return false;
-        }
-        return true;
-    }
+		$gateway = new \Payrexx\Models\Request\Gateway();
+		$gateway->setId($gatewayId);
 
-    public function getPayrexxTransaction(int $payrexxTransactionId): ?\Payrexx\Models\Response\Transaction
-    {
-        $payrexx = $this->getInterface();
+		try {
+			$payrexx->delete($gateway);
+		} catch (\Payrexx\PayrexxException $e) {
+			return false;
+		}
+		return true;
+	}
 
-        $payrexxTransaction = new \Payrexx\Models\Request\Transaction();
-        $payrexxTransaction->setId($payrexxTransactionId);
+	public function getPayrexxTransaction(int $payrexxTransactionId): ?\Payrexx\Models\Response\Transaction
+	{
+		$payrexx = $this->getInterface();
 
-        try {
-            $response = $payrexx->getOne($payrexxTransaction);
-            return $response;
-        } catch (\Payrexx\PayrexxException $e) {
-            return null;
-        }
-    }
+		$payrexxTransaction = new \Payrexx\Models\Request\Transaction();
+		$payrexxTransaction->setId($payrexxTransactionId);
 
-    public function chargeTransaction($transactionId, $amount) {
-        $payrexx = $this->getInterface();
-        $transaction = new \Payrexx\Models\Request\Transaction();
-        $transaction->setId($transactionId);
-        $transaction->setAmount(floatval($amount) * 100);
-        try {
-            $payrexx->charge($transaction);
-            return true;
-        } catch (\Payrexx\PayrexxException $e) {
-        }
-        return false;
-    }
+		try {
+			$response = $payrexx->getOne($payrexxTransaction);
+			return $response;
+		} catch (\Payrexx\PayrexxException $e) {
+			return null;
+		}
+	}
 
-    /**
-     * @param $gatewayId
-     * @return \Payrexx\Models\Request\Gateway
-     */
-    public function getPayrexxGateway($gatewayId) {
-        $payrexx = $this->getInterface();
-        $gateway = new \Payrexx\Models\Request\Gateway();
-        $gateway->setId($gatewayId);
-        try {
-            $payrexxGateway = $payrexx->getOne($gateway);
-            return $payrexxGateway;
-        } catch (\Payrexx\PayrexxException $e) {
-            throw new \Exception('No gateway found by ID: '. $gatewayId);
-        }
-    }
+	public function chargeTransaction($transactionId, $amount) {
+		$payrexx = $this->getInterface();
+		$transaction = new \Payrexx\Models\Request\Transaction();
+		$transaction->setId($transactionId);
+		$transaction->setAmount(floatval($amount) * 100);
+		try {
+			$payrexx->charge($transaction);
+			return true;
+		} catch (\Payrexx\PayrexxException $e) {
+		}
+		return false;
+	}
+
+	/**
+	 * @param $gatewayId
+	 * @return \Payrexx\Models\Request\Gateway
+	 */
+	public function getPayrexxGateway($gatewayId) {
+		$payrexx = $this->getInterface();
+		$gateway = new \Payrexx\Models\Request\Gateway();
+		$gateway->setId($gatewayId);
+		try {
+			$payrexxGateway = $payrexx->getOne($gateway);
+			return $payrexxGateway;
+		} catch (\Payrexx\PayrexxException $e) {
+			throw new \Exception('No gateway found by ID: '. $gatewayId);
+		}
+	}
 
 	/**
 	 * Refund transaction
@@ -195,11 +205,11 @@ class PayrexxApiService
 				$transaction->setId( $refund_transaction->getId() );
 				$transaction->setAmount( (int) ( $amount * 100 ) );
 				$refund = $payrexx->refund( $transaction );
-                $refund_success_status = [
-                    Transaction::CONFIRMED,
-                    Transaction::REFUNDED,
-                    Transaction::PARTIALLY_REFUNDED,
-                ];
+				$refund_success_status = [
+					Transaction::CONFIRMED,
+					Transaction::REFUNDED,
+					Transaction::PARTIALLY_REFUNDED,
+				];
 				if ( in_array( $refund->getStatus(), $refund_success_status ) ) {
 					return true;
 				}
@@ -210,26 +220,26 @@ class PayrexxApiService
 		}
 	}
 
-    public function validate_api_credentials($instance, $apiKey, $platform)
-    {
-        $payrexx = new \Payrexx\Payrexx($instance, $apiKey, '', $platform);
-        $signatureCheck = new \Payrexx\Models\Request\SignatureCheck();
+	public function validate_api_credentials($instance, $apiKey, $platform)
+	{
+		$payrexx = new \Payrexx\Payrexx($instance, $apiKey, '', $platform);
+		$signatureCheck = new \Payrexx\Models\Request\SignatureCheck();
 
-        try {
-            $response = $payrexx->getOne($signatureCheck);
-        } catch(\Payrexx\PayrexxException $e) {
-            return false;
-        }
+		try {
+			$response = $payrexx->getOne($signatureCheck);
+		} catch(\Payrexx\PayrexxException $e) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * @return \Payrexx\Payrexx
-     */
-    private function getInterface(): \Payrexx\Payrexx
-    {
-        $platform = !empty($this->platform) ? $this->platform : \Payrexx\Communicator::API_URL_BASE_DOMAIN;
-        return new \Payrexx\Payrexx($this->instance, $this->apiKey, '', $platform);
-    }
+	/**
+	 * @return \Payrexx\Payrexx
+	 */
+	private function getInterface(): \Payrexx\Payrexx
+	{
+		$platform = !empty($this->platform) ? $this->platform : \Payrexx\Communicator::API_URL_BASE_DOMAIN;
+		return new \Payrexx\Payrexx($this->instance, $this->apiKey, '', $platform);
+	}
 }
