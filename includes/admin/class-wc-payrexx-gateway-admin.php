@@ -147,7 +147,7 @@ class WC_Payrexx_Gateway_Admin
         if ($hook !== 'woocommerce_page_wc-settings') return;
 
         wp_enqueue_script(
-            'wc-payrexx-gateway-admin_connect_button',
+            'wc-payrexx-gateway-admin-connect-button',
             plugins_url('assets/js/connectPayrexx.js', $this->plugin_file),
             ['jquery'],
             '1.0',
@@ -155,14 +155,14 @@ class WC_Payrexx_Gateway_Admin
         );
 
         wp_enqueue_script(
-            'wc-payrexx-gateway-admin_verify_button',
+            'wc-payrexx-gateway-admin-verify-button',
             plugins_url('assets/js/settingsValidation.js', $this->plugin_file),
             ['jquery'],
             '1.0',
             true
         );
 
-        wp_localize_script('wc-payrexx-gateway-admin_verify_button', 'payrexxAjax', [
+        wp_localize_script('wc-payrexx-gateway-admin-verify-button', 'payrexxAjax', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('wc_payrexx_gateway_verify_nonce'),
         ]);
@@ -269,13 +269,18 @@ class WC_Payrexx_Gateway_Admin
     {
         ?>
         <tr valign="top">
-            <th scope="row" class="titledesc"><?php echo esc_html($value['title']); ?></th>
+            <th scope="row" class="titledesc">
+                <label>
+                    <?php echo esc_html($value['title']); ?>
+                    <span class="woocommerce-help-tip" data-tip="<?php echo esc_attr($value['tooltip']); ?>"></span>
+                </label>
+            </th>
             <td class="forminp">
                 <button id="payrexx-connect-button"
-                    type="button"
-                    class="button button-secondary"><?php echo esc_html($value['button_label']); ?></button>
+                        type="button"
+                        class="button button-secondary"><?php echo esc_html($value['button_label']); ?></button>
                 <span id="connectSpinner" class="spinner"
-                  style="display: none; float: none; margin: 3px 10px; vertical-align: middle;"></span>
+                      style="display: none; float: none; margin: 3px 10px; vertical-align: middle;"></span>
                 <span id="connectResult" style="margin-left:10px; line-height: 2.15384615"></span>
                 <p class="description"><?php echo esc_html($value['desc']); ?></p>
             </td>

@@ -43,7 +43,8 @@ return apply_filters('wc_payrexx_gateway_settings', [
             'type' => 'connect_payrexx_button',
             'id' => PAYREXX_CONFIGS_PREFIX . 'connect_button',
             'button_label' => __('Connect', 'woo-payrexx-gateway'),
-            'desc' => __('Click to open a popup to connect your Payrexx account. You will be redirected to the Payrexx platform to authorize the connection.', 'woo-payrexx-gateway'),
+            'desc' => __('Click to open a popup to connect your Payrexx account.', 'woo-payrexx-gateway'),
+            'tooltip' => __('Easily connect to your merchant account and connect an integration via connect button. You will be redirected to the Payrexx platform to authorize the connection.', 'wc-payrexx-gateway'),
         ],
         [
             'title' => __('Instance Name', 'woo-payrexx-gateway'),

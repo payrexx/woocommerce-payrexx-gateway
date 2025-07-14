@@ -4,7 +4,7 @@ jQuery(function ($) {
 
         const button = $(this);
         const connectSpinner = $('#connectSpinner');
-        const platformUrl = $('#payrexx_configs_platform').val() + '.loc';
+        const platformUrl = $('#payrexx_configs_platform').val();
 
         createPopup(platformUrl);
 
@@ -32,7 +32,6 @@ jQuery(function ($) {
         $('#payrexx_configs_instance').val(instance);
         $('#payrexx_configs_api_key').val(apiKey);
 
-        // Store the settings received via frontend
         $.post(payrexxAjax.ajax_url, {
             action: 'payrexx_store_connect_settings',
             nonce: payrexxAjax.nonce,
