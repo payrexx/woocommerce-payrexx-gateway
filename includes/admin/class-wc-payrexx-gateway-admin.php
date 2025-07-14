@@ -121,6 +121,21 @@ class WC_Payrexx_Gateway_Admin
                         $this, 'payrexx_validate_api'
                 ]
         );
+
+        add_action(
+                'woocommerce_admin_field_connect_payrexx_button',
+                [
+                        $this,
+                        'render_connect_payrexx_button'
+                ]
+        );
+
+        add_action(
+                'wp_ajax_payrexx_store_connect_settings',
+                [
+                        $this, 'payrexx_store_connect_settings'
+                ]
+        );
     }
 
     /**
@@ -132,16 +147,24 @@ class WC_Payrexx_Gateway_Admin
         if ($hook !== 'woocommerce_page_wc-settings') return;
 
         wp_enqueue_script(
-            'wc-payrexx-gateway-admin',
+            'wc-payrexx-gateway-admin_connect_button',
+            plugins_url('assets/js/connectPayrexx.js', $this->plugin_file),
+            ['jquery'],
+            '1.0',
+            true
+        );
+
+        wp_enqueue_script(
+            'wc-payrexx-gateway-admin_verify_button',
             plugins_url('assets/js/settingsValidation.js', $this->plugin_file),
             ['jquery'],
             '1.0',
             true
         );
 
-        wp_localize_script('wc-payrexx-gateway-admin', 'payrexxAjax', [
+        wp_localize_script('wc-payrexx-gateway-admin_verify_button', 'payrexxAjax', [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce'    => wp_create_nonce('wc_payrexx_gateway_verify_nonce'),
+            'nonce' => wp_create_nonce('wc_payrexx_gateway_verify_nonce'),
         ]);
     }
 
@@ -235,5 +258,47 @@ class WC_Payrexx_Gateway_Admin
         }
 
         wp_send_json_error(['message' => __('Signature validation failed. Please check your credentials.', 'woo-payrexx-gateway')]);
+    }
+
+    /**
+     * Render connect button
+     *
+     * @param array $value contains settings field properties
+     */
+    function render_connect_payrexx_button($value)
+    {
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc"><?php echo esc_html($value['title']); ?></th>
+            <td class="forminp">
+                <button id="payrexx-connect-button"
+                    type="button"
+                    class="button button-secondary"><?php echo esc_html($value['button_label']); ?></button>
+                <span id="connectSpinner" class="spinner"
+                  style="display: none; float: none; margin: 3px 10px; vertical-align: middle;"></span>
+                <span id="connectResult" style="margin-left:10px; line-height: 2.15384615"></span>
+                <p class="description"><?php echo esc_html($value['desc']); ?></p>
+            </td>
+        </tr>
+        <?php
+    }
+
+    /**
+     * Save payrexx credentials received in frontend.
+     *
+     * @return void
+     */
+    function payrexx_store_connect_settings()
+    {
+        $instance = isset($_POST['instance']) ? sanitize_text_field($_POST['instance']) : '';
+        $apiKey = isset($_POST['api_key']) ? sanitize_text_field($_POST['api_key']) : '';
+        $successInstance = update_option(PAYREXX_CONFIGS_PREFIX . 'instance', $instance);
+        $successKey = update_option(PAYREXX_CONFIGS_PREFIX . 'api_key', $apiKey);
+
+        if ($successInstance && $successKey) {
+            wp_send_json_success(['message' => __('Integration successfully created and credentials imported.', 'woo-payrexx-gateway')]);
+        }
+
+        wp_send_json_error(['message' => __('Integration created but error while saving the credentials. Please open the payrexx backend and copy the credentials manually.', 'woo-payrexx-gateway')]);
     }
 }

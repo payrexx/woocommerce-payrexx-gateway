@@ -39,6 +39,13 @@ return apply_filters('wc_payrexx_gateway_settings', [
             ],
         ],
         [
+            'title' => __('Connect to Payrexx', 'woo-payrexx-gateway'),
+            'type' => 'connect_payrexx_button',
+            'id' => PAYREXX_CONFIGS_PREFIX . 'connect_button',
+            'button_label' => __('Connect', 'woo-payrexx-gateway'),
+            'desc' => __('Click to open a popup to connect your Payrexx account. You will be redirected to the Payrexx platform to authorize the connection.', 'woo-payrexx-gateway'),
+        ],
+        [
             'title' => __('Instance Name', 'woo-payrexx-gateway'),
             'id' => PAYREXX_CONFIGS_PREFIX . 'instance',
             'type' => 'text',
