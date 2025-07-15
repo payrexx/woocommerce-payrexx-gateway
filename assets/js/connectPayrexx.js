@@ -1,12 +1,23 @@
 jQuery(function ($) {
-    // Handle "Test Connection" or "Connect" button click
+    // Handle "Connect" button click
     $('#payrexx-connect-button').on('click', function () {
 
         const button = $(this);
         const connectSpinner = $('#connectSpinner');
         const platformUrl = $('#payrexx_configs_platform').val();
 
-        createPopup(platformUrl);
+        let popup = createPopup(platformUrl);
+
+        // Check if the popup is closed manually (i.e., without receiving a message)
+        let popupCheck;
+        popupCheck = setInterval(() => {
+            if (popup.closed) {
+                popup = null;
+                clearInterval(popupCheck);
+                button.prop('disabled', false);
+                connectSpinner.removeClass('is-active').hide();
+            }
+        }, 500)
 
         button.prop('disabled', true);
         connectSpinner.addClass('is-active').show();
