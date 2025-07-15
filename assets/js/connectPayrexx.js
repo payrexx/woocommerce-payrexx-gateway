@@ -21,14 +21,6 @@ jQuery(function ($) {
 
         button.prop('disabled', true);
         connectSpinner.addClass('is-active').show();
-
-        const notice = `
-        <div class="notice notice-info is-dismissible">
-            <p><strong>Payrexx values successfully imported.</strong> Don't forget to save the settings.</p>
-        </div>
-        `;
-
-        $('#mainform').before(notice);
     });
 
     // Receive postMessage from popup
@@ -44,10 +36,7 @@ jQuery(function ($) {
         $('#payrexx_configs_api_key').val(apiKey);
 
         $.post(payrexxAjax.ajax_url, {
-            action: 'payrexx_store_connect_settings',
-            nonce: payrexxAjax.nonce,
-            api_key: apiKey,
-            instance: instance,
+            action: 'payrexx_store_connect_settings', nonce: payrexxAjax.nonce, api_key: apiKey, instance: instance,
         }, function (response) {
 
             const button = $(this);
@@ -59,6 +48,14 @@ jQuery(function ($) {
 
             if (response.success) {
                 resultSpan.text('✅ ' + response.data.message).css('color', 'green');
+
+                const notice = `
+                    <div class="notice notice-info is-dismissible">
+                        <p><strong>Payrexx values successfully imported.</strong> Don't forget to save the settings.</p>
+                    </div>
+                    `;
+
+                $('#mainform').before(notice);
                 return;
             }
 
@@ -75,26 +72,14 @@ const createPopup = (platformUrl) => {
     const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
     const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
 
-    const width = window.innerWidth
-        ? window.innerWidth
-        : document.documentElement.clientWidth
-            ? document.documentElement.clientWidth
-            : screen.width;
+    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
 
-    const height = window.innerHeight
-        ? window.innerHeight
-        : document.documentElement.clientHeight
-            ? document.documentElement.clientHeight
-            : screen.height;
+    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
     const left = dualScreenLeft + (width - popupWidth) / 2;
     const top = dualScreenTop + (height - popupHeight) / 2;
 
     const params = `width=${popupWidth},height=${popupHeight},top=${top},left=${left},resizable=no,scrollbars=yes`
     const url = `https://login.${platformUrl}?action=connect&plugin_id=1`;
-    return window.open(
-        url,
-        'Connect Payrexx',
-        params
-    );
+    return window.open(url, 'Connect Payrexx', params);
 }
