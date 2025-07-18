@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Payrexx Gateway\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 16:38+0000\n"
+"POT-Creation-Date: 2025-07-18 19:19+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -12,12 +12,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Loco-Source-Locale: en_IN\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: Poedit 2.3\n"
 "X-Loco-Version: 2.6.3; wp-6.2\n"
 "X-Domain: wc-payrexx-gateway\n"
 "X-Loco-Parser: loco_parse_po\n"
-"\n"
-"Language: "
 
 #. Description of the plugin
 msgid "Accept many different payment methods on your store using Payrexx"
@@ -100,9 +98,7 @@ msgid "Enable/Disable Subscriptions"
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:75
-msgid ""
-"Enter a look and feel profile ID if you wish to use a specific design in the "
-"checkout"
+msgid "Enter a look and feel profile ID if you wish to use a specific design in the checkout"
 msgstr ""
 
 #: src/Model/PaymentMethod/Abstract/Base.php:27
@@ -151,9 +147,7 @@ msgid "Masterpass (Payrexx)"
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:52
-msgid ""
-"Paste the API key from the integrations page of your Payrexx merchant "
-"backend here"
+msgid "Paste the API key from the integrations page of your Payrexx merchant backend here"
 msgstr ""
 
 # src/Model/PaymentMethod/PayByBank.php: 9
@@ -170,8 +164,7 @@ msgid "Paypal (Payrexx)"
 msgstr ""
 
 #. Author of the plugin
-#: includes/admin/class-wc-payrexx-gateway-admin.php:37
-#: src/Model/PaymentMethod/Payrexx.php:9
+#: includes/admin/class-wc-payrexx-gateway-admin.php:37 src/Model/PaymentMethod/Payrexx.php:9
 msgid "Payrexx"
 msgstr ""
 
@@ -232,15 +225,11 @@ msgid "Signature validation failed. Please check your credentials."
 msgstr ""
 
 #: includes/settings/payrexx_pm_settings.php:22
-msgid ""
-"The description of the paymment method which is visible in the checkout once "
-"selected."
+msgid "The description of the paymment method which is visible in the checkout once selected."
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:45
-msgid ""
-"The instance name is your Payrexx account name. You find it in the URL when "
-"logged in INSTANCENAME.payrexx.com."
+msgid "The instance name is your Payrexx account name. You find it in the URL when logged in INSTANCENAME.payrexx.com."
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:82
@@ -256,8 +245,7 @@ msgid "This controls the payment method logos for recurring payments."
 msgstr ""
 
 #: includes/settings/payrexx_pm_settings.php:32
-msgid ""
-"This controls the payment method logos the customer sees during checkout."
+msgid "This controls the payment method logos the customer sees during checkout."
 msgstr ""
 
 #: includes/settings/payrexx_pm_settings.php:11
@@ -291,4 +279,20 @@ msgstr ""
 # src/Model/PaymentMethod/Xmoney.php: 9
 #: src/Model/PaymentMethod/Xmoney.php:9
 msgid "xMoney (Payrexx)"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php
+msgid "Connect to Payrexx"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php
+msgid "Connect"
+msgstr ""
+
+#: includes/settings/payrexx_settings.php
+msgid "Click to open a popup to connect your Payrexx account."
+msgstr ""
+
+#: includes/settings/payrexx_settings.php
+msgid "Easily connect to your merchant account and connect an integration via connect button. You will be redirected to the Payrexx platform to authorize the connection."
 msgstr ""
