@@ -67,7 +67,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 == Upgrade Notice ==
 
 = 3.1.0 =
-* Payrexx SDK update, no need to backup
+* Minor update, no need to backup
 
 = 3.0.32 =
 * Minor update, no need to backup
@@ -395,6 +395,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.0 =
 * Improvement: Updated Payrexx SDK.
+* Feature: Connect Button
 
 = 3.0.32 =
 * Feature: API Credentials Validation
