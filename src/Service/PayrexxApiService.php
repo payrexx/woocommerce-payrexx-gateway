@@ -47,7 +47,7 @@ class PayrexxApiService
 
 		$totalAmount = round($totalAmount, 2);
 		if ($totalAmount) {
-			$gateway->setAmount($totalAmount * 100);
+			$gateway->setAmount( (int) ( $totalAmount * 100 ) );
 		} else {
 			// The amount is artificially elevated because the Gateway creation always needs an amount
 			$gateway->setAmount(0.50 * 100);
@@ -139,7 +139,7 @@ class PayrexxApiService
 		$payrexx = $this->getInterface();
 		$transaction = new \Payrexx\Models\Request\Transaction();
 		$transaction->setId($transactionId);
-		$transaction->setAmount(floatval($amount) * 100);
+		$transaction->setAmount( (int) round( floatval( $amount ) * 100 ) );
 		try {
 			$payrexx->charge($transaction);
 			return true;
