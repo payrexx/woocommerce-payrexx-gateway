@@ -45,9 +45,11 @@ class PayrexxApiService
 		$gateway->setPsp([]);
 		$gateway->setSkipResultPage(true);
 
-		$totalAmount = round($totalAmount, 2);
-		if ($totalAmount) {
-			$gateway->setAmount( (int) ( $totalAmount * 100 ) );
+        $formattedTotalAmount = wc_format_decimal( $totalAmount, wc_get_price_decimals() );
+        $totalInCents = (int) round( $formattedTotalAmount * 100 );
+        $totalAmount = round( $totalAmount, 2 );
+		if ( $totalAmount ) {
+			$gateway->setAmount( $totalInCents );
 		} else {
 			// The amount is artificially elevated because the Gateway creation always needs an amount
 			$gateway->setAmount(0.50 * 100);
