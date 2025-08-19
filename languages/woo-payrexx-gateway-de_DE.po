@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
-"PO-Revision-Date: 2025-08-19 16:40+0530\n"
+"PO-Revision-Date: 2025-08-19 17:39+0530\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -17,8 +17,7 @@ msgstr ""
 
 #. Description of the plugin
 msgid "Accept many different payment methods on your store using Payrexx"
-msgstr ""
-"Akzeptieren Sie mit Payrexx verschiedene Zahlungsmittel auf Ihrem Onlineshop"
+msgstr "Akzeptieren Sie mit Payrexx verschiedene Zahlungsmittel auf Ihrem Onlineshop"
 
 #: includes/settings/payrexx_settings.php:67
 msgid "Additional Settings"
@@ -94,12 +93,8 @@ msgid "Enable/Disable Subscriptions"
 msgstr "Abonnemente Aktivieren/Deaktivieren"
 
 #: includes/settings/payrexx_settings.php:75
-msgid ""
-"Enter a look and feel profile ID if you wish to use a specific design in the "
-"checkout"
-msgstr ""
-"Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im "
-"Checkout zu nutzen"
+msgid "Enter a look and feel profile ID if you wish to use a specific design in the checkout"
+msgstr "Geben Sie eine Look&Feel Profil ID an, um ein spezifisches Design im Checkout zu nutzen"
 
 #: src/Model/PaymentMethod/Abstract/Base.php:27
 msgid "General Payrexx Settings"
@@ -146,12 +141,8 @@ msgid "Masterpass (Payrexx)"
 msgstr ""
 
 #: includes/settings/payrexx_settings.php:52
-msgid ""
-"Paste the API key from the integrations page of your Payrexx merchant "
-"backend here"
-msgstr ""
-"Füge Sie den API Key, von der Integrationsseite in Ihrem Payrexx Händler "
-"Account, hier ein"
+msgid "Paste the API key from the integrations page of your Payrexx merchant backend here"
+msgstr "Füge Sie den API Key, von der Integrationsseite in Ihrem Payrexx Händler Account, hier ein"
 
 #: src/Model/PaymentMethod/PayByBank.php:9
 msgid "Pay by Bank (Payrexx)"
@@ -166,8 +157,7 @@ msgid "Paypal (Payrexx)"
 msgstr ""
 
 #. Author of the plugin
-#: includes/admin/class-wc-payrexx-gateway-admin.php:37
-#: src/Model/PaymentMethod/Payrexx.php:9
+#: includes/admin/class-wc-payrexx-gateway-admin.php:37 src/Model/PaymentMethod/Payrexx.php:9
 msgid "Payrexx"
 msgstr ""
 
@@ -218,51 +208,35 @@ msgstr "Einstellungen"
 
 #: includes/admin/class-wc-payrexx-gateway-admin.php:234
 msgid "Signature validated successfully. Your credentials are correct."
-msgstr ""
-"Die Signatur wurde erfolgreich validiert. Ihre API Zugangsdaten sind korrekt."
+msgstr "Die Signatur wurde erfolgreich validiert. Ihre API Zugangsdaten sind korrekt."
 
 #: includes/admin/class-wc-payrexx-gateway-admin.php:237
 msgid "Signature validation failed. Pleae check your credentials."
-msgstr ""
-"Die Validierung Ihrer Signatur ist fehlgeschlagen. Ihre API Zugangsdaten "
-"sind falsch."
+msgstr "Die Validierung Ihrer Signatur ist fehlgeschlagen. Ihre API Zugangsdaten sind falsch."
 
 #: includes/settings/payrexx_pm_settings.php:22
-msgid ""
-"The description of the paymment method which is visible in the checkout once "
-"selected."
-msgstr ""
-"Die Zahlungsmittel Beschreibung, welche im Checkout erscheint wenn das "
-"jeweilige Zahlungsmittel gewählt wird."
+msgid "The description of the paymment method which is visible in the checkout once selected."
+msgstr "Die Zahlungsmittel Beschreibung, welche im Checkout erscheint wenn das jeweilige Zahlungsmittel gewählt wird."
 
 #: includes/settings/payrexx_settings.php:45
-msgid ""
-"The instance name is your Payrexx account name. You find it in the URL when "
-"logged in INSTANCENAME.payrexx.com."
-msgstr ""
-"Der Instanzname ist Ihr Payrexx Account Name. Sie finden diesen in der URL, "
-"wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME."
-"payrexx.com."
+msgid "The instance name is your Payrexx account name. You find it in the URL when logged in INSTANCENAME.payrexx.com."
+msgstr "Der Instanzname ist Ihr Payrexx Account Name. Sie finden diesen in der URL, wenn Sie in Ihrem Payrexx Händler Account eingeloggt sind INSTANZNAME.payrexx.com."
 
 #: includes/settings/payrexx_settings.php:82
-#| msgid ""
-#| "The Prefix is only necessary for customers outside the Payrexx platform"
+#| msgid "The Prefix is only necessary for customers outside the Payrexx platform"
 msgid "The Prefix is only necessary for merchants outside the Payrexx platform"
-msgstr ""
-"Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
+msgstr "Der Prefix ist nur für Händler ausserhalb der Payrexx Plattform notwendig"
 
 #: includes/settings/payrexx_pm_settings.php:13
 msgid "The title of the payment method which shows in the checkout."
-msgstr ""
-"Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
+msgstr "Dies ist der Titel des Zahlungsmittels, welcher im Checkout genutzt wird."
 
 #: includes/settings/payrexx_subscription_pm_settings.php:26
 msgid "This controls the payment method logos for recurring payments."
 msgstr ""
 
 #: includes/settings/payrexx_pm_settings.php:32
-msgid ""
-"This controls the payment method logos the customer sees during checkout."
+msgid "This controls the payment method logos the customer sees during checkout."
 msgstr ""
 
 #: includes/settings/payrexx_pm_settings.php:11
@@ -296,3 +270,7 @@ msgstr ""
 #: src/Model/PaymentMethod/Xmoney.php:9
 msgid "xMoney (Payrexx)"
 msgstr "xMoney (Payrexx)"
+
+#: includes/settings/payrexx_subscription_pm_settings.php:15
+msgid "This controls the description which the user sees besides the checkbox to activate recurring payments for a subscription. Checkbox shows only if the feature is active and a subscription is purchased."
+msgstr "Dies steuert die Beschreibung, die der Benutzer neben dem Kontrollkästchen sieht, um wiederkehrende Zahlungen für ein Abonnement zu aktivieren. Das Kontrollkästchen wird nur angezeigt, wenn die Funktion aktiv ist und ein Abonnement erworben wurde."
