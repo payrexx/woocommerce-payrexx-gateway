@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WooCommerce Payrexx Gateway
+ * Plugin Name: Payrexx Gateway for WooCommerce
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com

@@ -1,6 +1,6 @@
 <?php
 /**
- * Woocommerce payrexx payment gateway
+ * Payrexx payment gateway for Woocommerce
  *
  * @package woo-payrexx-gateway
  */

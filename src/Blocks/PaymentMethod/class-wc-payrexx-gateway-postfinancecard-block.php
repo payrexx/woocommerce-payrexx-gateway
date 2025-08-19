@@ -1,6 +1,6 @@
 <?php
 /**
- * Woocommerce payrexx payment gateway
+ * Payrexx payment gateway for Woocommerce
  */
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
