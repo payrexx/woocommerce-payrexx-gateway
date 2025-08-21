@@ -1,20 +1,20 @@
-=== WooCommerce Payrexx Payment Gateway  ===
+=== Payrexx Payment Gateway for WooCommerce ===
 Contributors: payrexx
 Donate link: https://www.payrexx.com?ref=wordpress
-Tags: payment, e-commerce, payrexx, gateway, postfinance, twint, wir, giropay, concardis, paymill, braintree, stripe, ogone, ingenico, viveum, reka, datatrans, six, saferpay, onepage, shop, payment link, invoices, virtual terminal, vpos
+Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 6.8
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-The Payrexx payment gateway is a simple method to integrate all payment providers and payment methods with one single payment plugin.
+The Payrexx payment gateway for WooCommerce is a simple method to integrate all payment providers and payment methods with one single payment plugin.
 
 == Description ==
 Website: [www.payrexx.com](https://www.payrexx.com?ref=wordpress)
 
 The Payrexx meta payment gateway is a simple method to integrate all payment providers and payment methods with one
-single payment gateway. The WooCommerce Payrexx payment gateway helps you to accept credit card payments securely.
+single payment gateway. The Payrexx payment gateway for WooCommerce helps you to accept credit card payments securely.
 
 The Payrexx plugin extends WooCommerce allowing you to take payments directly on your store via Payrexx's API.
 
@@ -59,12 +59,14 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Configure the webhook URL in Payrexx, use the URL to your shop and add /?wc-api=wc_payrexx_gateway
 
 == Screenshots ==
-1. Screenshot WooCommerce Backend
-2. Screenshot WooCommerce Backend
-3. Screenshot WooCommerce Backend
-4. Screenshot Payrexx Backend
+1. Install the plugin in WordPress
+2. Connect your Payrexx account or enter credentials manually.
+3. Payrexx backend integration
 
 == Upgrade Notice ==
+
+= 3.1.3 =
+* Minor update, no need to backup
 
 = 3.1.2 =
 * Minor update, no need to backup
@@ -398,6 +400,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.1.3 =
+* Improvement: Plugin Text changes
 
 = 3.1.2 =
 * Improvement: Corrected total amount

@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Payrexx Gateway 1.8.4\n"
+"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-21 18:19+0530\n"
-"PO-Revision-Date: 2025-07-18 19:20+0530\n"
+"PO-Revision-Date: 2025-08-19 17:39+0530\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Schweiz)\n"
 "Language: de_CH\n"
@@ -159,7 +159,8 @@ msgid "Paypal (Payrexx)"
 msgstr ""
 
 #. Author of the plugin
-#: includes/admin/class-wc-payrexx-gateway-admin.php:37 src/Model/PaymentMethod/Payrexx.php:9
+#: includes/admin/class-wc-payrexx-gateway-admin.php:37
+#: src/Model/PaymentMethod/Payrexx.php:9
 msgid "Payrexx"
 msgstr ""
 
@@ -266,7 +267,7 @@ msgid "Wirpay (Payrexx)"
 msgstr ""
 
 #. Name of the plugin
-msgid "WooCommerce Payrexx Gateway"
+msgid "Payrexx Gateway for WooCommerce"
 msgstr ""
 
 #: src/Model/PaymentMethod/Xmoney.php:9
@@ -288,3 +289,7 @@ msgstr "Klicken Sie auf , um ein Popup-Fenster zu öffnen und Ihr Payrexx-Konto 
 #: includes/settings/payrexx_settings.php
 msgid "Easily connect to your merchant account and connect an integration via connect button. You will be redirected to the Payrexx platform to authorize the connection."
 msgstr "Verbinden Sie sich ganz einfach mit Ihrem Händlerkonto und verbinden Sie eine Integration über die Schaltfläche „Verbinden“. Sie werden zur Payrexx-Plattform weitergeleitet, um die Verbindung zu autorisieren."
+
+#: includes/settings/payrexx_subscription_pm_settings.php:15
+msgid "This controls the description which the user sees besides the checkbox to activate recurring payments for a subscription. Checkbox shows only if the feature is active and a subscription is purchased."
+msgstr "Dies steuert die Beschreibung, die der Benutzer neben dem Kontrollkästchen sieht, um wiederkehrende Zahlungen für ein Abonnement zu aktivieren. Das Kontrollkästchen wird nur angezeigt, wenn die Funktion aktiv ist und ein Abonnement erworben wurde."

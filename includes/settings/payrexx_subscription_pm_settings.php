@@ -12,7 +12,7 @@ if ( class_exists( '\WC_Subscriptions' ) ) {
 			'title'       => __( 'Description Checkbox', 'woo-payrexx-gateway' ),
 			'type'        => 'textarea',
 			'css'         => 'width:400px;',
-			'description' => __( 'This controls the description which the user sees besides the checkbox to activate recurring payments for a subscription. Checkbox shows only if the feature is active and a subscription is purchased.', 'woocommerce' ),
+			'description' => __( 'This controls the description which the user sees besides the checkbox to activate recurring payments for a subscription. Checkbox shows only if the feature is active and a subscription is purchased.', 'woo-payrexx-gateway' ),
 			'default'     => __( 'I accept that recurring payments will be charged to my credit card', 'woo-payrexx-gateway' ),
 			'desc_tip'    => true,
 		),
