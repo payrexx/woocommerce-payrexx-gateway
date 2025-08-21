@@ -59,10 +59,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Configure the webhook URL in Payrexx, use the URL to your shop and add /?wc-api=wc_payrexx_gateway
 
 == Screenshots ==
-1. Screenshot WooCommerce Backend
-2. Screenshot WooCommerce Backend
-3. Screenshot WooCommerce Backend
-4. Screenshot Payrexx Backend
+1. Install the plugin in WordPress
+2. Connect your Payrexx account or enter credentials manually.
+3. Payrexx backend integration
 
 == Upgrade Notice ==
 
