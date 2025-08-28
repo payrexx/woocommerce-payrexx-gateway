@@ -49,6 +49,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * xMoney
 * Powerpay
 * CembraPay
+* Crypto
 
 == Installation ==
 * Download the plugin

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Payrexx Gateway for WooCommerce 3.2.0\n"
+"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
 "PO-Revision-Date: 2025-08-19 17:39+0530\n"
