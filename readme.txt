@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 6.8
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 3. Payrexx backend integration
 
 == Upgrade Notice ==
+
+= 3.1.4 =
+* Minor update, no need to backup
 
 = 3.1.3 =
 * Minor update, no need to backup
@@ -400,6 +403,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.1.4 =
+* Improvement: Resolved translation loading warning message triggered too early. 
 
 = 3.1.3 =
 * Improvement: Plugin Text changes
