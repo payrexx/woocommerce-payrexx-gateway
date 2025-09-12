@@ -35,8 +35,8 @@ jQuery(function ($) {
         $('#payrexx_configs_instance').val(instance);
         $('#payrexx_configs_api_key').val(apiKey);
 
-        $.post(payrexxAjax.ajax_url, {
-            action: 'payrexx_store_connect_settings', nonce: payrexxAjax.nonce, api_key: apiKey, instance: instance,
+        $.post(payrexxConnectAjax.ajax_url, {
+            action: 'payrexx_store_connect_settings', nonce: payrexxConnectAjax.nonce, api_key: apiKey, instance: instance,
         }, function (response) {
 
             const button = $(this);
