@@ -228,6 +228,9 @@ class WC_Payrexx_Gateway_Admin {
      *
      */
     public function payrexx_validate_api() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wc_payrexx_gateway_verify_nonce' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Unauthorized request' ) ) );
+        }
         $instance = isset( $_POST['instance'] ) ? sanitize_text_field( $_POST['instance'] ) : '';
         $api_key  = isset( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
         $platform = isset( $_POST['platform'] ) ? sanitize_text_field( $_POST['platform'] ) : '';
