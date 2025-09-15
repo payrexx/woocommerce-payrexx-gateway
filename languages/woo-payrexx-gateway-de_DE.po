@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.4\n"
+"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
-"PO-Revision-Date: 2025-08-19 17:39+0530\n"
+"PO-Revision-Date: 2025-09-15 19:27+0530\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -157,7 +157,8 @@ msgid "Paypal (Payrexx)"
 msgstr ""
 
 #. Author of the plugin
-#: includes/admin/class-wc-payrexx-gateway-admin.php:37 src/Model/PaymentMethod/Payrexx.php:9
+#: includes/admin/class-wc-payrexx-gateway-admin.php:37
+#: src/Model/PaymentMethod/Payrexx.php:9
 msgid "Payrexx"
 msgstr ""
 
