@@ -127,6 +127,13 @@ class WC_Payrexx_Gateway_Admin {
                 true
         );
 
+        wp_localize_script( 'wc-payrexx-gateway-admin-connect-button', 'payrexxConnectAjax',
+            array(
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'nonce'    => wp_create_nonce( 'wc_payrexx_gateway_connect_button_nonce' ),
+            )
+        );
+
         wp_enqueue_script(
                 'wc-payrexx-gateway-admin-verify-button',
                 plugins_url( 'assets/js/settingsValidation.js', $this->plugin_file ),
@@ -221,6 +228,9 @@ class WC_Payrexx_Gateway_Admin {
      *
      */
     public function payrexx_validate_api() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wc_payrexx_gateway_verify_nonce' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Unauthorized request' ) ) );
+        }
         $instance = isset( $_POST['instance'] ) ? sanitize_text_field( $_POST['instance'] ) : '';
         $api_key  = isset( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
         $platform = isset( $_POST['platform'] ) ? sanitize_text_field( $_POST['platform'] ) : '';
@@ -267,6 +277,9 @@ class WC_Payrexx_Gateway_Admin {
      * @return void
      */
     public function payrexx_store_connect_settings() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wc_payrexx_gateway_connect_button_nonce' ) ) {
+            wp_send_json_error( array( 'message' => __( 'Unauthorized request' ) ) );
+        }
         $instance         = isset( $_POST['instance'] ) ? sanitize_text_field( $_POST['instance'] ) : '';
         $api_key          = isset( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
         $success_instance = update_option( PAYREXX_CONFIGS_PREFIX . 'instance', $instance );
