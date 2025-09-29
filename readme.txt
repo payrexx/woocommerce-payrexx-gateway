@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 6.8
-Stable tag: 3.1.6
+Stable tag: 3.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Powerpay
 * CembraPay
 * Crypto
+* VERD.cash
 
 == Installation ==
 * Download the plugin
@@ -65,6 +66,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 3. Payrexx backend integration
 
 == Upgrade Notice ==
+
+= 3.1.7 =
+* Minor update, no need to backup
 
 = 3.1.6 =
 * Minor update, no need to backup
@@ -410,6 +414,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.1.7 =
+* Feature: Added New payment method VERD.cash.
 
 = 3.1.6 =
 * Improvement: Added nonce checks for update connect button settings.
