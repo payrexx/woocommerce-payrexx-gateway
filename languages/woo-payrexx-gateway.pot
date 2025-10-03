@@ -1,9 +1,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.5\n"
+"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-19 17:39+0530\n"
+"POT-Creation-Date: 2025-09-29 15:55+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -304,4 +304,8 @@ msgstr ""
 
 #: src/Model/PaymentMethod/Crypto.php:9
 msgid "Crypto (Payrexx)"
+msgstr ""
+
+#: src/Model/PaymentMethod/VerdCash.php:9
+msgid "VERD.cash (Payrexx)"
 msgstr ""
