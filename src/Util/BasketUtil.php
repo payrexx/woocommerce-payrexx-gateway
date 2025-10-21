@@ -45,8 +45,8 @@ class BasketUtil
             $tax_rate = !empty( $tax_rates ) ? reset( $tax_rates )['rate'] : 0;
 
             $basket[] = [
-                'name' => self::get_product_name( $item ),
-                'description' => strip_tags($item['data']->get_short_description()),
+                'name' => $item['data']->get_name(),
+                'description' => self::get_product_description( $item ),
                 'quantity' => $item['quantity'],
                 'amount' => round($amount * 100),
                 'sku' => $item['data']->get_sku(),
@@ -147,21 +147,22 @@ class BasketUtil
         return implode('; ', $desc);
     }
 
-    private static function get_product_name(array $item): string
+    private static function get_product_description(array $item): string
     {
         $product = $item['data'];
-        $product_name = $product->get_name();
+        $description = strip_tags($item['data']->get_short_description());
 
         try {
             if ( $product->is_type( 'variation' ) ) {
                 $item_meta = wc_get_formatted_cart_item_data( $item, true );
                 if ( $item_meta ) {
-                    return $product_name . " ( " . $item_meta . " )";
+                    $item_meta = trim(preg_replace('/\s+/', ' ', strip_tags($item_meta)));
+                    return $description . " ( " . $item_meta . " )";
                 }
             }
         } catch ( Exception $e ) {
         }
 
-        return $product_name;
+        return $description;
     }
 }
