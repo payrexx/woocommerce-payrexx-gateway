@@ -1,9 +1,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.7\n"
+"Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-29 15:55+0530\n"
+"POT-Creation-Date: 2025-10-22 11:10+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -52,7 +52,7 @@ msgstr ""
 
 # src/Model/PaymentMethod/CembraPay.php: 9
 #: src/Model/PaymentMethod/CembraPay.php:9
-msgid "CembraPay (Payrexx)"
+msgid "Purchase on Account (CembraPay)"
 msgstr ""
 
 #: src/Model/PaymentMethod/Centi.php:9
