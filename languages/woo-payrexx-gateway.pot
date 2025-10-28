@@ -52,7 +52,7 @@ msgstr ""
 
 # src/Model/PaymentMethod/CembraPay.php: 9
 #: src/Model/PaymentMethod/CembraPay.php:9
-msgid "Purchase on Account (CembraPay)"
+msgid "Purchase on Account"
 msgstr ""
 
 #: src/Model/PaymentMethod/Centi.php:9

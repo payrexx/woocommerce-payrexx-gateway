@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Payrexx Gateway for WooCommerce 3.1.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-07 11:04+0000\n"
-"PO-Revision-Date: 2025-10-13 13:18+0530\n"
+"PO-Revision-Date: 2025-10-28 16:24+0530\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -49,8 +49,8 @@ msgstr "Boncard (Payrexx)"
 
 # src/Model/PaymentMethod/CembraPay.php:9
 #: src/Model/PaymentMethod/CembraPay.php:9
-msgid "Purchase on Account (CembraPay)"
-msgstr "Kauf auf Rechnung (CembraPay)"
+msgid "Purchase on Account"
+msgstr "Kauf auf Rechnung"
 
 #: src/Model/PaymentMethod/Centi.php:9
 msgid "Centi (Payrexx)"
