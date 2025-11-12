@@ -27,7 +27,7 @@ class PayrexxApiService
 		$this->lookAndFeelId = $lookAndFeelId;
 	}
 
-	public function createPayrexxGateway($order, $cart, $totalAmount, $pm, $reference, $successRedirectUrl, $cancelRedirectUrl, $preAuthorization, $chargeOnAuth) {
+	public function createPayrexxGateway($order, $cart, $totalAmount, $pm, $data, $preAuthorization, $chargeOnAuth) {
 		$payrexx = $this->getInterface();
 		try {
 			$plugin_data = get_plugin_data(
@@ -79,13 +79,11 @@ class PayrexxApiService
 			$gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
 		}
 
-		$gateway->setReferenceId($reference);
-
-		$gateway->setLookAndFeelProfile($this->lookAndFeelId ?: null);
-
-		$gateway->setSuccessRedirectUrl($successRedirectUrl);
-		$gateway->setCancelRedirectUrl($cancelRedirectUrl);
-		$gateway->setFailedRedirectUrl($cancelRedirectUrl);
+		$gateway->setReferenceId( $data['reference'] );
+		$gateway->setLookAndFeelProfile( $this->lookAndFeelId ?: null );
+		$gateway->setSuccessRedirectUrl( $data['success_redirect_url'] );
+		$gateway->setCancelRedirectUrl( $data['cancel_redirect_url'] );
+		$gateway->setFailedRedirectUrl( $data['cancel_redirect_url'] );
 
 		$billingAddress = $order->get_billing_address_1() . ' ' . $order->get_billing_address_2();
 		$gateway->addField('title', '');
@@ -99,6 +97,7 @@ class PayrexxApiService
 		$gateway->addField('phone', $order->get_billing_phone());
 		$gateway->addField('email', $order->get_billing_email());
 		$gateway->addField('custom_field_1', $order->get_id(), 'WooCommerce Order ID');
+		$gateway->setLanguage( $data['language'] ?? LANG['0'] );
 
 		try {
 			$response = $payrexx->create($gateway);

@@ -128,11 +128,12 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 				);
 			}
 		}
-		$total_amount = floatval( $order->get_total( 'edit' ) );
-		$reference    = ( get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' ) ? get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' ) . '_' : '' ) . $order_id;
-
-		$success_redirect_url = $this->get_return_url( $order );
-		$cancel_redirect_url  = PaymentHelper::getCancelUrl( $order );
+		$total_amount                 = floatval( $order->get_total( 'edit' ) );
+		$prefix                       = get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' );
+		$data['reference']            = $prefix ? $prefix . '_' . $order_id : $order_id;
+		$data['success_redirect_url'] = $this->get_return_url( $order );
+		$data['cancel_redirect_url']  = PaymentHelper::getCancelUrl( $order );
+		$data['language']             = $this->get_gateway_lang();
 
 		$charge_on_auth = false;
 		$pre_auth       = true;
@@ -178,9 +179,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			$cart,
 			$total_amount,
 			$this->pm,
-			$reference,
-			$success_redirect_url,
-			$cancel_redirect_url,
+			$data,
 			$pre_auth,
 			$charge_on_auth
 		);
