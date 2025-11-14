@@ -101,7 +101,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 	 * @param int $order_id order id.
 	 * @return array
 	 */
-	public function process_payment( $order_id ) {
+	public function process_payment( $order_id ): array {
 		$cart  = WC()->cart;
 		$order = new \WC_Order( $order_id );
 
@@ -145,7 +145,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		}
 
 		if ( SubscriptionHelper::isPaymentMethodChange() ) {
-			$cancel_redirect_url = wp_nonce_url(
+			$data['cancel_redirect_url'] = wp_nonce_url(
 				add_query_arg( array( 'change_payment_method' => $subscription->get_id() ), $subscription->get_checkout_payment_url() )
 			);
 		} elseif ( empty( $_POST['payrexx-allow-recurring-' . $this->id] ) ) { // manually renewal.
