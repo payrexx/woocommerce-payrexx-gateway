@@ -70,13 +70,12 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 	}
 
 	/**
-	 * @param $orderId
+	 * @param int $order_id
 	 * @return array
 	 */
-	public function process_payment($orderId)
-	{
-		$cart = WC()->cart;
-		$order = new WC_Order($orderId);
+	public function process_payment( $order_id ): array {
+		$cart  = WC()->cart;
+		$order = new WC_Order( $order_id );
 
 		if (!$totalAmount = floatval($order->get_total('edit'))) {
 			$order->payment_complete();
@@ -87,42 +86,30 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 			];
 		}
 
-		$reference = (get_option(PAYREXX_CONFIGS_PREFIX . 'prefix') ? get_option(PAYREXX_CONFIGS_PREFIX . 'prefix') . '_' :  '') . $orderId;
+		$prefix                       = get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' );
+		$data['reference']            = $prefix ? $prefix . '_' . $order_id : $order_id;
+		$data['success_redirect_url'] = $this->get_return_url( $order );
+		$data['cancel_redirect_url']  = PaymentHelper::getCancelUrl( $order );
+		$data['language']             = $this->get_gateway_lang();
 
-		$successRedirectUrl = $this->get_return_url($order);
-		$cancelRedirectUrl = PaymentHelper::getCancelUrl($order);
-
-		$gateway = $this->payrexxApiService->createPayrexxGateway($order, $cart, $totalAmount, $this->pm, $reference, $successRedirectUrl, $cancelRedirectUrl, false, false);
+		$gateway = $this->payrexxApiService->createPayrexxGateway( $order, $cart, $totalAmount, $this->pm, $data, false, false );
 		if ( ! $gateway ) {
 			return array(
 				'result' => 'failure',
 			);
 		}
-		return $this->process_redirect($gateway, $order);
+		return $this->process_redirect( $gateway, $order );
 	}
 
-	/**
-	 * @param $gateway
-	 * @param $order
-	 * @return array
-	 */
-	public function process_redirect($gateway, $order) {
-		$order->update_meta_data('payrexx_gateway_id', $gateway->getId());
+	public function process_redirect( $gateway, $order ): array {
+		$order->update_meta_data( 'payrexx_gateway_id', $gateway->getId() );
 		$order->save();
 
-		if (isset($_COOKIE['pll_language'])) {
-			$language = sanitize_text_field($_COOKIE['pll_language']);
-		}
-		
-		$language = substr($language ?? get_locale(), 0, 2);
-		!in_array($language, LANG) ? $language = LANG[0] : null;
-		$redirect = str_replace('?', $language . '/?', $gateway->getLink());
-
 		// Return redirect
-		return [
+		return array(
 			'result' => 'success',
-			'redirect' => $redirect
-		];
+			'redirect' => $gateway->getLink(),
+		);
 	}
 
 	/**
@@ -177,5 +164,14 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 			$transaction_uuid,
 			$amount
 		);
+	}
+
+	public function get_gateway_lang(): string {
+		if ( isset( $_COOKIE['pll_language'] ) ) {
+			$language = sanitize_text_field( $_COOKIE['pll_language'] );
+		}
+
+		$language = substr( $language ?? get_locale(), 0, 2 );
+		return in_array( $language, LANG, true ) ? $language : LANG[0];
 	}
 }
