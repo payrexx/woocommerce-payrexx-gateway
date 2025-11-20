@@ -66,7 +66,11 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 		$supports    = $this->get_supported_features();
 		$isSubscription = false;
 		if ( SubscriptionHelper::isPaymentMethodChange() ) {
-			$isSubscription = new \WC_Subscription( (int) $_GET['change_payment_method'] );
+			try {
+				$isSubscription = new \WC_Subscription( (int) $_GET['change_payment_method'] );
+			} catch (Exception $e) {
+
+			}
 		}
 		if ( isset( $this->settings['subscriptions_enabled'] )
 			&& 'yes' === $this->settings['subscriptions_enabled']
