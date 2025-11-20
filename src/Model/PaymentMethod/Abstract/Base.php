@@ -98,12 +98,17 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 				'result' => 'failure',
 			);
 		}
-		return $this->process_redirect( $gateway, $order );
+		return $this->process_redirect( $gateway, $order, false );
 	}
 
-	public function process_redirect( $gateway, $order ): array {
-		$order->update_meta_data( 'payrexx_gateway_id', $gateway->getId() );
-		$order->save();
+	public function process_redirect( $gateway, $order, $isPaymentMethodChange ): array {
+		if ( $isPaymentMethodChange ) {
+			header( "Location:" . $gateway->getLink() );
+			exit();
+		} else {
+			$order->update_meta_data( 'payrexx_gateway_id', $gateway->getId() );
+			$order->save();
+		}
 
 		// Return redirect
 		return array(
