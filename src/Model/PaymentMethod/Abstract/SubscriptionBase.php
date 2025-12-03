@@ -52,12 +52,10 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			);
 
 			$isSubscription = false;
-			if (SubscriptionHelper::isPaymentMethodChange()) {
+			if ( SubscriptionHelper::isPaymentMethodChange() ) {
 				try {
 					$isSubscription = new \WC_Subscription( (int) $_GET['change_payment_method'] );
-				} catch (Exception $e) {
-					
-				}
+				} catch (Exception $e) {}
 			}
 
 			if ( $isSubscription || SubscriptionHelper::isSubscription( WC()->cart ) ) {
@@ -210,7 +208,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		}
 
 		if ( $subscription ) {
-			$subscription->update_meta_data('payrexx_gateway_id', $gateway->getId());
+			$subscription->update_meta_data( 'payrexx_gateway_id', $gateway->getId() );
 			$subscription->save();
 		}
 
