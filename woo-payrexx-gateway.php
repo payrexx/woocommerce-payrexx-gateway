@@ -4,13 +4,13 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.12
+ * Version: 3.1.13
  * Requires at least: 5.6
- * Tested up to: 6.8
+ * Tested up to: 6.9
  * Requires PHP: 8.0
  * Requires Plugins: woocommerce
  * WC requires at least: 5.0
- * WC tested up to: 10.0.1
+ * WC tested up to: 10.4.3
  * Text Domain: woo-payrexx-gateway
  * Domain Path: /languages
  */
