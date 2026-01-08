@@ -34,6 +34,8 @@ class PaymentHelper
 		// Delete old Gateway using order metadata
 		$gatewayId = intval( $order->get_meta( 'payrexx_gateway_id', true ) );
 		$payrexxApiService->deleteGatewayById( $gatewayId );
+		header( "Location:" . wc_get_checkout_url() );
+		exit();
 	}
 
 	public static function getCancelUrl( WC_Order $order ): string  {
