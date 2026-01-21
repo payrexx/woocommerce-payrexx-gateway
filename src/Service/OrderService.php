@@ -44,9 +44,11 @@ class OrderService
 		switch ( $payrexx_status ) {
 			case Transaction::WAITING:
 				$order_status = self::WC_STATUS_ONHOLD;
+				$this->clear_payrexx_unpaid_order_timeout_event( $order->get_id() );
 				break;
 			case Transaction::CONFIRMED:
 				$this->setOrderPaid( $order, $transaction_uuid );
+				$this->clear_payrexx_unpaid_order_timeout_event( $order->get_id() );
 				return;
 			case Transaction::AUTHORIZED:
 				foreach ( $subscriptions as $subscription ) {
@@ -152,4 +154,11 @@ class OrderService
         // Remove cart
         WC()->cart->empty_cart();
     }
+
+	public function clear_payrexx_unpaid_order_timeout_event( $order_id ) {
+		wp_clear_scheduled_hook(
+			'payrexx_unpaid_order_timeout_event',
+			[ $order_id ]
+    	);
+	}
 }

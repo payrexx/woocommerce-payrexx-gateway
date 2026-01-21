@@ -232,6 +232,16 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 				10,
 				2
 			);
+
+			add_action(
+				'payrexx_unpaid_order_timeout_event',
+				[
+					$this,
+					'payrexx_auto_cancel_unpaid_order'
+				],
+				10,
+				1
+			);
 		}
 
 		public function payment_scripts()
@@ -313,6 +323,27 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 					$booking->update_status( 'confirmed', __( 'Booking confirmed after cancelled - Payrexx', 'woo-payrexx-gateway' ) );
 				}
 			}
+		}
+
+		public function payrexx_auto_cancel_unpaid_order( $order_id ) {
+			$order = wc_get_order( $order_id );
+
+			if ( ! $order ) {
+				return;
+			}
+
+			if ( $order->is_paid() ) {
+				return;
+			}
+
+			if ( 'pending' !== $order->get_status() ) {
+				return;
+			}
+
+			$order->update_status(
+				'cancelled',
+				__( 'Automatically cancelled – payment not received within 15 minutes (Payrexx).')
+			);
 		}
 	}
 }

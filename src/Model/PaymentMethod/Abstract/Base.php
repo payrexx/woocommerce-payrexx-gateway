@@ -108,6 +108,13 @@ abstract class WC_Payrexx_Gateway_Base extends WC_Payment_Gateway
 		} else {
 			$order->update_meta_data( 'payrexx_gateway_id', $gateway->getId() );
 			$order->save();
+			if ( ! wp_next_scheduled( 'payrexx_unpaid_order_timeout_event', [ $order->get_id() ] ) ) {
+				wp_schedule_single_event(
+					time() + 960, // 16 minutes
+					'payrexx_unpaid_order_timeout_event',
+					[ $order->get_id() ]
+				);
+			}
 		}
 
 		// Return redirect
