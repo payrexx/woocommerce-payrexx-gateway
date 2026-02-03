@@ -33,6 +33,8 @@ if ( class_exists( '\WC_Subscriptions' ) ) {
 				'post-finance-pay'     => 'Post Finance Pay',
 				'post-finance-card'    =>  'PostFinance Card',
 				'post-finance-e-finance' => 'PostFinance E-Finance',
+				'samsung-pay'            => 'Samsung Pay',
+				'apple-pay'              => 'Apple Pay',
 			),
 		);
 	}
