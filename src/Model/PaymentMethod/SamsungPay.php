@@ -1,6 +1,6 @@
 <?php
 
-class WC_Payrexx_Gateway_SamsungPay extends WC_Payrexx_Gateway_Base
+class WC_Payrexx_Gateway_SamsungPay extends WC_Payrexx_Gateway_SubscriptionBase
 {
 
     public function __construct()

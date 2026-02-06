@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 6.9
-Stable tag: 3.1.13
+Stable tag: 3.1.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 3. Payrexx backend integration
 
 == Upgrade Notice ==
+
+= 3.1.14 =
+* Minor update, no need to backup
 
 = 3.1.13 =
 * Minor update, no need to backup
@@ -432,6 +435,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.1.14 =
+* Info: Apple Pay and Samsung Pay are now available for subscription products.
 
 = 3.1.13 =
 * Info: Upgraded the Payrexx SDK to support Exclusive VAT handling.
