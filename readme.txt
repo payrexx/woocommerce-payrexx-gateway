@@ -444,6 +444,7 @@ Improvements:
 * Added support for restoring WooCommerce Bookings when an order status changes from Cancelled → Processing.
 * Introduced new settings to allow customers to place a new order after a cancellation.
 * Added a scheduled task to automatically cancel orders that remain unpaid.
+* Updated the SDK to version 2.0.11.
 
 = 3.1.14 =
 * Info: Apple Pay and Samsung Pay are now available for subscription products.
