@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.14
+ * Version: 3.1.15
  * Requires at least: 5.6
  * Tested up to: 6.9
  * Requires PHP: 8.0
@@ -222,6 +222,26 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 				10,
 				2
 			);
+
+			add_action(
+				'woocommerce_order_status_cancelled_to_processing',
+				[
+					$this,
+					'payrexx_recover_bookings_on_order_recovery' 
+				],
+				10,
+				2
+			);
+
+			add_action(
+				'payrexx_unpaid_order_timeout_event',
+				[
+					$this,
+					'payrexx_auto_cancel_unpaid_order'
+				],
+				10,
+				1
+			);
 		}
 
 		public function payment_scripts()
@@ -282,6 +302,48 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 			}
 
 			return $statuses;
+		}
+
+		public function payrexx_recover_bookings_on_order_recovery( $order_id, $order ) {
+
+			if ( ! class_exists( '\WC_Booking_Data_Store' ) ) {
+				return;
+			}
+
+			$booking_ids = \WC_Booking_Data_Store::get_booking_ids_from_order_id( $order_id );
+
+			if ( empty( $booking_ids ) ) {
+				return;
+			}
+
+			foreach ( $booking_ids as $booking_id ) {
+				$booking = new \WC_Booking( $booking_id );
+
+				if ( $booking->get_status() === 'cancelled' ) {
+					$booking->update_status( 'confirmed', __( 'Booking confirmed after cancelled - Payrexx', 'woo-payrexx-gateway' ) );
+				}
+			}
+		}
+
+		public function payrexx_auto_cancel_unpaid_order( $order_id ) {
+			$order = wc_get_order( $order_id );
+
+			if ( ! $order ) {
+				return;
+			}
+
+			if ( $order->is_paid() ) {
+				return;
+			}
+
+			if ( 'pending' !== $order->get_status() ) {
+				return;
+			}
+
+			$order->update_status(
+				'cancelled',
+				__( 'Automatically cancelled – payment not received within 15 minutes (Payrexx).')
+			);
 		}
 	}
 }

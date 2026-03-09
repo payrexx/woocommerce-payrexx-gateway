@@ -91,6 +91,14 @@ return apply_filters( 'wc_payrexx_gateway_settings', [
 			'desc_tip'          => true,
 		],
 		[
+			'title'             => __( 'Allow new order on payment cancel ', 'woo-payrexx-gateway' ),
+			'id'                => PAYREXX_CONFIGS_PREFIX . 'new_checkout_after_cancel',
+			'type'              => 'checkbox',
+			'custom_attributes' => [],
+			'description'       => __( 'If enabled, customers are redirected to a fresh checkout instead of reusing the same order after cancelling payment.', 'woo-payrexx-gateway' ),
+			'desc_tip'          => true,
+		],
+		[
 			'type' => 'sectionend',
 			'id'   => PAYREXX_CONFIGS_PREFIX . 'additional_settings',
 		],
