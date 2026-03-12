@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '863c8789daebeaab403c9eb7efc1764af9660041',
+        'reference' => '4dc0cc0f9e39bd81a611d4511a0123c471419360',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '863c8789daebeaab403c9eb7efc1764af9660041',
+            'reference' => '4dc0cc0f9e39bd81a611d4511a0123c471419360',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'payrexx/payrexx' => array(
             'pretty_version' => 'v2.0.12',
             'version' => '2.0.12.0',
-            'reference' => '3c65ea106c2b2ca444fd3c823fbc78be7cfeb75a',
+            'reference' => '6d249753a2b0aaf4b82ea73614c1ad0498d216be',
             'type' => 'library',
             'install_path' => __DIR__ . '/../payrexx/payrexx',
             'aliases' => array(),
