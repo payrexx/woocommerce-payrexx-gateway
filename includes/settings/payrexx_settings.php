@@ -36,6 +36,7 @@ return apply_filters( 'wc_payrexx_gateway_settings', [
 				'pay.weblandschaft.ch'    => 'Weblandschaft',
 				'paydirect.ch'            => 'Paydirect',
 				'pay.boulderado.app'      => 'Boulderado',
+				'payrexx.naka.com'        => 'Naka',
 			],
 		],
 		[
