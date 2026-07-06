@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.18
+Stable tag: 3.1.19
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 3. Payrexx backend integration
 
 == Upgrade Notice ==
+
+= 3.1.19 =
+* Minor update, no need to backup
 
 = 3.1.18 =
 * Minor update, no need to backup
@@ -447,6 +450,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.1.19 =
+* PP-19695: Bank transfer (Payrexx Pay) invoices manually marked as paid now complete the WooCommerce order instead of cancelling it.
 
 = 3.1.18 =
 * Info: Basket name and description are now sent without HTML tags.

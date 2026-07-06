@@ -10,6 +10,9 @@ use PayrexxPaymentGateway\Util\StatusUtil;
 
 class Dispatcher
 {
+    const BRAND_BANK_TRANSFER = 'bank-transfer';
+    const PSP_NATIVE = 'Native_PSP';
+
     /**
      * @var PayrexxApiService
      */
@@ -111,6 +114,18 @@ class Dispatcher
                 $refundedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
 
                 $newTransactionStatus = StatusUtil::determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount);
+            }
+
+            // Marking a Payrexx Pay bank transfer invoice as paid in the merchant backend cancels the open
+            // waiting transaction, which would otherwise cancel an already paid order. Treat it as confirmed.
+            $payment = $transaction->getPayment();
+            if ($newTransactionStatus === Transaction::CANCELLED
+                && is_array($payment)
+                && ($payment['brand'] ?? '') === self::BRAND_BANK_TRANSFER
+                && $transaction->getPsp() === self::PSP_NATIVE
+                && in_array(($payment['invoicePaymentStatus'] ?? null), ['paid', 'overpaid'], true)
+            ) {
+                $newTransactionStatus = Transaction::CONFIRMED;
             }
 
             $transactionUuid = $transaction->getUuid();
