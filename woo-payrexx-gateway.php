@@ -340,6 +340,15 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 				return;
 			}
 
+			// Subscription orders: 'failed' keeps the WCS subscription on-hold instead of cancelling it permanently.
+			if ( self::getOrderService()->orderContainsSubscription( $order ) ) {
+				$order->update_status(
+					OrderService::WC_STATUS_FAILED,
+					__( 'Payment not received within 15 minutes (Payrexx).' )
+				);
+				return;
+			}
+
 			$order->update_status(
 				'cancelled',
 				__( 'Automatically cancelled – payment not received within 15 minutes (Payrexx).')

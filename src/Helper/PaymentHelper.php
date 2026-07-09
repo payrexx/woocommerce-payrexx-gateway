@@ -24,9 +24,12 @@ class PaymentHelper
 
 		$orderService = WC_Payrexx_Gateway::getOrderService();
 
-		// Set order status to cancelled
-		if ( $orderService->transition_allowed( OrderService::WC_STATUS_CANCELLED, $order ) ) {
-			$orderService->transitionOrder( $order, OrderService::WC_STATUS_CANCELLED );
+		// Subscription orders: 'failed' keeps the WCS subscription on-hold instead of cancelling it permanently.
+		$order_status = $orderService->orderContainsSubscription( $order )
+			? OrderService::WC_STATUS_FAILED
+			: OrderService::WC_STATUS_CANCELLED;
+		if ( $orderService->transition_allowed( $order_status, $order ) ) {
+			$orderService->transitionOrder( $order, $order_status );
 		}
 
 		$payrexxApiService = WC_Payrexx_Gateway::getPayrexxApiService();
