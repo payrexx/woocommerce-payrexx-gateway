@@ -72,9 +72,14 @@ class OrderService
 				);
 				return;
 			case Transaction::CANCELLED:
+				$order_status = self::WC_STATUS_CANCELLED;
+				break;
 			case Transaction::EXPIRED:
 			case Transaction::DECLINED:
-				$order_status = self::WC_STATUS_CANCELLED;
+				// Retryable failure: 'failed' keeps a WCS subscription on-hold (retry), 'cancelled' would end it permanently.
+				$order_status = $this->orderContainsSubscription( $order )
+					? self::WC_STATUS_FAILED
+					: self::WC_STATUS_CANCELLED;
 				break;
 			case Transaction::ERROR:
 				$order_status = self::WC_STATUS_FAILED;
@@ -85,6 +90,17 @@ class OrderService
 		}
 
 		$this->transitionOrder( $order, $order_status, $transaction_uuid );
+	}
+
+	/**
+	 * Check whether the order belongs to a WooCommerce subscription
+	 *
+	 * @param WC_Order $order woocommerce order.
+	 * @return bool
+	 */
+	public function orderContainsSubscription( $order ): bool {
+		return function_exists( 'wcs_order_contains_subscription' )
+			&& wcs_order_contains_subscription( $order, 'any' );
 	}
 
 	/**

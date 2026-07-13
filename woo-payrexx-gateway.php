@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.19
+ * Version: 3.1.20
  * Requires at least: 5.6
  * Tested up to: 7.0
  * Requires PHP: 8.0
@@ -337,6 +337,15 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 			}
 
 			if ( 'pending' !== $order->get_status() ) {
+				return;
+			}
+
+			// Subscription orders: 'failed' keeps the WCS subscription on-hold instead of cancelling it permanently.
+			if ( self::getOrderService()->orderContainsSubscription( $order ) ) {
+				$order->update_status(
+					OrderService::WC_STATUS_FAILED,
+					__( 'Payment not received within 15 minutes (Payrexx).' )
+				);
 				return;
 			}
 
