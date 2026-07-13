@@ -67,6 +67,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.20 =
+* Minor update, no need to backup
+
 = 3.1.19 =
 * Minor update, no need to backup
 
