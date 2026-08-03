@@ -459,6 +459,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.21 =
 * PP-20206: Security: the payment webhook now identifies the order from the transaction fetched from Payrexx, so a forged request can no longer mark an unpaid order as paid.
+* PP-20189: Updated the Payrexx SDK to 2.0.15, which fixes intermittent PHP worker crashes (HTTP 502/503) on webhook and API calls under OPcache.
 
 = 3.1.20 =
 * PP-19798: Failed subscription payments are now marked as failed instead of cancelled across the webhook, redirect and timeout paths.
