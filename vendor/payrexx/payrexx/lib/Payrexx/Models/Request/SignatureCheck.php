@@ -20,10 +20,7 @@ use Payrexx\Models\Response\SignatureCheck as ResponseSignatureCheck;
  */
 class SignatureCheck extends Base
 {
-    /**
-     * @return ResponseSignatureCheck
-     */
-    public function getResponseModel(): object
+    public function getResponseModel(): ResponseSignatureCheck
     {
         return new ResponseSignatureCheck();
     }

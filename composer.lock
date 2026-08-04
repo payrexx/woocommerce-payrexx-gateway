@@ -4,24 +4,23 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63e7f1fe1c1c5e7414a845f1b7dbab8f",
+    "content-hash": "2ddafe6c1f6062fdf47372ac4b4a82ae",
     "packages": [
         {
             "name": "payrexx/payrexx",
-            "version": "v2.0.15",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
-                "url": "https://github.com/payrexx/payrexx-php",
-                "reference": "33c898223c7dc87d623c43b741d708bd23d87b6e"
+                "url": "https://github.com/payrexx/payrexx-php.git",
+                "reference": "6d249753a2b0aaf4b82ea73614c1ad0498d216be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/33c898223c7dc87d623c43b741d708bd23d87b6e",
-                "reference": "33c898223c7dc87d623c43b741d708bd23d87b6e",
+                "url": "https://api.github.com/repos/payrexx/payrexx-php/zipball/6d249753a2b0aaf4b82ea73614c1ad0498d216be",
+                "reference": "6d249753a2b0aaf4b82ea73614c1ad0498d216be",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
                 "php": "^8.0"
             },
             "require-dev": {
@@ -51,18 +50,22 @@
                 "gateway",
                 "payment"
             ],
-            "time": "2026-08-03T08:04:45+00:00"
+            "support": {
+                "issues": "https://github.com/payrexx/payrexx-php/issues",
+                "source": "https://github.com/payrexx/payrexx-php/tree/v2.0.12"
+            },
+            "time": "2026-03-12T10:14:17+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.0"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

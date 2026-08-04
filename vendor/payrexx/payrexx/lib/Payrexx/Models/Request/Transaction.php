@@ -246,10 +246,8 @@ class Transaction extends Base
 
     /**
      * {@inheritdoc}
-     *
-     * @return ResponseTransaction
      */
-    public function getResponseModel(): object
+    public function getResponseModel(): ResponseTransaction
     {
         return new ResponseTransaction();
     }

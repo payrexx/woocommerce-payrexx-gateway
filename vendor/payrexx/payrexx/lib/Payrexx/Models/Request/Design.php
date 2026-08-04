@@ -401,10 +401,7 @@ class Design extends Base
         $this->limit = $limit;
     }
 
-    /**
-     * @return ResponseDesign
-     */
-    public function getResponseModel(): object
+    public function getResponseModel(): ResponseDesign
     {
         return new ResponseDesign();
     }

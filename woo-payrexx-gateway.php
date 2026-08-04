@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.21
+ * Version: 3.1.20
  * Requires at least: 5.6
  * Tested up to: 7.0
  * Requires PHP: 8.0

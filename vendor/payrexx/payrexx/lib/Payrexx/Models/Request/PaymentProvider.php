@@ -54,10 +54,7 @@ class PaymentProvider extends Base
         $this->activePaymentMethods = $activePaymentMethods;
     }
 
-    /**
-     * @return ResponsePaymentProvider
-     */
-    public function getResponseModel(): object
+    public function getResponseModel(): ResponsePaymentProvider
     {
         return new ResponsePaymentProvider();
     }

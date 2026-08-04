@@ -50,33 +50,12 @@ class Dispatcher
     {
         try {
             $resp = $_REQUEST;
-            $gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
+			$order_id = $resp['transaction']['invoice']['referenceId'] ?? '';
+			$gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
 
-            if (!isset($resp['transaction']['status'])) {
-                throw new \Exception('Missing transaction status');
-            }
-
-            /**
-             * @var Transaction $resp
-             */
-            $transaction = $this->payrexx_api_service->getPayrexxTransaction($resp['transaction']['id'] ?? 0);
-
-            if (!$transaction) {
-                throw new \Exception('Unknown transaction');
-            }
-
-            if ($transaction->getStatus() !== $resp['transaction']['status']) {
-                throw new \Exception('Fraudulent transaction status');
-            }
-
-            // The order reference has to come from the fetched transaction. Taken from the
-            // request it only proves that some confirmed transaction exists, so a replay
-            // could bind a real payment to a foreign, unpaid order.
-            $order_id = (string) $transaction->getReferenceId();
-
-            if (empty($order_id)) {
-                $this->send_response('Webhook data incomplete');
-            }
+			if ( empty( $order_id ) ) {
+				$this->send_response( 'Webhook data incomplete' );
+			}
 
             if (!empty($this->prefix) && strpos($order_id, $this->prefix) === false) {
                 $this->send_response('Prefix mismatch');
@@ -84,6 +63,19 @@ class Dispatcher
 
             $arr = explode('_', $order_id);
             $order_id = end($arr);
+
+            if (!isset($resp['transaction']['status'])) {
+                throw new \Exception('Missing transaction status');
+            }
+
+            /**
+             * @var \Payrexx\Models\Response\Transaction
+             */
+            $transaction = $this->payrexx_api_service->getPayrexxTransaction($resp['transaction']['id']);
+
+            if ($transaction->getStatus() !== $resp['transaction']['status']) {
+                throw new \Exception('Fraudulent transaction status');
+            }
 
             // Check if subscription to handle accordingly
             $subscriptions = [];
