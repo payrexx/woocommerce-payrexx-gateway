@@ -1,0 +1,12 @@
+# Keep non-runtime material out of `git archive` exports as well as out of the
+# wordpress.org build. Mirrors .distignore.
+/.github        export-ignore
+/.gitattributes export-ignore
+/.distignore    export-ignore
+/.idea          export-ignore
+/tests          export-ignore
+
+vendor/**/examples      export-ignore
+vendor/**/tests         export-ignore
+vendor/**/.github       export-ignore
+vendor/**/phpunit.xml   export-ignore

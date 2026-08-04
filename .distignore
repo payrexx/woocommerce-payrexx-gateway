@@ -1,0 +1,26 @@
+# Files that must never reach a merchant's plugin directory.
+#
+# The vendor tree is committed, so anything a dependency ships lands in the
+# webroot unless it is excluded here. SDK 2.0.15 added 46 example scripts that
+# construct a Payrexx client and call the API from top-level code with no
+# ABSPATH guard — directly executable over HTTP once installed.
+
+/.git
+/.github
+/.gitignore
+/.gitattributes
+/.distignore
+/.idea
+/tests
+
+# Dependency material that is not runtime code.
+vendor/**/examples
+vendor/**/tests
+vendor/**/test
+vendor/**/doc
+vendor/**/docs
+vendor/**/.github
+vendor/**/.gitignore
+vendor/**/phpunit.xml
+vendor/**/phpunit.xml.dist
+vendor/**/*.md
