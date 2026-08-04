@@ -458,7 +458,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 == Changelog ==
 
 = 3.1.21 =
-* PP-20206: Security: the payment webhook now identifies the order from the transaction fetched from Payrexx, so a forged request can no longer mark an unpaid order as paid.
+* PP-20206: Security: the payment webhook now identifies the order, the gateway and the pre-authorization from the transaction fetched from Payrexx instead of from the request, so a forged request can no longer mark an unpaid order as paid, complete an underpaid order, or settle a subscription renewal that was never charged.
+* PP-20206: The payment amount is now reconciled on every webhook, including notifications that carry a pre-authorization.
+* PP-20206: The webhook answers cleanly instead of failing with an HTTP 500 on shops without WooCommerce Subscriptions, and orders are loaded through the HPOS-compatible factory.
 * PP-20189: Updated the Payrexx SDK to 2.0.15, which fixes intermittent PHP worker crashes (HTTP 502/503) on webhook and API calls under OPcache.
 
 = 3.1.20 =

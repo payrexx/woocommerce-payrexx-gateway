@@ -50,7 +50,6 @@ class Dispatcher
     {
         try {
             $resp = $_REQUEST;
-            $gateway_id = $resp['transaction']['invoice']['paymentRequestId'] ?? '';
 
             if (!isset($resp['transaction']['status'])) {
                 throw new \Exception('Missing transaction status');
@@ -74,6 +73,12 @@ class Dispatcher
             // could bind a real payment to a foreign, unpaid order.
             $order_id = (string) $transaction->getReferenceId();
 
+            // The same applies to the gateway: it is the sole input to the amount
+            // reconciliation below, so taking it from the request lets a replay prove
+            // payment with a gateway that belongs to a different order.
+            $invoice = $transaction->getInvoice();
+            $gateway_id = is_array($invoice) ? ($invoice['paymentRequestId'] ?? '') : '';
+
             if (empty($order_id)) {
                 $this->send_response('Webhook data incomplete');
             }
@@ -85,10 +90,21 @@ class Dispatcher
             $arr = explode('_', $order_id);
             $order_id = end($arr);
 
-            // Check if subscription to handle accordingly
+            // Check if subscription to handle accordingly.
+            //
+            // The pre-authorization marker in the request only routes the notification. It
+            // must never reach the money path or persistent billing state: the SDK's
+            // Response\Transaction carries no preAuthorizationId field (Base::fromArray
+            // drops unknown keys), so it cannot be re-derived from the fetched object. The
+            // id stored on the subscription is therefore the id of the transaction we just
+            // fetched from Payrexx, never the request payload.
             $subscriptions = [];
             $preAuthId = null;
             if (!empty($resp['transaction']['preAuthorizationId'])) {
+                if (!function_exists('wcs_get_subscriptions_for_order') || !class_exists('WC_Subscription')) {
+                    $this->send_response('Subscriptions not supported on this shop');
+                }
+
                 $subscriptions = wcs_get_subscriptions_for_order($order_id, array('order_type' => 'any'));
 
                 // $order_id is the subscription id in case of payment method change. In this case $subscriptions will be empty
@@ -102,10 +118,10 @@ class Dispatcher
                 // Subscription renewal > $order_id is from an old order and must be overwritten
                 $firstSubscription = reset($subscriptions);
                 $order_id = $firstSubscription->get_last_order( 'ids', 'any' );
-                $preAuthId = $resp['transaction']['preAuthorizationId'];
+                $preAuthId = $transaction->getId();
             }
 
-            $order = new \WC_Order($order_id);
+            $order = wc_get_order($order_id);
 
             if (!$order_id || !$order) {
                 throw new \Exception('Fraudulent request');
@@ -115,11 +131,23 @@ class Dispatcher
             $newTransactionStatus = $transaction->getStatus();
 
             // A confirmed transaction can also be a partial payment (with bank transfer).
-            // Therefore the new correct status must be determined
-            if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED]) && !$preAuthId) {
-                $gateway = $this->payrexx_api_service->getPayrexxGateway($gateway_id);
-                $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::CONFIRMED]);
-                $refundedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
+            // Therefore the new correct status must be determined.
+            //
+            // This reconciliation runs on every path. Skipping it whenever a
+            // pre-authorization marker was present allowed a replayed webhook to complete
+            // an unpaid renewal order without any money being charged.
+            if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED])) {
+                if (!empty($gateway_id)) {
+                    $gateway = $this->payrexx_api_service->getPayrexxGateway($gateway_id);
+                    $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::CONFIRMED]);
+                    $refundedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
+                } else {
+                    // A transaction charged directly against a pre-authorization has no
+                    // gateway. Reconcile against the transaction's own amount instead of
+                    // letting the check fall away.
+                    $confirmedAmount = round(((int) $transaction->getAmount()) / 100, 2);
+                    $refundedAmount = 0.0;
+                }
 
                 $newTransactionStatus = StatusUtil::determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount);
             }
@@ -140,7 +168,10 @@ class Dispatcher
             $this->order_service->handleTransactionStatus($order, $subscriptions, $newTransactionStatus, $transactionUuid, $preAuthId);
             $this->send_response('Success: Processed webhook response');
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            // \Throwable, not \Exception: a TypeError or a missing WooCommerce Subscriptions
+            // class is an \Error and used to escape this handler as a raw fatal on a public
+            // endpoint.
             throw new \Exception('Error: ' . $e->getMessage());
         }
     }
