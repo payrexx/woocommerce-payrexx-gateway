@@ -163,10 +163,7 @@ class Subscription extends Base
         $this->limit = $limit;
     }
 
-    /**
-     * @return ResponseSubscription
-     */
-    public function getResponseModel(): object
+    public function getResponseModel(): ResponseSubscription
     {
         return new ResponseSubscription();
     }

@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.21
+Stable tag: 3.1.20
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,9 +66,6 @@ payment methods especially in Europe that you can quickly and easily integrate i
 3. Payrexx backend integration
 
 == Upgrade Notice ==
-
-= 3.1.21 =
-* Security update, please install as soon as possible
 
 = 3.1.20 =
 * Minor update, no need to backup
@@ -456,10 +453,6 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
-
-= 3.1.21 =
-* PP-20206: Security: the payment webhook now identifies the order from the transaction fetched from Payrexx, so a forged request can no longer mark an unpaid order as paid.
-* PP-20189: Updated the Payrexx SDK to 2.0.15, which fixes intermittent PHP worker crashes (HTTP 502/503) on webhook and API calls under OPcache.
 
 = 3.1.20 =
 * PP-19798: Failed subscription payments are now marked as failed instead of cancelled across the webhook, redirect and timeout paths.

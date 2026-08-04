@@ -33,10 +33,7 @@ class QrCodeScan extends Base
         $this->sessionId = $sessionId;
     }
 
-    /**
-     * @return ResponseQrCodeScan
-     */
-    public function getResponseModel(): object
+    public function getResponseModel(): ResponseQrCodeScan
     {
         return new ResponseQrCodeScan();
     }
