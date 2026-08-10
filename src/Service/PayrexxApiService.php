@@ -3,7 +3,10 @@
 namespace PayrexxPaymentGateway\Service;
 
 use Exception;
+use Payrexx\Communicator;
 use Payrexx\Models\Response\Transaction;
+use Payrexx\Payrexx;
+use Payrexx\PayrexxException;
 use PayrexxPaymentGateway\Util\BasketUtil;
 
 class PayrexxApiService
@@ -121,6 +124,91 @@ class PayrexxApiService
 		return true;
 	}
 
+    /**
+     * Cancel every waiting transaction belonging to a gateway.
+     *
+     * Deleting the gateway does not touch its transactions, so this has to run first.
+     * A gateway that can no longer be read is reported as a failure: its transactions
+     * are then unreachable and would stay open without anyone noticing.
+     *
+     * @param int $gatewayId payrexx gateway id.
+     * @return bool false as soon as one transaction could not be cancelled.
+     * @throws PayrexxException
+     */
+	public function cancelWaitingTransactions( int $gatewayId ): bool {
+		// No gateway was ever stored on the order - there is nothing to cancel.
+		if ( ! $gatewayId ) {
+			return true;
+		}
+
+		try {
+			$gateway = $this->getPayrexxGateway( $gatewayId );
+		} catch ( Exception $e ) {
+			return false;
+		}
+
+		$cancelled = true;
+		foreach ( $gateway->getInvoices() ?? [] as $invoice ) {
+			foreach ( $invoice['transactions'] ?? [] as $transaction ) {
+				if ( Transaction::WAITING !== ( $transaction['status'] ?? '' ) ) {
+					continue;
+				}
+				// The call comes first so it runs for every waiting transaction.
+				$cancelled = $this->cancelTransaction( (int) ( $transaction['id'] ?? 0 ) ) && $cancelled;
+			}
+		}
+
+		return $cancelled;
+	}
+
+    /**
+     * Cancel a single waiting transaction.
+     *
+     * Raw request on purpose: no SDK method emits act "cancel", and $payrexx->delete()
+     * maps to DELETE /Transaction/{id}, which returns 404 for a waiting transaction.
+     *
+     * @param int $transactionId payrexx transaction id.
+     * @return bool
+     * @throws PayrexxException
+     */
+	protected function cancelTransaction( int $transactionId ): bool {
+		$version = $this->getInterface()->getVersion();
+		if ( ! $transactionId || ! $version ) {
+			return false;
+		}
+
+		$url = sprintf(
+			'https://api.%s/v%s/Transaction/%d/cancel?instance=%s',
+			$this->getApiBaseDomain(),
+			$version,
+			$transactionId,
+			rawurlencode( (string) $this->instance )
+		);
+
+		// Runs while the customer waits for the redirect, so fail fast rather than hang.
+		$response = wp_remote_request(
+			$url,
+			[
+				'method'  => 'PATCH',
+				'timeout' => 10,
+				'headers' => [
+					'x-api-key'    => $this->apiKey,
+					'Content-Type' => 'application/x-www-form-urlencoded',
+				],
+				'body'    => '',
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		// Below API 1.15 errors arrive as HTTP 200 with status "error", so judge the envelope.
+		$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+
+		return is_array( $body ) && 'success' === ( $body['status'] ?? '' );
+	}
+
 	public function getPayrexxTransaction(int $payrexxTransactionId): ?\Payrexx\Models\Response\Transaction
 	{
 		$payrexx = $this->getInterface();
@@ -221,7 +309,7 @@ class PayrexxApiService
 		}
 	}
 
-	public function validate_api_credentials($instance, $apiKey, $platform)
+    public function validate_api_credentials($instance, $apiKey, $platform)
 	{
 		$payrexx = new \Payrexx\Payrexx($instance, $apiKey, '', $platform);
 		$signatureCheck = new \Payrexx\Models\Request\SignatureCheck();
@@ -236,11 +324,24 @@ class PayrexxApiService
 	}
 
 	/**
-	 * @return \Payrexx\Payrexx
-	 */
-	private function getInterface(): \Payrexx\Payrexx
+	 * @return Payrexx
+     * @throws PayrexxException
+     */
+	private function getInterface(): Payrexx
 	{
-		$platform = !empty($this->platform) ? $this->platform : \Payrexx\Communicator::API_URL_BASE_DOMAIN;
-		return new \Payrexx\Payrexx($this->instance, $this->apiKey, '', $platform);
+		return new Payrexx($this->instance, $this->apiKey, '', $this->getApiBaseDomain());
+	}
+
+	/**
+	 * Api host the SDK and the raw cancel request must agree on.
+	 *
+	 * @return string
+	 */
+	private function getApiBaseDomain(): string
+	{
+		if (!empty($this->platform)) {
+			return $this->platform;
+		}
+		return Communicator::API_URL_BASE_DOMAIN;
 	}
 }

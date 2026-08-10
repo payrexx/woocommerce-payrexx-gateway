@@ -104,6 +104,38 @@ class OrderService
 	}
 
 	/**
+	 * Cancel an order that stayed unpaid past the gateway timeout (PP-17648: frees a
+	 * blocked WooCommerce Bookings slot when the customer just closes the tab).
+	 *
+	 * Deliberately does not cancel Payrexx transactions: 'pending' only means no webhook
+	 * arrived, not that the customer abandoned the checkout. A waiting transaction here
+	 * belongs to an invoice the customer already received and may still pay.
+	 *
+	 * @param WC_Order $order woocommerce order.
+	 * @return void
+	 */
+	public function autoCancelUnpaidOrder(WC_Order $order ): void
+    {
+		if ( $order->is_paid() || self::WC_STATUS_PENDING !== $order->get_status() ) {
+			return;
+		}
+
+		if ( $this->orderContainsSubscription( $order ) ) {
+			// 'failed' keeps the WCS subscription on-hold instead of cancelling it permanently.
+			$order->update_status(
+				self::WC_STATUS_FAILED,
+				__( 'Payment not received within 15 minutes (Payrexx).' )
+			);
+			return;
+		}
+
+		$order->update_status(
+			self::WC_STATUS_CANCELLED,
+			__( 'Automatically cancelled – payment not received within 15 minutes (Payrexx).' )
+		);
+	}
+
+	/**
 	 * Check order transition allowed
 	 *
 	 * @param string $new_status new order status.

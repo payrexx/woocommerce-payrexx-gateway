@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.21
+Stable tag: 3.1.22
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.22 =
+* Minor update, no need to backup
 = 3.1.21 =
 * Security update, please install as soon as possible
 
@@ -457,6 +459,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.22 =
+* PP-20180: Aborting a checkout now also cancels a pending invoice, prepayment or bank transfer transaction instead of leaving it open in the Payrexx backend.
+* PP-20180: If that cancellation fails, the order gets a note asking the merchant to check the payment, instead of failing silently.
 = 3.1.21 =
 * PP-20206: Security: the payment webhook now takes the order, the gateway and the amount from the transaction fetched from Payrexx instead of the incoming request.
 
