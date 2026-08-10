@@ -69,6 +69,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.22 =
 * Minor update, no need to backup
+= 3.1.21 =
+* Security update, please install as soon as possible
 
 = 3.1.20 =
 * Minor update, no need to backup
@@ -460,6 +462,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 = 3.1.22 =
 * PP-20180: Aborting a checkout now also cancels a pending invoice, prepayment or bank transfer transaction instead of leaving it open in the Payrexx backend.
 * PP-20180: If that cancellation fails, the order gets a note asking the merchant to check the payment, instead of failing silently.
+= 3.1.21 =
+* PP-20206: Security: the payment webhook now takes the order, the gateway and the amount from the transaction fetched from Payrexx instead of the incoming request.
 
 = 3.1.20 =
 * PP-19798: Failed subscription payments are now marked as failed instead of cancelled across the webhook, redirect and timeout paths.
