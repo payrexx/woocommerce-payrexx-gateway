@@ -69,6 +69,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.25 =
 * Minor update, no need to backup
+= 3.1.24 =
+* Minor update, no need to backup
+
 = 3.1.23 =
 * Minor update, no need to backup
 = 3.1.22 =
@@ -465,6 +468,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.25 =
 * PP-20387: Recurring subscription charges no longer hang and abort with a fatal error when the Payrexx API is slow - the request now times out cleanly. A timed-out charge whose outcome is unknown is left for the webhook to confirm instead of being retried, to avoid a possible double charge.
+= 3.1.24 =
+* PP-20386: Webhooks referencing an order or subscription that no longer exists (e.g. an unpaid checkout draft removed by WooCommerce's daily cleanup) are now acknowledged instead of returning an error, which stopped Payrexx from retrying the delivery repeatedly.
+
 = 3.1.23 =
 * PP-20204: Order line items with per-unit rounding are now sent as an itemized basket instead of a single purpose string.
 = 3.1.22 =
