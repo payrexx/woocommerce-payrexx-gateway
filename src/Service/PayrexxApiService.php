@@ -233,6 +233,10 @@ class PayrexxApiService
 		}
 	}
 
+	/**
+	 * @return bool|null true = charged, false = declined/failed (safe to retry),
+	 *                   null = request timed out (outcome unknown, must NOT be retried).
+	 */
 	public function chargeTransaction($transactionId, $amount) {
 		$payrexx = $this->getInterface();
 		$transaction = new \Payrexx\Models\Request\Transaction();
@@ -242,6 +246,13 @@ class PayrexxApiService
 			$payrexx->charge($transaction);
 			return true;
 		} catch (\Payrexx\PayrexxException $e) {
+			// A cURL timeout (no HTTP response) means the request was sent but we never
+			// learned the outcome - the charge may well have gone through. Signal "unknown"
+			// so the caller does not retry and risk a double charge. Any other error is a
+			// real failure and can be retried safely.
+			if ($e->getCode() === 0 && (int) $e->getMessage() === CURLE_OPERATION_TIMEDOUT) {
+				return null;
+			}
 		}
 		return false;
 	}
