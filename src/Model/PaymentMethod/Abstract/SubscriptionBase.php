@@ -245,12 +245,15 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 			}
 
 			// Both must be given to do a valid recurring transaction
-			if ($this->payrexxApiService->chargeTransaction($tokenizationId, $amount)) {
-				continue;
-			}
+			$chargeResult = $this->payrexxApiService->chargeTransaction($tokenizationId, $amount);
 
-			// Recurring payment failed if we reach this point
-			$subscription->payment_failed();
+			// Only an explicit failure (declined / real error) may be retried. A null
+			// result means the charge timed out and its outcome is unknown - marking it
+			// failed would trigger a retry that could double-charge, so we leave it for
+			// the Payrexx webhook to settle instead.
+			if ($chargeResult === false) {
+				$subscription->payment_failed();
+			}
 		}
 	}
 }
