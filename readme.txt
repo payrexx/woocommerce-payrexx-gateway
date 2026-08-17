@@ -70,6 +70,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 = 3.1.24 =
 * Minor update, no need to backup
 
+= 3.1.23 =
+* Minor update, no need to backup
 = 3.1.22 =
 * Minor update, no need to backup
 = 3.1.21 =
@@ -465,6 +467,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 = 3.1.24 =
 * PP-20386: Webhooks referencing an order or subscription that no longer exists (e.g. an unpaid checkout draft removed by WooCommerce's daily cleanup) are now acknowledged instead of returning an error, which stopped Payrexx from retrying the delivery repeatedly.
 
+= 3.1.23 =
+* PP-20204: Order line items with per-unit rounding are now sent as an itemized basket instead of a single purpose string.
 = 3.1.22 =
 * PP-20180: Aborting a checkout now also cancels a pending invoice, prepayment or bank transfer transaction instead of leaving it open in the Payrexx backend.
 * PP-20180: If that cancellation fails, the order gets a note asking the merchant to check the payment, instead of failing silently.
