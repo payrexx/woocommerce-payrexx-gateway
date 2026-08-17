@@ -118,7 +118,11 @@ class Dispatcher
 
                 // $order_id is the subscription id in case of payment method change. In this case $subscriptions will be empty
                 if (!$subscriptions) {
-                    $subscriptions[] = new \WC_Subscription($order_id);
+                    $subscription = function_exists('wcs_get_subscription') ? wcs_get_subscription($order_id) : false;
+                    if (!$subscription) {
+                        $this->send_response('Subscription no longer exists, nothing to process');
+                    }
+                    $subscriptions[] = $subscription;
                 }
 
                 // Identify the correct order_id
@@ -144,8 +148,14 @@ class Dispatcher
             // !$order guard below dead code and turned legitimate webhooks into HTTP 500.
             $order = wc_get_order($order_id);
 
-            if (!$order_id || !$order) {
-                throw new Exception('Fraudulent request');
+            if (!$order) {
+                if (in_array($transaction->getStatus(), [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED], true)) {
+                    wc_get_logger()->warning(
+                        sprintf('Payrexx webhook: order %s not found for a %s transaction', $order_id, $transaction->getStatus()),
+                        ['source' => 'payrexx']
+                    );
+                }
+                $this->send_response('Order no longer exists, nothing to process');
             }
 
             $orderTotal = round(floatval($order->get_total('edit')), 2);

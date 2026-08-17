@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.23
+Stable tag: 3.1.24
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 3. Payrexx backend integration
 
 == Upgrade Notice ==
+
+= 3.1.24 =
+* Minor update, no need to backup
 
 = 3.1.23 =
 * Minor update, no need to backup
@@ -460,6 +463,9 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * First version of Payrexx plugin
 
 == Changelog ==
+
+= 3.1.24 =
+* PP-20386: Webhooks referencing an order or subscription that no longer exists (e.g. an unpaid checkout draft removed by WooCommerce's daily cleanup) are now acknowledged instead of returning an error, which stopped Payrexx from retrying the delivery repeatedly.
 
 = 3.1.23 =
 * PP-20204: Order line items with per-unit rounding are now sent as an itemized basket instead of a single purpose string.
