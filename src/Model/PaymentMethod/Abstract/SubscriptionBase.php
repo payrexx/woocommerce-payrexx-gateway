@@ -142,7 +142,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 		}
 		$total_amount                 = floatval( $order->get_total( 'edit' ) );
 		$prefix                       = get_option( PAYREXX_CONFIGS_PREFIX . 'prefix' );
-		$data['reference']            = $prefix ? $prefix . '_' . $order_id : $order_id;
+		$data['reference']            = (string) ( $prefix ? $prefix . '_' . $order_id : $order_id );
 		$data['success_redirect_url'] = $this->get_return_url( $order );
 		$data['cancel_redirect_url']  = PaymentHelper::getCancelUrl( $order );
 		$data['language']             = $this->get_gateway_lang();
