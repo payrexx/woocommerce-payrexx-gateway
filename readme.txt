@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.25
+Stable tag: 3.1.26
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.26 =
+* Minor update, no need to backup
 = 3.1.25 =
 * Minor update, no need to backup
 = 3.1.24 =
@@ -466,6 +468,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.26 =
+* PP-20452: Fixed paid orders staying unpaid for merchants without a prefix (Payrexx platform merchants) - the order reference is now sent as a string so it is no longer dropped from the API request, letting the payment webhook match the order again.
 = 3.1.25 =
 * PP-20387: Recurring subscription charges no longer hang and abort with a fatal error when the Payrexx API is slow - the request now times out cleanly. A timed-out charge whose outcome is unknown is left for the webhook to confirm instead of being retried, to avoid a possible double charge.
 = 3.1.24 =
