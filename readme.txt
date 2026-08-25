@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.26
+Stable tag: 3.1.28
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.28 =
+* Minor update, no need to backup
 = 3.1.26 =
 * Minor update, no need to backup
 = 3.1.25 =
@@ -468,6 +470,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.28 =
+* PP-20477: An aborted payment attempt no longer cancels the whole order (and sends a cancellation email) when another attempt on the same checkout succeeds. The order is only cancelled once Payrexx confirms no successful or pending transaction, and its final state is driven by the payment webhook instead of the browser cancel redirect.
 = 3.1.26 =
 * PP-20452: Fixed paid orders staying unpaid for merchants without a prefix (Payrexx platform merchants) - the order reference is now sent as a string so it is no longer dropped from the API request, letting the payment webhook match the order again.
 = 3.1.25 =

@@ -134,6 +134,42 @@ class PayrexxApiService
 	}
 
     /**
+     * True if the gateway has a non-dead transaction (paid or still pending); such an order
+     * must not be cancelled by an aborted sibling's redirect. Fails safe (PP-20477).
+     *
+     * @param int $gatewayId payrexx gateway id.
+     * @return bool
+     * @throws PayrexxException
+     */
+	public function gatewayHasLiveTransaction( int $gatewayId ): bool {
+		if ( ! $gatewayId ) {
+			return false;
+		}
+
+		try {
+			$gateway = $this->getPayrexxGateway( $gatewayId );
+		} catch ( Exception $e ) {
+			return true;
+		}
+
+		$deadStatuses = [
+			Transaction::CANCELLED,
+			Transaction::EXPIRED,
+			Transaction::DECLINED,
+			Transaction::ERROR,
+		];
+		foreach ( $gateway->getInvoices() ?? [] as $invoice ) {
+			foreach ( $invoice['transactions'] ?? [] as $transaction ) {
+				if ( ! in_array( $transaction['status'] ?? '', $deadStatuses, true ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+    /**
      * Cancel every waiting transaction belonging to a gateway.
      *
      * Deleting the gateway does not touch its transactions, so this has to run first.
