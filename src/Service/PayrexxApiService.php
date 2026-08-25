@@ -75,17 +75,10 @@ class PayrexxApiService
 		$gateway->setChargeOnAuthorization($chargeOnAuth);
 
 		$basket = BasketUtil::createBasketByCart($cart);
-		$basketInCents = (int) round(BasketUtil::getBasketAmount($basket) * 100);
 
-		// Each line amount is rounded to whole cents per unit, so the basket sum can drift
-		// a few cents from the order total (PP-20204). Tolerate that instead of collapsing
-		// every line item into one purpose string, which would also drop the VAT breakdown.
-		$roundingTolerance = 1;
-		foreach ($basket as $basketItem) {
-			$roundingTolerance += (int) $basketItem['quantity'];
-		}
-
-		if ($totalAmount && abs($totalInCents - $basketInCents) <= $roundingTolerance) {
+		// Always itemize; reconcile rounding via an adjustment line instead of collapsing to purpose (PP-20637).
+		if ($totalAmount && !empty($basket)) {
+			$basket = BasketUtil::appendRoundingCorrection($basket, $totalInCents);
 			$gateway->setBasket($basket);
 		} else {
 			$gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
