@@ -75,17 +75,10 @@ class PayrexxApiService
 		$gateway->setChargeOnAuthorization($chargeOnAuth);
 
 		$basket = BasketUtil::createBasketByCart($cart);
-		$basketInCents = (int) round(BasketUtil::getBasketAmount($basket) * 100);
 
-		// Each line amount is rounded to whole cents per unit, so the basket sum can drift
-		// a few cents from the order total (PP-20204). Tolerate that instead of collapsing
-		// every line item into one purpose string, which would also drop the VAT breakdown.
-		$roundingTolerance = 1;
-		foreach ($basket as $basketItem) {
-			$roundingTolerance += (int) $basketItem['quantity'];
-		}
-
-		if ($totalAmount && abs($totalInCents - $basketInCents) <= $roundingTolerance) {
+		// Always itemize; reconcile rounding via an adjustment line instead of collapsing to purpose (PP-20637).
+		if ($totalAmount && !empty($basket)) {
+			$basket = BasketUtil::appendRoundingCorrection($basket, $totalInCents);
 			$gateway->setBasket($basket);
 		} else {
 			$gateway->setPurpose([BasketUtil::createPurposeByBasket($basket)]);
@@ -131,6 +124,42 @@ class PayrexxApiService
 			return false;
 		}
 		return true;
+	}
+
+    /**
+     * True if the gateway has a non-dead transaction (paid or still pending); such an order
+     * must not be cancelled by an aborted sibling's redirect. Fails safe (PP-20477).
+     *
+     * @param int $gatewayId payrexx gateway id.
+     * @return bool
+     * @throws PayrexxException
+     */
+	public function gatewayHasLiveTransaction( int $gatewayId ): bool {
+		if ( ! $gatewayId ) {
+			return false;
+		}
+
+		try {
+			$gateway = $this->getPayrexxGateway( $gatewayId );
+		} catch ( Exception $e ) {
+			return true;
+		}
+
+		$deadStatuses = [
+			Transaction::CANCELLED,
+			Transaction::EXPIRED,
+			Transaction::DECLINED,
+			Transaction::ERROR,
+		];
+		foreach ( $gateway->getInvoices() ?? [] as $invoice ) {
+			foreach ( $invoice['transactions'] ?? [] as $transaction ) {
+				if ( ! in_array( $transaction['status'] ?? '', $deadStatuses, true ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
     /**

@@ -69,6 +69,10 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.29 =
 * Minor update, no need to backup
+= 3.1.28 =
+* Minor update, no need to backup
+= 3.1.27 =
+* Minor update, no need to backup
 = 3.1.26 =
 * Minor update, no need to backup
 = 3.1.25 =
@@ -472,6 +476,10 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 = 3.1.29 =
 * PP-20826: Fixed a fatal error when WooCommerce automatically cancels an unpaid Payrexx order - the order service was missing the WC_Order class import, so the cancellation could never run.
+= 3.1.28 =
+* PP-20477: An aborted payment attempt no longer cancels the whole order (and sends a cancellation email) when another attempt on the same checkout succeeds. The order is only cancelled once Payrexx confirms no successful or pending transaction, and its final state is driven by the payment webhook instead of the browser cancel redirect.
+= 3.1.27 =
+* PP-20637: Order line items are now always shown individually on the Payrexx receipt. The basket is built from the actually charged amounts (incl. coupons) and a small rounding adjustment keeps the total exact, so carts with per-unit rounding or coupons no longer collapse into a single position.
 = 3.1.26 =
 * PP-20452: Fixed paid orders staying unpaid for merchants without a prefix (Payrexx platform merchants) - the order reference is now sent as a string so it is no longer dropped from the API request, letting the payment webhook match the order again.
 = 3.1.25 =
