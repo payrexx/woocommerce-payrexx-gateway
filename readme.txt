@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.28
+Stable tag: 3.1.29
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.29 =
+* Minor update, no need to backup
 = 3.1.28 =
 * Minor update, no need to backup
 = 3.1.27 =
@@ -472,6 +474,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.29 =
+* PP-20826: Fixed a fatal error when WooCommerce automatically cancels an unpaid Payrexx order - the order service was missing the WC_Order class import, so the cancellation could never run.
 = 3.1.28 =
 * PP-20477: An aborted payment attempt no longer cancels the whole order (and sends a cancellation email) when another attempt on the same checkout succeeds. The order is only cancelled once Payrexx confirms no successful or pending transaction, and its final state is driven by the payment webhook instead of the browser cancel redirect.
 = 3.1.27 =

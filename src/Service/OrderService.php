@@ -3,6 +3,7 @@
 namespace PayrexxPaymentGateway\Service;
 
 use Payrexx\Models\Response\Transaction;
+use WC_Order;
 
 class OrderService
 {
