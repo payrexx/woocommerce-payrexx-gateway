@@ -16,28 +16,12 @@ class BasketUtil
         $basket = [];
 
         foreach ($cartItems as $item) {
-            // Product
-            $productId = $item['data']->get_id();
-            $amount = $item['data']->get_sale_price() ?: $item['data']->get_price();
+            $quantity = (int) $item['quantity'];
 
-            // In case of subscription the sign up fee maybe should be added
-            if (class_exists('\WC_Subscriptions') && \WC_Subscriptions_Product::is_subscription($productId)) {
-                $amount += \WC_Subscriptions_Product::get_sign_up_fee($productId);
-
-                // With a trial period the original price is not immediately charged
-                if (\WC_Subscriptions_Product::get_trial_length($productId)) {
-                    $amount -= ($item['data']->get_sale_price() ?: $item['data']->get_price());
-                }
-            }
-
-            if ( ! $amount ) {
-                $amount = 0;
-            }
-
-			$taxPerProduct = ( ( $item['line_subtotal_tax'] * 100 ) / $item['quantity'] ) / 100;
-			if ( ! $productPriceIncludesTax ) {
-				$amount += $taxPerProduct;
-			}
+            // Actual charged line amount (post-coupon) so the basket reconciles (PP-20637).
+            $lineTotal = (float) ( $item['line_total'] ?? 0 );
+            $lineTax   = (float) ( $item['line_tax'] ?? 0 );
+            $unitAmount = $quantity > 0 ? ( $lineTotal + $lineTax ) / $quantity : 0.0;
 
             // Get VAT rate based on product tax class
             $tax_class = $item['data']->get_tax_class();
@@ -47,8 +31,8 @@ class BasketUtil
             $basket[] = [
                 'name' => wp_strip_all_tags( $item['data']->get_name() ),
                 'description' => wp_strip_all_tags( self::get_product_description( $item ) ),
-                'quantity' => $item['quantity'],
-                'amount' => round($amount * 100),
+                'quantity' => $quantity,
+                'amount' => (int) round( $unitAmount * 100 ),
                 'sku' => $item['data']->get_sku(),
                 'vatRate' => $tax_rate,
             ];
@@ -73,26 +57,6 @@ class BasketUtil
                 'quantity' => 1,
                 'amount' => round( $shippingAmount * 100 ),
                 'vatRate' => $shippingTaxPercentage,
-            ];
-        }
-
-        // Discount
-        $discount = $cart->get_discount_total();
-        $discountTax = $cart->get_discount_tax();
-        if ($discount) {
-            $discountAmount = $discount;
-            $discountAmount += $productPriceIncludesTax ? 0 : $discountTax;
-			// Calculate the VAT Rate based on discount amount and tax.
-			$vatRate = $discountTax ? round( ( $discountTax / $discount ) * 100 ) : 0;
-
-            $basket[] = [
-                'name' => [
-                    1 => 'Rabatt',
-                    2 => 'Discount',
-                ],
-                'quantity' => 1,
-                'amount' => round($discountAmount * -100),
-				'vatRate' => $vatRate,
             ];
         }
 
@@ -127,6 +91,27 @@ class BasketUtil
             $basketAmount += $product['quantity'] * $amount;
         }
         return floatval($basketAmount);
+    }
+
+    /** Append an adjustment line so the basket sums exactly to the order total (PP-20637). */
+    public static function appendRoundingCorrection(array $basket, int $totalInCents): array
+    {
+        $basketInCents = (int) round(self::getBasketAmount($basket) * 100);
+        $delta = $totalInCents - $basketInCents;
+        if ($delta !== 0) {
+            $basket[] = [
+                'name' => [
+                    1 => 'Anpassung',
+                    2 => 'Adjustment',
+                    3 => 'Ajustement',
+                    4 => 'Adeguamento',
+                ],
+                'quantity' => 1,
+                'amount' => $delta,
+                'vatRate' => 0,
+            ];
+        }
+        return $basket;
     }
 
     /**
