@@ -301,3 +301,31 @@ msgstr ""
 #: src/Model/PaymentMethod/VerdCash.php:9
 msgid "VERD.cash (Payrexx)"
 msgstr ""
+
+#: src/Service/OrderService.php:211
+msgid "Payment was cancelled by the customer"
+msgstr "Die Zahlung wurde vom Kunden abgebrochen"
+
+#: src/Service/OrderService.php:212
+msgid "An error occured while processing this payment"
+msgstr "Bei der Verarbeitung dieser Zahlung ist ein Fehler aufgetreten"
+
+#: src/Service/OrderService.php:213
+msgid "Payment was fully refunded"
+msgstr "Die Zahlung wurde vollständig zurückerstattet"
+
+#: src/Service/OrderService.php:214
+msgid "Awaiting payment"
+msgstr "Zahlung ausstehend"
+
+#: src/Service/OrderService.php:215
+msgid "Payment was partially refunded"
+msgstr "Die Zahlung wurde teilweise zurückerstattet"
+
+#: src/Service/OrderService.php:216
+msgid "Payment expired"
+msgstr "Die Zahlung ist abgelaufen"
+
+#: src/Service/OrderService.php:217
+msgid "Payment was declined"
+msgstr "Die Zahlung wurde abgelehnt"

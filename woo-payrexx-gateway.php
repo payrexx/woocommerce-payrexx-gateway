@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.29
+ * Version: 3.1.30
  * Requires at least: 5.6
  * Tested up to: 7.0
  * Requires PHP: 8.0
@@ -295,7 +295,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 		 */
 		public function allow_order_payment_on_cancelled(array $statuses, WC_Order $order): array {
 			if (
-				strpos($order->get_payment_method(), 'payrexx') === 0 &&
+				self::getOrderService()->isPayrexxOrder($order) &&
 				$order->has_status(OrderService::WC_STATUS_CANCELLED)
 			) {
 				$statuses[] = OrderService::WC_STATUS_CANCELLED;

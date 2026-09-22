@@ -14,6 +14,7 @@ class Dispatcher
 {
     const BRAND_BANK_TRANSFER = 'bank-transfer';
     const PSP_NATIVE = 'Native_PSP';
+    const MONEY_MOVED_STATUSES = [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED];
 
     /**
      * @var PayrexxApiService
@@ -149,7 +150,7 @@ class Dispatcher
             $order = wc_get_order($order_id);
 
             if (!$order) {
-                if (in_array($transaction->getStatus(), [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED], true)) {
+                if (in_array($transaction->getStatus(), self::MONEY_MOVED_STATUSES, true)) {
                     wc_get_logger()->warning(
                         sprintf('Payrexx webhook: order %s not found for a %s transaction', $order_id, $transaction->getStatus()),
                         ['source' => 'payrexx']
@@ -158,12 +159,38 @@ class Dispatcher
                 $this->send_response('Order no longer exists, nothing to process');
             }
 
+            // WooCommerce reuses a pending order across checkouts, so a stale transaction may arrive after
+            // the order was re-paid another way. Subscription webhooks are scoped by their pre-authorization.
+            if (empty($subscriptions) && $order->get_type() === 'shop_order') {
+                $ignoreReason = '';
+                if (!$this->order_service->isPayrexxOrder($order)) {
+                    $ignoreReason = 'Order is no longer paid via Payrexx, nothing to process';
+                } elseif (!$this->belongsToOrderGateway($transaction, $order)) {
+                    $ignoreReason = 'Transaction belongs to a previous gateway of this order, nothing to process';
+                }
+
+                if ($ignoreReason !== '') {
+                    // Money moved on the Payrexx side without touching the order - leave a trace.
+                    if (in_array($transaction->getStatus(), self::MONEY_MOVED_STATUSES, true)) {
+                        $logMessage = sprintf(
+                            'Payrexx webhook: ignored %s transaction %s for order %s (%s)',
+                            $transaction->getStatus(),
+                            $transaction->getId(),
+                            $order_id,
+                            $ignoreReason
+                        );
+                        wc_get_logger()->warning($logMessage, ['source' => 'payrexx']);
+                    }
+                    $this->send_response($ignoreReason);
+                }
+            }
+
             $orderTotal = round(floatval($order->get_total('edit')), 2);
             $newTransactionStatus = $transaction->getStatus();
 
             // A confirmed transaction can also be a partial payment (with bank transfer).
             // Therefore the new correct status must be determined.
-            if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED])) {
+            if (in_array($newTransactionStatus, self::MONEY_MOVED_STATUSES)) {
                 if ($gateway_id !== '') {
                     $gateway = $this->payrexx_api_service->getPayrexxGateway($gateway_id);
                     $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::CONFIRMED]);
@@ -205,6 +232,39 @@ class Dispatcher
             // API response missing uuid or id raises an \Error rather than an \Exception.
             throw new Exception('Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * GET /Transaction strips invoice.paymentRequestId, so the gateway stored on the order is
+     * fetched and searched for the transaction instead. Without a stored or fetchable gateway
+     * there is nothing to compare against.
+     *
+     * @param Transaction $transaction fetched transaction.
+     * @param \WC_Order $order woocommerce order.
+     * @return bool
+     */
+    private function belongsToOrderGateway(Transaction $transaction, $order): bool
+    {
+        $orderGatewayId = (int) $order->get_meta('payrexx_gateway_id', true);
+        if ($orderGatewayId <= 0) {
+            return true;
+        }
+
+        try {
+            $gateway = $this->payrexx_api_service->getPayrexxGateway($orderGatewayId);
+        } catch (Exception $e) {
+            return true;
+        }
+
+        foreach ($gateway->getInvoices() ?? [] as $invoice) {
+            foreach ($invoice['transactions'] ?? [] as $gatewayTransaction) {
+                if ((int) ($gatewayTransaction['id'] ?? 0) === (int) $transaction->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
