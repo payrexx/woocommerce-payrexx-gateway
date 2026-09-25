@@ -7,6 +7,7 @@ use Payrexx\Communicator;
 use Payrexx\Models\Response\Transaction;
 use Payrexx\Payrexx;
 use Payrexx\PayrexxException;
+use PayrexxPaymentGateway\Util\AmountUtil;
 use PayrexxPaymentGateway\Util\BasketUtil;
 
 class PayrexxApiService
@@ -49,7 +50,7 @@ class PayrexxApiService
 		$gateway->setSkipResultPage(true);
 
         $formattedTotalAmount = wc_format_decimal( $totalAmount, wc_get_price_decimals() );
-        $totalInCents = (int) round( $formattedTotalAmount * 100 );
+        $totalInCents = AmountUtil::toCents( $formattedTotalAmount );
         $totalAmount = round( $totalAmount, 2 );
 		if ( $totalAmount ) {
 			$gateway->setAmount( $totalInCents );
@@ -270,7 +271,7 @@ class PayrexxApiService
 		$payrexx = $this->getInterface();
 		$transaction = new \Payrexx\Models\Request\Transaction();
 		$transaction->setId($transactionId);
-		$transaction->setAmount( (int) round( floatval( $amount ) * 100 ) );
+		$transaction->setAmount( AmountUtil::toCents( $amount ) );
 		try {
 			$payrexx->charge($transaction);
 			return true;
@@ -341,7 +342,7 @@ class PayrexxApiService
 				$payrexx     = $this->getInterface();
 				$transaction = new \Payrexx\Models\Request\Transaction();
 				$transaction->setId( $refund_transaction->getId() );
-				$transaction->setAmount( (int) ( $amount * 100 ) );
+				$transaction->setAmount( AmountUtil::toCents( $amount ) );
 				$refund = $payrexx->refund( $transaction );
 				$refund_success_status = [
 					Transaction::CONFIRMED,

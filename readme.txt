@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.29
+Stable tag: 3.1.31
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.31 =
+* Minor update, no need to backup
 = 3.1.29 =
 * Minor update, no need to backup
 = 3.1.28 =
@@ -474,6 +476,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.31 =
+* PP-20828: A confirmed payment that is one cent short of the order total (per-unit rounding) or that overpays it now marks the order as paid instead of leaving it on hold; whenever the amounts differ, the order gets a note with both values. Refund amounts are rounded to cents instead of being truncated, so refunds are no longer 1 cent short.
 = 3.1.29 =
 * PP-20826: Fixed a fatal error when WooCommerce automatically cancels an unpaid Payrexx order - the order service was missing the WC_Order class import, so the cancellation could never run.
 = 3.1.28 =
