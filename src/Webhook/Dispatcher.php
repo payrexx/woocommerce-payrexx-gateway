@@ -14,7 +14,7 @@ class Dispatcher
 {
     const BRAND_BANK_TRANSFER = 'bank-transfer';
     const PSP_NATIVE = 'Native_PSP';
-    const MONEY_MOVED_STATUSES = [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED];
+    const CANCELLING_STATUSES = [Transaction::CANCELLED, Transaction::EXPIRED, Transaction::DECLINED, Transaction::ERROR];
 
     /**
      * @var PayrexxApiService
@@ -68,7 +68,7 @@ class Dispatcher
             // transaction we fetch with our own API credentials, never from $_REQUEST.
             // Taken from the request they only prove that some confirmed transaction
             // exists somewhere, which lets a replay bind a real payment to a foreign order.
-            $transaction = $this->payrexx_api_service->getPayrexxTransaction((int) $resp['transaction']['id']);
+            $transaction = $this->payrexx_api_service->getPayrexxTransaction((int)$resp['transaction']['id']);
 
             if (!$transaction) {
                 throw new Exception('Fraudulent request: transaction not found');
@@ -89,10 +89,10 @@ class Dispatcher
             // transaction type.
             $order_id = $transaction->getReferenceId() ?? '';
             if ($order_id === '') {
-                $order_id = (string) ($invoice['referenceId'] ?? '');
+                $order_id = (string)($invoice['referenceId'] ?? '');
             }
 
-            $gateway_id = (string) ($invoice['paymentRequestId'] ?? '');
+            $gateway_id = (string)($invoice['paymentRequestId'] ?? '');
 
             if (empty($order_id)) {
                 $this->send_response('Webhook data incomplete');
@@ -131,7 +131,7 @@ class Dispatcher
                 // Payment method change > $order_id is a subscriptionId and must be overwritten
                 // Subscription renewal > $order_id is from an old order and must be overwritten
                 $firstSubscription = reset($subscriptions);
-                $order_id = $firstSubscription->get_last_order( 'ids', 'any' );
+                $order_id = $firstSubscription->get_last_order('ids', 'any');
 
                 // The request's preAuthorizationId must not be persisted: Response\Transaction
                 // has no such field, so it cannot be corroborated against Payrexx, and
@@ -150,7 +150,7 @@ class Dispatcher
             $order = wc_get_order($order_id);
 
             if (!$order) {
-                if (in_array($transaction->getStatus(), self::MONEY_MOVED_STATUSES, true)) {
+                if (in_array($transaction->getStatus(), [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED], true)) {
                     wc_get_logger()->warning(
                         sprintf('Payrexx webhook: order %s not found for a %s transaction', $order_id, $transaction->getStatus()),
                         ['source' => 'payrexx']
@@ -159,38 +159,12 @@ class Dispatcher
                 $this->send_response('Order no longer exists, nothing to process');
             }
 
-            // WooCommerce reuses a pending order across checkouts, so a stale transaction may arrive after
-            // the order was re-paid another way. Subscription webhooks are scoped by their pre-authorization.
-            if (empty($subscriptions) && $order->get_type() === 'shop_order') {
-                $ignoreReason = '';
-                if (!$this->order_service->isPayrexxOrder($order)) {
-                    $ignoreReason = 'Order is no longer paid via Payrexx, nothing to process';
-                } elseif (!$this->belongsToOrderGateway($transaction, $order)) {
-                    $ignoreReason = 'Transaction belongs to a previous gateway of this order, nothing to process';
-                }
-
-                if ($ignoreReason !== '') {
-                    // Money moved on the Payrexx side without touching the order - leave a trace.
-                    if (in_array($transaction->getStatus(), self::MONEY_MOVED_STATUSES, true)) {
-                        $logMessage = sprintf(
-                            'Payrexx webhook: ignored %s transaction %s for order %s (%s)',
-                            $transaction->getStatus(),
-                            $transaction->getId(),
-                            $order_id,
-                            $ignoreReason
-                        );
-                        wc_get_logger()->warning($logMessage, ['source' => 'payrexx']);
-                    }
-                    $this->send_response($ignoreReason);
-                }
-            }
-
             $orderTotal = round(floatval($order->get_total('edit')), 2);
             $newTransactionStatus = $transaction->getStatus();
 
             // A confirmed transaction can also be a partial payment (with bank transfer).
             // Therefore the new correct status must be determined.
-            if (in_array($newTransactionStatus, self::MONEY_MOVED_STATUSES)) {
+            if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED])) {
                 if ($gateway_id !== '') {
                     $gateway = $this->payrexx_api_service->getPayrexxGateway($gateway_id);
                     $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::CONFIRMED]);
@@ -223,6 +197,21 @@ class Dispatcher
                 $newTransactionStatus = Transaction::CONFIRMED;
             }
 
+            // WooCommerce reuses a pending order across checkouts, so a stale transaction may arrive after the
+            // order was re-paid another way. Only statuses that would cancel or fail the order are ignored, and
+            // only after the remapping above, so a late payment still settles the order.
+            if (in_array($newTransactionStatus, self::CANCELLING_STATUSES, true)
+                && empty($subscriptions)
+                && $order->get_type() === 'shop_order'
+            ) {
+                if (!$this->order_service->isPayrexxOrder($order)) {
+                    $this->send_response('Order is no longer paid via Payrexx, nothing to process');
+                }
+                if (!$this->belongsToOrderGateway($transaction, $order)) {
+                    $this->send_response('Transaction belongs to a previous gateway of this order, nothing to process');
+                }
+            }
+
             $transactionUuid = $transaction->getUuid();
             $this->order_service->handleTransactionStatus($order, $subscriptions, $newTransactionStatus, $transactionUuid, $preAuthId);
             $this->send_response('Success: Processed webhook response');
@@ -245,7 +234,7 @@ class Dispatcher
      */
     private function belongsToOrderGateway(Transaction $transaction, $order): bool
     {
-        $orderGatewayId = (int) $order->get_meta('payrexx_gateway_id', true);
+        $orderGatewayId = (int)$order->get_meta('payrexx_gateway_id', true);
         if ($orderGatewayId <= 0) {
             return true;
         }
@@ -258,7 +247,7 @@ class Dispatcher
 
         foreach ($gateway->getInvoices() ?? [] as $invoice) {
             foreach ($invoice['transactions'] ?? [] as $gatewayTransaction) {
-                if ((int) ($gatewayTransaction['id'] ?? 0) === (int) $transaction->getId()) {
+                if ((int)($gatewayTransaction['id'] ?? 0) === (int)$transaction->getId()) {
                     return true;
                 }
             }
