@@ -3,6 +3,7 @@
 namespace PayrexxPaymentGateway\Webhook;
 
 use Exception;
+use Payrexx\Models\Response\Gateway;
 use Payrexx\Models\Response\Transaction;
 
 use PayrexxPaymentGateway\Service\OrderService;
@@ -92,8 +93,6 @@ class Dispatcher
                 $order_id = (string)($invoice['referenceId'] ?? '');
             }
 
-            $gateway_id = (string)($invoice['paymentRequestId'] ?? '');
-
             if (empty($order_id)) {
                 $this->send_response('Webhook data incomplete');
             }
@@ -162,13 +161,18 @@ class Dispatcher
             $orderTotal = round(floatval($order->get_total('edit')), 2);
             $newTransactionStatus = $transaction->getStatus();
 
+            // GET /Transaction strips invoice.paymentRequestId, so the gateway is taken from the order meta the
+            // shop wrote itself and only trusted if it actually contains the fetched transaction.
+            $orderGateway = $this->fetchOrderGateway($order);
+            $isOrderGatewayTransaction = $orderGateway !== null
+                && $this->isTransactionOfGateway($orderGateway, $transaction);
+
             // A confirmed transaction can also be a partial payment (with bank transfer).
             // Therefore the new correct status must be determined.
             if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED])) {
-                if ($gateway_id !== '') {
-                    $gateway = $this->payrexx_api_service->getPayrexxGateway($gateway_id);
-                    $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::CONFIRMED]);
-                    $refundedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
+                if ($isOrderGatewayTransaction) {
+                    $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($orderGateway, [Transaction::CONFIRMED]);
+                    $refundedAmount = StatusUtil::getAmountByStatusAndGateway($orderGateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
 
                     $newTransactionStatus = StatusUtil::determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount);
                 } elseif ($newTransactionStatus === Transaction::CONFIRMED) {
@@ -207,7 +211,8 @@ class Dispatcher
                 if (!$this->order_service->isPayrexxOrder($order)) {
                     $this->send_response('Order is no longer paid via Payrexx, nothing to process');
                 }
-                if (!$this->belongsToOrderGateway($transaction, $order)) {
+                // Without a stored or fetchable gateway there is nothing to compare against.
+                if ($orderGateway !== null && !$isOrderGatewayTransaction) {
                     $this->send_response('Transaction belongs to a previous gateway of this order, nothing to process');
                 }
             }
@@ -224,27 +229,30 @@ class Dispatcher
     }
 
     /**
-     * GET /Transaction strips invoice.paymentRequestId, so the gateway stored on the order is
-     * fetched and searched for the transaction instead. Without a stored or fetchable gateway
-     * there is nothing to compare against.
-     *
-     * @param Transaction $transaction fetched transaction.
      * @param \WC_Order $order woocommerce order.
-     * @return bool
+     * @return Gateway|null
      */
-    private function belongsToOrderGateway(Transaction $transaction, $order): bool
+    private function fetchOrderGateway($order): ?Gateway
     {
         $orderGatewayId = (int)$order->get_meta('payrexx_gateway_id', true);
         if ($orderGatewayId <= 0) {
-            return true;
+            return null;
         }
 
         try {
-            $gateway = $this->payrexx_api_service->getPayrexxGateway($orderGatewayId);
+            return $this->payrexx_api_service->getPayrexxGateway($orderGatewayId);
         } catch (Exception $e) {
-            return true;
+            return null;
         }
+    }
 
+    /**
+     * @param Gateway $gateway payrexx gateway.
+     * @param Transaction $transaction fetched transaction.
+     * @return bool
+     */
+    private function isTransactionOfGateway(Gateway $gateway, Transaction $transaction): bool
+    {
         foreach ($gateway->getInvoices() ?? [] as $invoice) {
             foreach ($invoice['transactions'] ?? [] as $gatewayTransaction) {
                 if ((int)($gatewayTransaction['id'] ?? 0) === (int)$transaction->getId()) {

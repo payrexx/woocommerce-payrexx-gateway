@@ -83,6 +83,22 @@ $scenarios = [
         'transaction' => ['status' => Transaction::CANCELLED, 'id' => CURRENT_TRANSACTION_ID],
         'expect' => ['message' => 'Success: Processed webhook response', 'status' => 'cancelled'],
     ],
+    'bank transfer, first of two partial payments confirmed' => [
+        'transaction' => ['status' => Transaction::CONFIRMED, 'id' => CURRENT_TRANSACTION_ID, 'amount' => 900],
+        'gateway_transactions' => [
+            ['id' => CURRENT_TRANSACTION_ID, 'status' => Transaction::CONFIRMED, 'amount' => 900],
+        ],
+        'expect' => ['message' => 'Success: Processed webhook response', 'status' => 'on-hold', 'paid' => false],
+    ],
+    'bank transfer, second of two partial payments confirmed' => [
+        'order' => ['status' => 'on-hold'],
+        'transaction' => ['status' => Transaction::CONFIRMED, 'id' => CURRENT_TRANSACTION_ID, 'amount' => 900],
+        'gateway_transactions' => [
+            ['id' => 3, 'status' => Transaction::CONFIRMED, 'amount' => 900],
+            ['id' => CURRENT_TRANSACTION_ID, 'status' => Transaction::CONFIRMED, 'amount' => 900],
+        ],
+        'expect' => ['message' => 'Success: Processed webhook response', 'paid' => true],
+    ],
     'no gateway stored on the order, expired' => [
         'order' => ['gateway_id' => 0],
         'transaction' => ['status' => Transaction::EXPIRED],
@@ -289,8 +305,11 @@ class FakeOrder extends WC_Order
 
 class FakeApiService
 {
-    public function __construct(private Transaction $transaction, private bool $gatewayFetchFails)
-    {
+    public function __construct(
+        private Transaction $transaction,
+        private bool $gatewayFetchFails,
+        private array $gatewayTransactions
+    ) {
     }
 
     public function getPayrexxTransaction($id)
@@ -306,7 +325,7 @@ class FakeApiService
 
         $gateway = new \Payrexx\Models\Response\Gateway();
         $gateway->setInvoices([
-            ['transactions' => [['id' => CURRENT_TRANSACTION_ID, 'status' => Transaction::WAITING]]],
+            ['transactions' => $this->gatewayTransactions],
         ]);
         return $gateway;
     }
@@ -356,7 +375,13 @@ register_shutdown_function(function () {
 });
 
 $dispatcher = new Dispatcher(
-    new FakeApiService($transaction, $scenario['gateway_fetch_fails'] ?? false),
+    new FakeApiService(
+        $transaction,
+        $scenario['gateway_fetch_fails'] ?? false,
+        $scenario['gateway_transactions'] ?? [
+            ['id' => CURRENT_TRANSACTION_ID, 'status' => Transaction::WAITING, 'amount' => 1800],
+        ]
+    ),
     new OrderService(),
     ''
 );

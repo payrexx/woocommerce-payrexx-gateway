@@ -479,6 +479,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 = 3.1.30 =
 * PP-20982: A stale Payrexx transaction (e.g. an abandoned Twint attempt that later expires) no longer cancels an order that was meanwhile paid via another payment method such as bank transfer (BACS) or re-paid via a new Payrexx checkout. Such webhooks are acknowledged and ignored.
 * PP-20982: Order notes now distinguish an expired or declined transaction from a cancellation by the customer, and the status notes are translatable (German translations added).
+* PP-20982: Bank transfer partial payments are summed up again, so the payment that completes the order total marks the order as paid (regression since 3.1.21).
 = 3.1.29 =
 * PP-20826: Fixed a fatal error when WooCommerce automatically cancels an unpaid Payrexx order - the order service was missing the WC_Order class import, so the cancellation could never run.
 = 3.1.28 =
