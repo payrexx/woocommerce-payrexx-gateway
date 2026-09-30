@@ -240,11 +240,17 @@ class Dispatcher
             $differenceCents / 100
         );
 
-        $order->add_order_note(
-            $paid
-                ? 'Payrexx: confirmed payment of ' . $amounts . ' - order treated as paid.'
-                : 'Payrexx: confirmed payment of ' . $amounts . ' does not cover the order - left on hold, please check.'
-        );
+        $note = $paid
+            ? 'Payrexx: confirmed payment of ' . $amounts . ' - order treated as paid.'
+            : 'Payrexx: confirmed payment of ' . $amounts . ' does not cover the order - left on hold, please check.';
+
+        // Retried or duplicate webhooks must not repeat the same note.
+        foreach (wc_get_order_notes(['order_id' => $order->get_id(), 'type' => 'internal']) as $existing) {
+            if ($existing->content === $note) {
+                return;
+            }
+        }
+        $order->add_order_note($note);
     }
 
     /**

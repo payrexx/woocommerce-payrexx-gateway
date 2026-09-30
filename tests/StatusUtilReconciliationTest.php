@@ -9,7 +9,7 @@ declare(strict_types=1);
  * (per-unit rounding drift, e.g. 58.11 paid vs 58.10 order total) or that
  * overpays it used to match none of the strict float `===` branches, so the
  * order never became paid and stayed on hold. The comparison now runs in
- * integer cents with a one-cent underpayment tolerance; overpayment counts as paid.
+ * integer cents; overpayment counts as paid, any underpayment stays on hold.
  *
  * Standalone like OrderServiceStatusMappingTest.php (the plugin has no PHPUnit
  * infrastructure). The REAL classes are invoked.
@@ -67,8 +67,8 @@ echo "PP-20828 StatusUtil amount reconciliation\n";
 test('1 cent overpaid => CONFIRMED (bugfix)', function () {
     assertSame(Transaction::CONFIRMED, status(58.10, 58.11));
 });
-test('1 cent underpaid => CONFIRMED (bugfix, within tolerance)', function () {
-    assertSame(Transaction::CONFIRMED, status(58.11, 58.10));
+test('1 cent underpaid => WAITING (no tolerance)', function () {
+    assertSame(Transaction::WAITING, status(58.11, 58.10));
 });
 test('exact amount => CONFIRMED (as before)', function () {
     assertSame(Transaction::CONFIRMED, status(58.10, 58.10));
@@ -76,10 +76,10 @@ test('exact amount => CONFIRMED (as before)', function () {
 test('float drift (0.1 + 0.2 vs 0.3) => CONFIRMED', function () {
     assertSame(Transaction::CONFIRMED, status(0.3, 0.1 + 0.2));
 });
-test('underpaid exactly at tolerance (1 cent) => CONFIRMED', function () {
-    assertSame(Transaction::CONFIRMED, status(100.00, 99.99));
+test('underpaid by 1 cent on 100.00 => WAITING', function () {
+    assertSame(Transaction::WAITING, status(100.00, 99.99));
 });
-test('underpaid beyond tolerance (2 cents) => WAITING', function () {
+test('underpaid by 2 cents => WAITING', function () {
     assertSame(Transaction::WAITING, status(100.00, 99.98));
 });
 test('large overpayment (double payment) => CONFIRMED', function () {
@@ -106,7 +106,7 @@ test('full refund => REFUNDED (as before)', function () {
 test('partial refund => PARTIALLY_REFUNDED (as before)', function () {
     assertSame(Transaction::PARTIALLY_REFUNDED, status(58.10, 58.10, -10.00));
 });
-test('tiny partial refund (3 cents) => PARTIALLY_REFUNDED, tolerance not applied', function () {
+test('tiny partial refund (3 cents) => PARTIALLY_REFUNDED', function () {
     assertSame(Transaction::PARTIALLY_REFUNDED, status(58.10, 58.10, -0.03));
 });
 test('overpaid then excess refunded => CONFIRMED (as before)', function () {

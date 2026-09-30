@@ -477,7 +477,7 @@ payment methods especially in Europe that you can quickly and easily integrate i
 == Changelog ==
 
 = 3.1.31 =
-* PP-20828: A confirmed payment that is one cent short of the order total (per-unit rounding) or that overpays it now marks the order as paid instead of leaving it on hold; whenever the amounts differ, the order gets a note with both values. Refund amounts are rounded to cents instead of being truncated, so refunds are no longer 1 cent short.
+* PP-20828: A confirmed payment that overpays the order total (e.g. by one cent through per-unit rounding) now marks the order as paid instead of leaving it on hold; whenever the amounts differ, the order gets a note with both values. Refund amounts are rounded to cents instead of being truncated, so refunds are no longer 1 cent short.
 = 3.1.29 =
 * PP-20826: Fixed a fatal error when WooCommerce automatically cancels an unpaid Payrexx order - the order service was missing the WC_Order class import, so the cancellation could never run.
 = 3.1.28 =

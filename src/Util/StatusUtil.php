@@ -7,9 +7,6 @@ use Payrexx\Models\Response\Transaction;
 
 class StatusUtil
 {
-    /** Underpayment of one cent still counts as paid: rounding is never off by more (PP-20828). */
-    const AMOUNT_TOLERANCE_CENTS = 1;
-
     /**
      * @param Gateway $gateway
      * @param array $status
@@ -43,8 +40,8 @@ class StatusUtil
         $paidCents = $confirmedCents - $refundedCents;
 
         if ($paidCents === $totalCents) return Transaction::CONFIRMED;
-        // Overpayment or a few cents short: the order is covered, it must not stay on hold.
-        if ($refundedCents === 0 && $paidCents >= $totalCents - self::AMOUNT_TOLERANCE_CENTS) return Transaction::CONFIRMED;
+        // Overpayment: the order is covered, it must not stay on hold.
+        if ($refundedCents === 0 && $paidCents > $totalCents) return Transaction::CONFIRMED;
         if ($confirmedCents === $refundedCents && $confirmedCents > 0) return Transaction::REFUNDED;
         if ($confirmedCents > $refundedCents && $refundedCents > 0) return Transaction::PARTIALLY_REFUNDED;
         return Transaction::WAITING; // Partially paid
