@@ -7,11 +7,10 @@ use Payrexx\Models\Response\Transaction;
 
 class StatusUtil
 {
-
     /**
      * @param Gateway $gateway
-     * @param array $gateway
-     * @return int
+     * @param array $status
+     * @return float
      */
     public static function getAmountByStatusAndGateway(Gateway $gateway, array $status): float
     {
@@ -26,18 +25,25 @@ class StatusUtil
     }
 
     /**
-     * @param int $orderTotal
-     * @param int $confirmedAmount
-     * @param int $refundedAmount
+     * Compares in integer cents: float equality on summed amounts is unreliable.
+     *
+     * @param float $orderTotal
+     * @param float $confirmedAmount
+     * @param float $refundedAmount refund transactions carry a negative amount.
      * @return string
      */
-    public static function determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount)
+    public static function determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount): string
     {
-        $paidAmount = $confirmedAmount + $refundedAmount;
+        $totalCents = AmountUtil::toCents($orderTotal);
+        $confirmedCents = AmountUtil::toCents($confirmedAmount);
+        $refundedCents = abs(AmountUtil::toCents($refundedAmount));
+        $paidCents = $confirmedCents - $refundedCents;
 
-        if ($paidAmount === $orderTotal) return Transaction::CONFIRMED;
-        if ($confirmedAmount === abs($refundedAmount) && $confirmedAmount > 0) return Transaction::REFUNDED;
-        if ($confirmedAmount > abs($refundedAmount) && abs($refundedAmount) > 0) return Transaction::PARTIALLY_REFUNDED;
-        if ($confirmedAmount < $orderTotal) return Transaction::WAITING; // Partially paid
+        if ($paidCents === $totalCents) return Transaction::CONFIRMED;
+        // Overpayment: the order is covered, it must not stay on hold.
+        if ($refundedCents === 0 && $paidCents > $totalCents) return Transaction::CONFIRMED;
+        if ($confirmedCents === $refundedCents && $confirmedCents > 0) return Transaction::REFUNDED;
+        if ($confirmedCents > $refundedCents && $refundedCents > 0) return Transaction::PARTIALLY_REFUNDED;
+        return Transaction::WAITING; // Partially paid
     }
 }

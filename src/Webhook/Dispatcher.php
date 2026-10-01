@@ -8,6 +8,7 @@ use Payrexx\Models\Response\Transaction;
 
 use PayrexxPaymentGateway\Service\OrderService;
 use PayrexxPaymentGateway\Service\PayrexxApiService;
+use PayrexxPaymentGateway\Util\AmountUtil;
 use PayrexxPaymentGateway\Util\StatusUtil;
 use Throwable;
 
@@ -170,21 +171,26 @@ class Dispatcher
             // A confirmed transaction can also be a partial payment (with bank transfer).
             // Therefore the new correct status must be determined.
             if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED])) {
+                $confirmedAmount = null;
+                $refundedAmount = 0.0;
                 if ($isOrderGatewayTransaction) {
                     $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($orderGateway, [Transaction::CONFIRMED]);
                     $refundedAmount = StatusUtil::getAmountByStatusAndGateway($orderGateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
-
-                    $newTransactionStatus = StatusUtil::determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount);
                 } elseif ($newTransactionStatus === Transaction::CONFIRMED) {
                     // A transaction charged directly against a pre-authorization carries no
                     // gateway, so getPayrexxGateway('') would throw and the renewal would never
                     // settle. The reconciliation must not be skipped either - that was the
                     // second half of the bypass - so the transaction's own amount is used.
                     // getAmount() is in cents, mirroring createPayrexxGateway()'s setAmount().
-                    $transactionAmount = round(($transaction->getAmount()) / 100, 2);
+                    $confirmedAmount = round(($transaction->getAmount()) / 100, 2);
+                }
 
-                    if (abs($transactionAmount - $orderTotal) >= 0.005) {
-                        $newTransactionStatus = Transaction::WAITING;
+                if ($confirmedAmount !== null) {
+                    $newTransactionStatus = StatusUtil::determineNewOrderStatus($orderTotal, $confirmedAmount, $refundedAmount);
+
+                    // Only for a plain payment: after a refund the amounts differ by design.
+                    if ($transaction->getStatus() === Transaction::CONFIRMED && AmountUtil::toCents($refundedAmount) === 0) {
+                        $this->note_amount_mismatch($order, $orderTotal, $confirmedAmount, $newTransactionStatus === Transaction::CONFIRMED);
                     }
                 }
             }
@@ -226,6 +232,46 @@ class Dispatcher
             // API response missing uuid or id raises an \Error rather than an \Exception.
             throw new Exception('Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Leaves a note on the order when the confirmed amount and the order total differ,
+     * so the merchant sees why an order was marked paid anyway or stayed on hold (PP-20828).
+     * Not logged as a warning: a partial bank transfer payment is a regular case.
+     *
+     * @param \WC_Order $order woocommerce order.
+     * @param float $orderTotal order total.
+     * @param float $paidAmount confirmed amount.
+     * @param bool $paid whether the order is treated as paid.
+     */
+    private function note_amount_mismatch($order, float $orderTotal, float $paidAmount, bool $paid): void
+    {
+        $differenceCents = AmountUtil::toCents($paidAmount) - AmountUtil::toCents($orderTotal);
+        if ($differenceCents === 0) {
+            return;
+        }
+
+        $currency = $order->get_currency();
+        $amounts = sprintf(
+            '%s %s (order total %s %s, difference %+.2f)',
+            $currency,
+            number_format($paidAmount, 2, '.', ''),
+            $currency,
+            number_format($orderTotal, 2, '.', ''),
+            $differenceCents / 100
+        );
+
+        $note = $paid
+            ? 'Payrexx: confirmed payment of ' . $amounts . ' - order treated as paid.'
+            : 'Payrexx: confirmed payment of ' . $amounts . ' does not cover the order - left on hold, please check.';
+
+        // Retried or duplicate webhooks must not repeat the same note.
+        foreach (wc_get_order_notes(['order_id' => $order->get_id(), 'type' => 'internal']) as $existing) {
+            if ($existing->content === $note) {
+                return;
+            }
+        }
+        $order->add_order_note($note);
     }
 
     /**

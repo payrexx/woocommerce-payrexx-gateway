@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.30
+ * Version: 3.1.31
  * Requires at least: 5.6
  * Tested up to: 7.0
  * Requires PHP: 8.0
@@ -105,6 +105,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 			require_once PAYREXX_PLUGIN_DIR . '/src/Service/OrderService.php';
 			require_once PAYREXX_PLUGIN_DIR . '/src/Helper/SubscriptionHelper.php';
 			require_once PAYREXX_PLUGIN_DIR . '/src/Helper/PaymentHelper.php';
+			require_once PAYREXX_PLUGIN_DIR . '/src/Util/AmountUtil.php';
 			require_once PAYREXX_PLUGIN_DIR . '/src/Util/BasketUtil.php';
 			require_once PAYREXX_PLUGIN_DIR . '/src/Util/StatusUtil.php';
 			require_once PAYREXX_PLUGIN_DIR . '/src/Webhook/Dispatcher.php';
