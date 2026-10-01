@@ -296,7 +296,7 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 		 */
 		public function allow_order_payment_on_cancelled(array $statuses, WC_Order $order): array {
 			if (
-				strpos($order->get_payment_method(), 'payrexx') === 0 &&
+				self::getOrderService()->isPayrexxOrder($order) &&
 				$order->has_status(OrderService::WC_STATUS_CANCELLED)
 			) {
 				$statuses[] = OrderService::WC_STATUS_CANCELLED;

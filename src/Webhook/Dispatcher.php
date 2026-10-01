@@ -3,6 +3,7 @@
 namespace PayrexxPaymentGateway\Webhook;
 
 use Exception;
+use Payrexx\Models\Response\Gateway;
 use Payrexx\Models\Response\Transaction;
 
 use PayrexxPaymentGateway\Service\OrderService;
@@ -15,6 +16,7 @@ class Dispatcher
 {
     const BRAND_BANK_TRANSFER = 'bank-transfer';
     const PSP_NATIVE = 'Native_PSP';
+    const CANCELLING_STATUSES = [Transaction::CANCELLED, Transaction::EXPIRED, Transaction::DECLINED, Transaction::ERROR];
 
     /**
      * @var PayrexxApiService
@@ -68,7 +70,7 @@ class Dispatcher
             // transaction we fetch with our own API credentials, never from $_REQUEST.
             // Taken from the request they only prove that some confirmed transaction
             // exists somewhere, which lets a replay bind a real payment to a foreign order.
-            $transaction = $this->payrexx_api_service->getPayrexxTransaction((int) $resp['transaction']['id']);
+            $transaction = $this->payrexx_api_service->getPayrexxTransaction((int)$resp['transaction']['id']);
 
             if (!$transaction) {
                 throw new Exception('Fraudulent request: transaction not found');
@@ -89,10 +91,8 @@ class Dispatcher
             // transaction type.
             $order_id = $transaction->getReferenceId() ?? '';
             if ($order_id === '') {
-                $order_id = (string) ($invoice['referenceId'] ?? '');
+                $order_id = (string)($invoice['referenceId'] ?? '');
             }
-
-            $gateway_id = (string) ($invoice['paymentRequestId'] ?? '');
 
             if (empty($order_id)) {
                 $this->send_response('Webhook data incomplete');
@@ -131,7 +131,7 @@ class Dispatcher
                 // Payment method change > $order_id is a subscriptionId and must be overwritten
                 // Subscription renewal > $order_id is from an old order and must be overwritten
                 $firstSubscription = reset($subscriptions);
-                $order_id = $firstSubscription->get_last_order( 'ids', 'any' );
+                $order_id = $firstSubscription->get_last_order('ids', 'any');
 
                 // The request's preAuthorizationId must not be persisted: Response\Transaction
                 // has no such field, so it cannot be corroborated against Payrexx, and
@@ -162,15 +162,20 @@ class Dispatcher
             $orderTotal = round(floatval($order->get_total('edit')), 2);
             $newTransactionStatus = $transaction->getStatus();
 
+            // GET /Transaction strips invoice.paymentRequestId, so the gateway is taken from the order meta the
+            // shop wrote itself and only trusted if it actually contains the fetched transaction.
+            $orderGateway = $this->fetchOrderGateway($order);
+            $isOrderGatewayTransaction = $orderGateway !== null
+                && $this->isTransactionOfGateway($orderGateway, $transaction);
+
             // A confirmed transaction can also be a partial payment (with bank transfer).
             // Therefore the new correct status must be determined.
             if (in_array($newTransactionStatus, [Transaction::CONFIRMED, Transaction::REFUNDED, Transaction::PARTIALLY_REFUNDED])) {
                 $confirmedAmount = null;
                 $refundedAmount = 0.0;
-                if ($gateway_id !== '') {
-                    $gateway = $this->payrexx_api_service->getPayrexxGateway($gateway_id);
-                    $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::CONFIRMED]);
-                    $refundedAmount = StatusUtil::getAmountByStatusAndGateway($gateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
+                if ($isOrderGatewayTransaction) {
+                    $confirmedAmount = StatusUtil::getAmountByStatusAndGateway($orderGateway, [Transaction::CONFIRMED]);
+                    $refundedAmount = StatusUtil::getAmountByStatusAndGateway($orderGateway, [Transaction::PARTIALLY_REFUNDED, Transaction::REFUNDED]);
                 } elseif ($newTransactionStatus === Transaction::CONFIRMED) {
                     // A transaction charged directly against a pre-authorization carries no
                     // gateway, so getPayrexxGateway('') would throw and the renewal would never
@@ -200,6 +205,22 @@ class Dispatcher
                 && in_array(($payment['invoicePaymentStatus'] ?? null), ['paid', 'overpaid'], true)
             ) {
                 $newTransactionStatus = Transaction::CONFIRMED;
+            }
+
+            // WooCommerce reuses a pending order across checkouts, so a stale transaction may arrive after the
+            // order was re-paid another way. Only statuses that would cancel or fail the order are ignored, and
+            // only after the remapping above, so a late payment still settles the order.
+            if (in_array($newTransactionStatus, self::CANCELLING_STATUSES, true)
+                && empty($subscriptions)
+                && $order->get_type() === 'shop_order'
+            ) {
+                if (!$this->order_service->isPayrexxOrder($order)) {
+                    $this->send_response('Order is no longer paid via Payrexx, nothing to process');
+                }
+                // Without a stored or fetchable gateway there is nothing to compare against.
+                if ($orderGateway !== null && !$isOrderGatewayTransaction) {
+                    $this->send_response('Transaction belongs to a previous gateway of this order, nothing to process');
+                }
             }
 
             $transactionUuid = $transaction->getUuid();
@@ -251,6 +272,42 @@ class Dispatcher
             }
         }
         $order->add_order_note($note);
+    }
+
+    /**
+     * @param \WC_Order $order woocommerce order.
+     * @return Gateway|null
+     */
+    private function fetchOrderGateway($order): ?Gateway
+    {
+        $orderGatewayId = (int)$order->get_meta('payrexx_gateway_id', true);
+        if ($orderGatewayId <= 0) {
+            return null;
+        }
+
+        try {
+            return $this->payrexx_api_service->getPayrexxGateway($orderGatewayId);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param Gateway $gateway payrexx gateway.
+     * @param Transaction $transaction fetched transaction.
+     * @return bool
+     */
+    private function isTransactionOfGateway(Gateway $gateway, Transaction $transaction): bool
+    {
+        foreach ($gateway->getInvoices() ?? [] as $invoice) {
+            foreach ($invoice['transactions'] ?? [] as $gatewayTransaction) {
+                if ((int)($gatewayTransaction['id'] ?? 0) === (int)$transaction->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
