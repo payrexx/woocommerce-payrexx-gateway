@@ -15,14 +15,6 @@ class OrderService
     const WC_STATUS_ONHOLD = 'on-hold';
 	const WC_STATUS_PENDING = 'pending';
 
-    const STATUS_MESSAGES = [
-        self::WC_STATUS_CANCELLED => 'Payment was cancelled by the customer',
-        self::WC_STATUS_FAILED => 'An error occured while processing this payment',
-        self::WC_STATUS_REFUNDED => 'Payment was fully refunded',
-        self::WC_STATUS_ONHOLD => 'Awaiting payment',
-		Transaction::PARTIALLY_REFUNDED => 'Payment was partially refunded',
-	];
-
 	/**
 	 * Handle transaction status
 	 *
@@ -41,6 +33,7 @@ class OrderService
 		$pre_auth_id = ''
 	) {
 		$order_status = '';
+		$message_key = '';
 
 		$this->clear_payrexx_unpaid_order_timeout_event( $order->get_id() );
 		switch ( $payrexx_status ) {
@@ -69,7 +62,7 @@ class OrderService
 					break;
 				}
 				$order->add_order_note(
-					self::STATUS_MESSAGES[ $payrexx_status ] . ' ( ' . $transaction_uuid . ' )'
+					$this->getStatusMessage( $payrexx_status ) . ' ( ' . $transaction_uuid . ' )'
 				);
 				return;
 			case Transaction::CANCELLED:
@@ -81,6 +74,7 @@ class OrderService
 				$order_status = $this->orderContainsSubscription( $order )
 					? self::WC_STATUS_FAILED
 					: self::WC_STATUS_CANCELLED;
+				$message_key = $payrexx_status;
 				break;
 			case Transaction::ERROR:
 				$order_status = self::WC_STATUS_FAILED;
@@ -90,7 +84,17 @@ class OrderService
 			return;
 		}
 
-		$this->transitionOrder( $order, $order_status, $transaction_uuid );
+		$this->transitionOrder( $order, $order_status, $transaction_uuid, $message_key );
+	}
+
+	/**
+	 * The generic gateway is 'payrexx', the single methods 'payrexx_<pm>'.
+	 *
+	 * @param WC_Order $order woocommerce order.
+	 * @return bool
+	 */
+	public function isPayrexxOrder( WC_Order $order ): bool {
+		return str_starts_with( (string) $order->get_payment_method(), 'payrexx' );
 	}
 
 	/**
@@ -172,20 +176,47 @@ class OrderService
 	/**
 	 * Transtition the order
 	 *
-	 * @param order  $order            order.
+	 * @param WC_Order $order         order.
 	 * @param string $order_status     order status.
 	 * @param string $transaction_uuid payrexx transaction uuid.
+	 * @param string $message_key      order note key, defaults to the order status.
 	 * @return void
 	 */
-	public function transitionOrder( $order, string $order_status, string $transaction_uuid = '' ) {
+	public function transitionOrder(
+		WC_Order $order,
+		string $order_status,
+		string $transaction_uuid = '',
+		string $message_key = ''
+	): void {
 		$custom_status = apply_filters( 'woo_payrexx_custom_transaction_status_' . $order_status, $order_status );
-		if ( $transaction_uuid ) {
-			$transaction_uuid = ' ( ' . $transaction_uuid . ' )';
+		if ( ! $message_key ) {
+			$message_key = $order_status;
 		}
-		$order->update_status(
-			$custom_status,
-			__( self::STATUS_MESSAGES[$order_status] . $transaction_uuid, 'woo-payrexx-gateway' )
-		);
+		// Translate before appending the uuid, otherwise the string never matches a .po entry.
+		$note = $this->getStatusMessage( $message_key );
+		if ( $transaction_uuid ) {
+			$note .= ' ( ' . $transaction_uuid . ' )';
+		}
+		$order->update_status( $custom_status, $note );
+	}
+
+	/**
+	 * Literal strings so gettext extraction picks them up.
+	 *
+	 * @param string $key order status or payrexx transaction status.
+	 * @return string
+	 */
+	private function getStatusMessage( string $key ): string {
+		return match ( $key ) {
+			self::WC_STATUS_CANCELLED => __( 'Payment was cancelled by the customer', 'woo-payrexx-gateway' ),
+			self::WC_STATUS_FAILED => __( 'An error occured while processing this payment', 'woo-payrexx-gateway' ),
+			self::WC_STATUS_REFUNDED => __( 'Payment was fully refunded', 'woo-payrexx-gateway' ),
+			self::WC_STATUS_ONHOLD => __( 'Awaiting payment', 'woo-payrexx-gateway' ),
+			Transaction::PARTIALLY_REFUNDED => __( 'Payment was partially refunded', 'woo-payrexx-gateway' ),
+			Transaction::EXPIRED => __( 'Payment expired', 'woo-payrexx-gateway' ),
+			Transaction::DECLINED => __( 'Payment was declined', 'woo-payrexx-gateway' ),
+			default => '',
+		};
 	}
 
     /**

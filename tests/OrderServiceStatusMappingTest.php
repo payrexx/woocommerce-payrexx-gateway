@@ -50,9 +50,17 @@ require __DIR__ . '/../src/Service/OrderService.php';
 
 /* -------------------------------------------------------------- Fake order */
 
-class FakeOrder
+if (!class_exists('WC_Order')) {
+    // OrderService type-hints WC_Order; the fake only needs to satisfy the hint.
+    class WC_Order
+    {
+    }
+}
+
+class FakeOrder extends WC_Order
 {
     public ?string $updated_status = null;
+    public ?string $updated_note = null;
     public array $notes = [];
     private string $status;
     private string $transaction_id;
@@ -91,6 +99,7 @@ class FakeOrder
     public function update_status($status, $note = '')
     {
         $this->updated_status = $status;
+        $this->updated_note = $note;
         $this->status = $status;
     }
 }
@@ -190,6 +199,39 @@ test('DECLINED + subscription + order on-hold => FAILED (allowed transition)', f
 test('WAITING + subscription order => ON-HOLD (as before)', function () {
     $order = runStatus(Transaction::WAITING, true);
     assertSame(OrderService::WC_STATUS_ONHOLD, $order->updated_status);
+});
+
+// PP-20982: order notes distinguish expired/declined from a customer cancellation and are
+// translated before the uuid is appended (the __() stub returns the plain msgid).
+test('EXPIRED note says expired, not "cancelled by the customer" (PP-20982)', function () {
+    $order = runStatus(Transaction::EXPIRED, false);
+    assertSame('Payment expired ( test-uuid )', $order->updated_note);
+});
+test('DECLINED note says declined (PP-20982)', function () {
+    $order = runStatus(Transaction::DECLINED, false);
+    assertSame('Payment was declined ( test-uuid )', $order->updated_note);
+});
+test('DECLINED + subscription => FAILED status but declined note (PP-20982)', function () {
+    $order = runStatus(Transaction::DECLINED, true);
+    assertSame(OrderService::WC_STATUS_FAILED, $order->updated_status);
+    assertSame('Payment was declined ( test-uuid )', $order->updated_note);
+});
+test('CANCELLED note still says cancelled by the customer', function () {
+    $order = runStatus(Transaction::CANCELLED, false);
+    assertSame('Payment was cancelled by the customer ( test-uuid )', $order->updated_note);
+});
+test('ERROR note unchanged', function () {
+    $order = runStatus(Transaction::ERROR, false);
+    assertSame('An error occured while processing this payment ( test-uuid )', $order->updated_note);
+});
+test('WAITING note unchanged', function () {
+    $order = runStatus(Transaction::WAITING, false);
+    assertSame('Awaiting payment ( test-uuid )', $order->updated_note);
+});
+test('transitionOrder without uuid (cancel redirect path) => plain note', function () {
+    $order = new FakeOrder('pending');
+    (new OrderService())->transitionOrder($order, OrderService::WC_STATUS_CANCELLED);
+    assertSame('Payment was cancelled by the customer', $order->updated_note);
 });
 
 /* --------------------------------------------------------------------- Output */
