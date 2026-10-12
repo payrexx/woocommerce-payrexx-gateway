@@ -280,7 +280,10 @@ class PayrexxApiService
 			// learned the outcome - the charge may well have gone through. Signal "unknown"
 			// so the caller does not retry and risk a double charge. Any other error is a
 			// real failure and can be retried safely.
-			if ($e->getCode() === 0 && (int) $e->getMessage() === CURLE_OPERATION_TIMEDOUT) {
+			// SDK <= 2.0.16 puts the errno in the message, >= 2.0.17 in the code (PP-21242).
+			if ($e->getCode() === CURLE_OPERATION_TIMEDOUT
+				|| ($e->getCode() === 0 && (int) $e->getMessage() === CURLE_OPERATION_TIMEDOUT)
+			) {
 				return null;
 			}
 		}
