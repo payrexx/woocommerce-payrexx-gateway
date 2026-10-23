@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.31
+Stable tag: 3.1.32
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,7 +37,6 @@ payment methods especially in Europe that you can quickly and easily integrate i
 * Centi
 * Heidipay
 * SamsungPay
-* Wirpay
 * Reka
 * Klarna
 * Boncard
@@ -67,6 +66,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.32 =
+* Minor update, no need to backup
 = 3.1.31 =
 * Minor update, no need to backup
 = 3.1.30 =
@@ -478,6 +479,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.32 =
+* PP-21293: Removed the WIRpay payment method, as WIR Bank discontinues the service on 02.12.2026. After the update, WIRpay is no longer offered in the checkout; orders previously paid with WIRpay are not affected.
 = 3.1.31 =
 * PP-20828: A confirmed payment that overpays the order total (e.g. by one cent through per-unit rounding) now marks the order as paid instead of leaving it on hold; whenever the amounts differ, the order gets a note with both values. Refund amounts are rounded to cents instead of being truncated, so refunds are no longer 1 cent short.
 = 3.1.30 =

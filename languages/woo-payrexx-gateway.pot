@@ -269,10 +269,6 @@ msgstr ""
 msgid "Visa (Payrexx)"
 msgstr ""
 
-#: src/Model/PaymentMethod/WirPay.php:9
-msgid "Wirpay (Payrexx)"
-msgstr ""
-
 #. Name of the plugin
 msgid "Payrexx Gateway for WooCommerce "
 msgstr ""
