@@ -129,6 +129,10 @@ class WC_Payrexx_Gateway_Block_Base extends AbstractPaymentMethodType {
 				$logos = SubscriptionHelper::isSubscription( WC()->cart ) ? $subscription_logos : $logos;
 				$icon  = '';
 				foreach ( $logos as $logo ) {
+					// Logos of removed payment methods may still be stored in the settings.
+					if ( ! file_exists( PAYREXX_PLUGIN_DIR . 'includes/cardicons/card_' . $logo . '.svg' ) ) {
+						continue;
+					}
 					$src   = WC_HTTPS::force_https_url(
 						plugins_url( 'includes/cardicons/card_' . $logo . '.svg', PAYREXX_MAIN_FILE )
 					);

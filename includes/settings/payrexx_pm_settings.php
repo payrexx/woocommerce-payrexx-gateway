@@ -40,7 +40,6 @@ if ($this->id === 'payrexx') {
             'maestro' => 'Maestro',
             'jcb' => 'JCB',
             'american_express' => 'American Express',
-            'wirpay' => 'WIRpay',
             'paypal' => 'PayPal',
             'bitcoin' => 'Bitcoin',
             'klarna' => 'Klarna',
