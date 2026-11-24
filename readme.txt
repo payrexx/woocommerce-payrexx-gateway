@@ -4,7 +4,7 @@ Donate link: https://www.payrexx.com?ref=wordpress
 Tags: payment, e-commerce, credit card, payrexx, gateway
 Requires at least: 5.6
 Tested up to: 7.0
-Stable tag: 3.1.31
+Stable tag: 3.1.33
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Upgrade Notice ==
 
+= 3.1.33 =
+* Minor update, no need to backup
 = 3.1.31 =
 * Minor update, no need to backup
 = 3.1.30 =
@@ -478,6 +480,8 @@ payment methods especially in Europe that you can quickly and easily integrate i
 
 == Changelog ==
 
+= 3.1.33 =
+* PP-22714: The "allow recurring payments" checkbox is shown again in the classic checkout when the cart contains a subscription, even if another plugin loads the payment gateways early. Before, subscriptions paid without the checkbox were set to manual renewal and no payment token was stored.
 = 3.1.31 =
 * PP-20828: A confirmed payment that overpays the order total (e.g. by one cent through per-unit rounding) now marks the order as paid instead of leaving it on hold; whenever the amounts differ, the order gets a note with both values. Refund amounts are rounded to cents instead of being truncated, so refunds are no longer 1 cent short.
 = 3.1.30 =
