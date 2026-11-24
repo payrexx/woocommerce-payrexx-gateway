@@ -4,7 +4,7 @@
  * Description: Accept many different payment methods on your store using Payrexx
  * Author: Payrexx
  * Author URI: https://payrexx.com
- * Version: 3.1.31
+ * Version: 3.1.32
  * Requires at least: 5.6
  * Tested up to: 7.0
  * Requires PHP: 8.0
@@ -259,16 +259,19 @@ if (! class_exists( 'WC_Payrexx_Gateway' ))
 				PaymentHelper::handleError();
 			}
 
-			$googlePayPaymentMethod = new WC_Payrexx_Gateway_GooglePay();
-			if ( 'yes' == $googlePayPaymentMethod->enabled ) {
+			// Use the registered gateways: a new SubscriptionBase instance would add its recurring checkbox a second time.
+			$gateways = WC()->payment_gateways()->payment_gateways();
+
+			$googlePayPaymentMethod = $gateways[ PAYREXX_PM_PREFIX . 'google-pay' ] ?? null;
+			if ( $googlePayPaymentMethod && 'yes' == $googlePayPaymentMethod->enabled ) {
 				wp_register_script( 'googlepay_js', 'https://pay.google.com/gp/p/js/pay.js', array( 'jquery' ) );
 				wp_enqueue_script( 'googlepay_js' );
 				wp_register_script( 'payrexx_googlepay_check', plugins_url( 'assets/js/googlepay.js', PAYREXX_MAIN_FILE ), array(), '1.0.1', true );
 				wp_enqueue_script( 'payrexx_googlepay_check' );
 			}
 
-			$applePayPaymentMethod = new WC_Payrexx_Gateway_ApplePay();
-			if ( 'yes' == $applePayPaymentMethod->enabled ) {
+			$applePayPaymentMethod = $gateways[ PAYREXX_PM_PREFIX . 'apple-pay' ] ?? null;
+			if ( $applePayPaymentMethod && 'yes' == $applePayPaymentMethod->enabled ) {
 				wp_register_script( 'payrexx_applepay_check', plugins_url( 'assets/js/applepay.js', PAYREXX_MAIN_FILE ), array(), '1.0.1', true );
 				wp_enqueue_script( 'payrexx_applepay_check' );
 			}

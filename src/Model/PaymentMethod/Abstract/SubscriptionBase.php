@@ -51,16 +51,7 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 				SubscriptionHelper::get_supported_features()
 			);
 
-			$isSubscription = false;
-			if ( SubscriptionHelper::isPaymentMethodChange() ) {
-				try {
-					$isSubscription = new \WC_Subscription( (int) $_GET['change_payment_method'] );
-				} catch (Exception $e) {}
-			}
-
-			if ( $isSubscription || SubscriptionHelper::isSubscription( WC()->cart ) ) {
-				add_filter( 'woocommerce_gateway_description', array( $this, 'gateway_subscription_checkbox' ), 20, 2 );
-			}
+			add_filter( 'woocommerce_gateway_description', array( $this, 'gateway_subscription_checkbox' ), 20, 2 );
 		}
 	}
 
@@ -72,7 +63,19 @@ abstract class WC_Payrexx_Gateway_SubscriptionBase extends WC_Payrexx_Gateway_Ba
 	 * @return string
 	 */
 	public function gateway_subscription_checkbox( $description, $payment_id ) {
-		if ( $payment_id === $this->id ) {
+		if ( $payment_id !== $this->id ) {
+			return $description;
+		}
+
+		// Checked at render time: gateways can be instantiated before WooCommerce loads the cart (wp_loaded).
+		$isSubscription = false;
+		if ( SubscriptionHelper::isPaymentMethodChange() ) {
+			try {
+				$isSubscription = new \WC_Subscription( (int) $_GET['change_payment_method'] );
+			} catch (Exception $e) {}
+		}
+
+		if ( $isSubscription || SubscriptionHelper::isSubscription( WC()->cart ) ) {
 			$name  = 'payrexx-allow-recurring-' . $payment_id;
 			$html  = '<label for="' . $name . '">';
 			$html .= '<input type="checkbox" checked name="' . $name . '" id="' . $name . '" value="1" />';
